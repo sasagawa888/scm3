@@ -1181,14 +1181,13 @@ int execute(int addr)
     else if(listp(addr)){
         if(subrp(car(addr))){
             return(apply_star(car(addr),apply_star(car(cadr(addr)),(cadr(cadr(addr))))));
+        } else if(fsubrp(car(addr))){
+            return(apply_star(car(addr),cdr(addr)));
+            return(NIL);
         } else if(experp(car(addr))){
             // generate continuation
             return(NIL);
-        } else if(fsubrp(car(addr))){
-            // generate continuation
-            return(NIL);
         }
-
     }
     return(NIL);
 }

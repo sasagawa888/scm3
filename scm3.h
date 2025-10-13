@@ -193,7 +193,7 @@ int eqp(int addr1, int addr2);
 int symnamep(int addr, char *name);
 int evlis(int addr);
 int apply(int func, int arg);
-int apply_star(int func, int args)
+int apply_star(int func, int args);
 int subrp(int addr);
 int fsubrp(int addr);
 int functionp(int addr);

@@ -15,11 +15,15 @@ acc <= response (eval)
 - progn (foo) (call/cc) (bar) (boo)
 (foo) (call/cc) (bar) (boo) 
 
-- (if (foo) (bar) (boo))
-'(foo) (push) '(bar) (push) '(boo) (push) (apply if (pops 3))
+- (foo (foo) (bar) (boo))
+(foo) (push) (bar) (push) (boo) (push) (apply foo (pops 3))
 
-- (if (foo) (bar) (call/cc))
-(foo) (push) (bar) (push) (boo) (push) (apply if (pops 3))
+- (if (foo) (bar) (boo))
+(lambda (v)
+    (if v
+        (eval_cps (bar)) 
+        (eval_cps (boo))))
+
 
 stack (lambda(cont) bar-val foo-val) 
 
