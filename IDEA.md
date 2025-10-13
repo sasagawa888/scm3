@@ -10,13 +10,13 @@ acc <= response (eval)
 (1st) (push) (2nd) (push) (3rd) (push) (apply + (pop 3))
 
 - (lambda (x y) (+ x (call/cc)))
-(1st) (push) (set! x (pop)) (2nd) (push) (set! y (pop)) (apply (lambda (x y) (+ x y)) (list x y))
+(1st) (push) (set! x (pop)) (2nd) (push) (set! y (pop)) (apply (lambda (x y) (+ x y)) (list x y) (unbind 3))
 
 - progn (foo) (call/cc) (bar) (boo)
 (foo) (call/cc) (bar) (boo) 
 
 - (if (foo) (bar) (boo))
-(foo) (push) (bar) (push) (boo) (push) (apply if (pops 3))
+'(foo) (push) '(bar) (push) '(boo) (push) (apply if (pops 3))
 
 - (if (foo) (bar) (call/cc))
 (foo) (push) (bar) (push) (boo) (push) (apply if (pops 3))

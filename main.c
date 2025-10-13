@@ -1172,7 +1172,42 @@ void princ(int addr)
 
 
 
-//--------eval---------------        
+//--------eval---------------
+// execute continuation
+int execute(int addr)
+{
+    if(numberp(addr) || stringp(addr))
+        return(addr);
+    else if(listp(addr)){
+        if(subrp(car(addr))){
+            return(apply_star(car(addr),apply_star(car(cadr(addr)),(cadr(cadr(addr))))));
+        } else if(experp(car(addr))){
+            // generate continuation
+            return(NIL);
+        } else if(fsubrp(car(addr))){
+            // generate continuation
+            return(NIL);
+        }
+
+    }
+    return(NIL);
+}
+
+// eval CPS
+int eval_star(int addr)
+{   
+    int exp,res;
+    cp = cons(addr,cp);
+    res = NIL;
+    while(!nullp(cp)){
+        exp = car(cp);
+        cp = cdr(cp);
+        res = execute(exp);
+    }
+    return(res);
+}
+
+
 void print_env(void){
     int i,n,env;
 
@@ -1266,6 +1301,36 @@ int eval(int addr)
     error(CANT_FIND_ERR, "eval", addr);
     return (0);
 }
+
+
+int apply_star(int func, int args)
+{
+    int body, res;
+
+    res = NIL;
+    switch (GET_TAG(func)) {
+    case SUBR:
+	return ((GET_SUBR(func)) (args));
+    case FSUBR:
+	return ((GET_SUBR(func)) (args));
+    case EXPR:
+    {
+	    body = cdr(GET_BIND(func));
+        cp = append(body,cp);
+	    while (!(IS_NIL(cp))) {
+		res = car(cp);
+		cp = cdr(cp);
+        res = eval(res);
+	    }
+	    return (res);
+	}
+    
+    default:
+	error(ILLEGAL_OBJ_ERR, "apply", func);
+    }
+    return (0);
+}
+
 
 int apply(int func, int args)
 {
