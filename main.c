@@ -508,6 +508,14 @@ int functionp(int addr)
 	return (IS_EXPR(GET_BIND(addr)));
 }
 
+int experp(int addr){
+
+    if(symbolp(addr))
+        return(IS_EXPR(findsym(addr)));
+    else 
+        return(0);
+}
+
 int fexprp(int addr)
 {
 	return (IS_FEXPR(GET_BIND(addr)));
@@ -1241,6 +1249,12 @@ int eval(int addr)
             printf("\n");
             SET_TR(sym,GET_TR(sym)-1);
         }
+        return(res);
+    }
+    else if (experp(car(addr))){
+        int func;
+        func = findsym(car(addr));
+        res = apply(func, evlis(cdr(addr)));
         return(res);
     }
 	else if (macrop(car(addr)))
@@ -2970,10 +2984,8 @@ int f_call_cc(int arglist)
     arg1 = car(arglist);
     cont = cons(makesym("lambda"),cons(list1(makesym("cont")),cp));
     // (lambda (cont) continuation)
-    print(cont);
     cont = eval(cont);
-    print(cp);print(arg1);print(cont);
-    return(apply(arg1,cont));
+    return (apply(arg1,list1(cont)));
 }
 
 //--------quasi-quote---------------
