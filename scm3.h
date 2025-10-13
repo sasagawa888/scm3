@@ -93,7 +93,8 @@ int sp; //stack pointer
 int fc; //free counter
 int ap; //arglist pointer
 int cp; //continuation pointer
-int acc;
+int acc; //register 
+int cpssp; //stack pointer for CPS
 
 //-------read--------
 #define EOL		'\n'

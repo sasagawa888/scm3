@@ -16,7 +16,7 @@ To exit, use (quit).
 
 
 ## Builtin Functions
-D
+
 ## Sample Codes
 
 ```

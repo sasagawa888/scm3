@@ -619,6 +619,17 @@ int member(int x, int lis)
 	return (member(x, cdr(lis)));
 }
 
+int reverse(int addr)
+{
+    int res;
+    res = NIL;
+    while(!nullp(addr)){
+        res = cons(car(addr),res);
+        addr = cdr(addr);
+    }
+    return(res);
+}
+
 int length(int addr)
 {
     int len = 0;
@@ -752,7 +763,39 @@ int makefunc(int addr)
     return (val);
 }
 
+//-------for CPS--------------------
+void cps_push(int addr)
+{
+    cpssp = cons(addr,cpssp);
+}
 
+int cps_pop(int n)
+{
+    int res;
+    res = NIL;
+    while(n>0){
+        res = cons(car(cpssp),res);
+        cpssp = cdr(cpssp);
+        n--;
+    }
+    return(reverse(res));
+}
+
+void cps_bind(int addr)
+{
+    assocsym(addr,acc);
+}
+
+void cps_unbind(int n)
+{
+    int new;
+    new = ep;
+    while(n > 0){
+        new = cdr(new);
+        n--;
+    }
+    ep = new;
+}
 
 // Stack. Used to save the environment pointer (EP).
 void push(int pt)
