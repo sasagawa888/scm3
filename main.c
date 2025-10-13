@@ -1266,10 +1266,12 @@ int apply(int func, int args)
     case EXPR:{
 	    varlist = car(GET_BIND(func));
 	    body = cdr(GET_BIND(func));
+        cp = append(body,cp);
 	    bindarg(varlist, args);
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
+	    while (!(IS_NIL(cp))) {
+		res = car(cp);
+		cp = cdr(cp);
+        res = eval(res);
 	    }
 	    unbind();
 	    return (res);
@@ -2699,7 +2701,6 @@ int f_define(int arglist){
 int f_lambda(int arglist)
 {
 
-    checkarg(LEN2_TEST, "lambda", arglist);
     checkarg(LIST_TEST, "lambda", car(arglist));
     checkarg(LIST_TEST, "lambda", cdr(arglist));
     return (makefunc(arglist));
@@ -2969,7 +2970,9 @@ int f_call_cc(int arglist)
     arg1 = car(arglist);
     cont = cons(makesym("lambda"),cons(list1(makesym("cont")),cp));
     // (lambda (cont) continuation)
+    print(cont);
     cont = eval(cont);
+    print(cp);print(arg1);print(cont);
     return(apply(arg1,cont));
 }
 
