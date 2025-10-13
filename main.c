@@ -1618,11 +1618,11 @@ int bindmacro1(int addr)
 
 void initsubr(void)
 {
-    defsubr("plus", f_plus);
-    defsubr("difference", f_difference);
+    defsubr("+", f_plus);
+    defsubr("-", f_difference);
     defsubr("minus", f_minus);
-    defsubr("times", f_times);
-    defsubr("quotient", f_quotient);
+    defsubr("*", f_times);
+    defsubr("/", f_quotient);
     defsubr("divide", f_divide);
     defsubr("add1", f_add1);
     defsubr("sub1", f_sub1);
