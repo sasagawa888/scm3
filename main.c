@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
 	    printf("> ");
 	    fflush(stdout);
 	    fflush(stdin);
+        cp = NIL;
 	    print(eval(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -1289,10 +1290,11 @@ int apply(int func, int args)
     case FEXPR:{
 	    varlist = car(GET_BIND(func));
 	    body = cdr(GET_BIND(func));
+        cp = cons(body,cp);
 	    bindarg(varlist, list1(args));
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
+	    while (!(IS_NIL(cp))) {
+		res = eval(car(cp));
+		cp = cdr(cp);
 	    }
 	    unbind();
 	    return (res);

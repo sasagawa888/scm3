@@ -1,7 +1,8 @@
 
-(define (foo) 
-    (print 1)
-    (print 2)
+(define (foo)
+    (bar) (print 1) (print 2))
+
+(define (bar)
     (print 3))
 
-(define (bar x) x)
+(define boo (lambda (x) x))

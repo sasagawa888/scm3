@@ -1,5 +1,5 @@
-/* Lisp1.5
-written by kenichi sasagawa 2025/9~
+/* Scheme R3RS
+written by kenichi sasagawa 2025/10~
 */ 
 
 #define HEAPSIZE 10000000
@@ -92,6 +92,7 @@ int hp; //heap pointer
 int sp; //stack pointer
 int fc; //free counter
 int ap; //arglist pointer
+int cp; //continuation pointer
 
 //-------read--------
 #define EOL		'\n'
