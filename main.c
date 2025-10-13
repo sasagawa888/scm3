@@ -2702,11 +2702,15 @@ int f_define(int arglist){
     arg1 = caar(arglist); // function name
     arg2 = cons(cdar(arglist),cdr(arglist)); // argument + body
     bindfunc1(arg1,EXPR,arg2);
-    } else if(symbolp(car(arglist))){
+    } else if(symbolp(car(arglist)) && lambdap(cadr(arglist))){
     checkarg(LIST_TEST, "define" ,cadr(arglist));
     arg1 = car(arglist);  // function name
     arg2 = cadr(arglist); //lambda exp
     SET_BIND(arg1,eval(arg2));
+    } else if(symbolp(car(arglist))){
+    arg1 = car(arglist); //variable name
+    arg2 = cadr(arglist); //value
+    bindsym(arg1,arg2);
     }
     return(arg1);
 }
