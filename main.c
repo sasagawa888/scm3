@@ -1694,7 +1694,7 @@ void initsubr(void)
     defsubr("call/cc", f_call_cc);
 
     deffsubr("quote", f_quote);
-    deffsubr("setq", f_setq);
+    deffsubr("set!", f_setq);
     deffsubr("define", f_define);
     deffsubr("lambda", f_lambda);
     deffsubr("defmacro", f_defmacro);
