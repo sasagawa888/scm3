@@ -1675,6 +1675,7 @@ void initsubr(void)
     defsubr("macrop", f_macrop);
     defsubr("explode", f_explode);
     defsubr("implode", f_implode);
+    defsubr("call/cc", f_call_cc);
 
     deffsubr("quote", f_quote);
     deffsubr("setq", f_setq);
@@ -2959,6 +2960,17 @@ int f_implode(int arglist)
         arg1 = cdr(arg1);
     }
     return(makesym(str));
+}
+
+int f_call_cc(int arglist)
+{
+    int arg1,cont;
+    checkarg(LEN1_TEST,"call/cc",arglist);
+    arg1 = car(arglist);
+    cont = cons(makesym("lambda"),cons(list1(makesym("cont")),cp));
+    // (lambda (cont) continuation)
+    cont = eval(cont);
+    return(apply(arg1,cont));
 }
 
 //--------quasi-quote---------------
