@@ -1,6 +1,6 @@
 
 (define (foo)
-    (call/cc (lambda (c) (setq a c))) (bar))
+    (call/cc (lambda (c) (set! a c))) (bar))
 
 (define (bar)
     (print 3))
