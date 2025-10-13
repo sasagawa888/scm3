@@ -2685,7 +2685,7 @@ int f_define(int arglist){
     arg1 = caar(arglist); // function name
     arg2 = cons(cdar(arglist),cdr(arglist)); // argument + body
     bindfunc1(arg1,EXPR,arg2);
-    } else if(symbolp(cadr(arglist))){
+    } else if(symbolp(car(arglist))){
     checkarg(LIST_TEST, "define" ,cadr(arglist));
     arg1 = car(arglist);  // function name
     arg2 = cadr(arglist); //lambda exp
