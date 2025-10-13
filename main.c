@@ -1180,9 +1180,10 @@ int execute(int addr)
         return(addr);
     else if(listp(addr)){
         if(subrp(car(addr))){
-            return(apply_star(car(addr),apply_star(car(cadr(addr)),(cadr(cadr(addr))))));
+            return(apply_cps(car(addr),
+                   apply_cps(car(cadr(addr)),(cadr(cadr(addr))))));
         } else if(fsubrp(car(addr))){
-            return(apply_star(car(addr),cdr(addr)));
+            return(apply_cps(car(addr),cdr(addr)));
             return(NIL);
         } else if(experp(car(addr))){
             // generate continuation
@@ -1193,17 +1194,16 @@ int execute(int addr)
 }
 
 // eval CPS
-int eval_star(int addr)
+int eval_cps(int addr)
 {   
-    int exp,res;
+    int exp;
     cp = cons(addr,cp);
-    res = NIL;
     while(!nullp(cp)){
         exp = car(cp);
         cp = cdr(cp);
-        res = execute(exp);
+        acc = execute(exp);
     }
-    return(res);
+    return(acc);
 }
 
 
@@ -1302,7 +1302,7 @@ int eval(int addr)
 }
 
 
-int apply_star(int func, int args)
+int apply_cps(int func, int args)
 {
     int body, res;
 

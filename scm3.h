@@ -93,6 +93,7 @@ int sp; //stack pointer
 int fc; //free counter
 int ap; //arglist pointer
 int cp; //continuation pointer
+int acc;
 
 //-------read--------
 #define EOL		'\n'
@@ -193,7 +194,7 @@ int eqp(int addr1, int addr2);
 int symnamep(int addr, char *name);
 int evlis(int addr);
 int apply(int func, int arg);
-int apply_star(int func, int args);
+int apply_cps(int func, int args);
 int subrp(int addr);
 int fsubrp(int addr);
 int functionp(int addr);

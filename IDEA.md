@@ -19,10 +19,7 @@ acc <= response (eval)
 (foo) (push) (bar) (push) (boo) (push) (apply foo (pops 3))
 
 - (if (foo) (bar) (boo))
-(lambda (v)
-    (if v
-        (eval_cps (bar)) 
-        (eval_cps (boo))))
+(apply (if v (eval_star (bar)) (eval_star (boo))) (foo))
 
 
 stack (lambda(cont) bar-val foo-val) 
