@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	    fflush(stdin);
         cp = NIL;
         cpssp = NIL;
-	    print(eval(read()));
+	    print(eval_cps(read()));
 	    printf("\n");
 	    fflush(stdout);
     } else if (ret == 1) {
@@ -1331,7 +1331,7 @@ void print_env(void){
 int eval_cps(int addr)
 {   
     int exp;
-    cp = addr;
+    cp = transfer(addr);
     print(cp);
     //cp = cons(transfer(addr),cp);
     while(!nullp(cp)){
