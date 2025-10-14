@@ -14,7 +14,7 @@ written by kenichi sasagawa
 #include <signal.h>
 #include "scm3.h"
 
-double version = 0.01;
+double version = 0.03;
 cell heap[HEAPSIZE];
 int stack[STACKSIZE];
 int argstk[STACKSIZE];
@@ -1224,7 +1224,7 @@ int transfer_exprargs(int args,int varlist)
         return(NIL);
     else 
         return(cons(car(args),
-                   cons(list2(makesym("bind"),car(varlist)),
+                   cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
                       transfer_exprargs(cdr(args),cdr(varlist)))));
 }
 
@@ -1255,7 +1255,7 @@ int transfer(int addr)
         return(list1(addr));
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
-        body = list3(makesym("apply"),car(addr),
+        body = list3(makesym("apply"),list2(makesym("quote"),car(addr)),
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
     }
@@ -1272,33 +1272,7 @@ int transfer(int addr)
 // execute continuation
 int execute(int addr)
 {
-    if(numberp(addr) || stringp(addr))
-        return(addr);
-    else if(symbolp(addr))
-        return(findsym(addr));
-    else if(listp(addr)){
-        if(subrp(car(addr))){
-            return(apply_cps(car(addr),
-                   apply_cps(car(cadr(addr)),(cadr(cadr(addr))))));
-        } else if(fsubrp(car(addr))){
-            return(apply_cps(car(addr),cdr(addr)));
-            return(NIL);
-        }
-    }
-    return(NIL);
-}
-
-// eval CPS
-int eval_cps(int addr)
-{   
-    int exp;
-    cp = cons(transfer(addr),cp);
-    while(!nullp(cp)){
-        exp = car(cp);
-        cp = cdr(cp);
-        acc = execute(exp);
-    }
-    return(acc);
+    return(eval(addr));
 }
 
 
@@ -1314,6 +1288,31 @@ void print_env(void){
     }
     printf("]");
 }
+
+
+// eval CPS
+int eval_cps(int addr)
+{   
+    int exp;
+    cp = addr;
+    print(cp);
+    //cp = cons(transfer(addr),cp);
+    while(!nullp(cp)){
+        exp = car(cp);
+        cp = cdr(cp);
+        acc = execute(exp);
+         int c;
+        print(exp);
+        printf(" in ");
+        print_env();
+        printf(" >> ");
+        c = getc(stdin);
+        if(c == 'q')
+            longjmp(buf, 1);
+    }
+    return(acc);
+}
+
 
 int eval(int addr)
 {
@@ -1856,6 +1855,7 @@ void initsubr(void)
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
     defsubr("test", f_test);
+    defsubr("test1", f_test1);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3182,7 +3182,7 @@ int f_unbind(int arglist)
     int arg1;
     arg1 = car(arglist);
     cps_unbind(GET_INT(arg1));
-    return(T);
+    return(acc);
 }
 
 int f_test(int arglist)
@@ -3190,6 +3190,13 @@ int f_test(int arglist)
     int arg1;
     arg1 = car(arglist);
     return(transfer(arg1));
+}
+
+int f_test1(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    return(eval_cps(arg1));
 }
 
 //--------quasi-quote---------------
