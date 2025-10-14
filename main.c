@@ -1217,20 +1217,70 @@ void princ(int addr)
 
 
 //--------eval---------------
+// transfer expr arguments
+int transfer_exprargs(int args,int varlist)
+{
+    if(nullp(args))
+        return(NIL);
+    else 
+        return(cons(car(args),
+                   cons(list2(makesym("bind"),car(varlist)),
+                      transfer_exprargs(cdr(args),cdr(varlist)))));
+}
+
+int transfer_exprbody(int addr)
+{
+    if(nullp(addr))
+        return(NIL);
+    else 
+        return(append(transfer(car(addr)),transfer_exprbody(cdr(addr))));
+}
+
+int transfer_subrargs(int args)
+{
+    if(nullp(args))
+        return(NIL);
+    else {
+        return(cons(car(args),
+                  cons(list1(makesym("push")),
+                      transfer_subrargs(cdr(args)))));
+    }
+
+}
+
+int transfer(int addr)
+{   
+    int func,varlist,args,body;
+    if(numberp(addr) || stringp(addr) || symbolp(addr))
+        return(list1(addr));
+    else if(subrp(car(addr))){
+        args = transfer_subrargs(cdr(addr));
+        body = list3(makesym("apply"),car(addr),
+                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+        return(append(args,list1(body)));
+    }
+    else if(functionp(car(addr))){
+        func = car(addr);
+        varlist = car(GET_BIND(GET_BIND(func)));
+	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(args,body));
+    }
+}
+
 // execute continuation
 int execute(int addr)
 {
     if(numberp(addr) || stringp(addr))
         return(addr);
+    else if(symbolp(addr))
+        return(findsym(addr));
     else if(listp(addr)){
         if(subrp(car(addr))){
             return(apply_cps(car(addr),
                    apply_cps(car(cadr(addr)),(cadr(cadr(addr))))));
         } else if(fsubrp(car(addr))){
             return(apply_cps(car(addr),cdr(addr)));
-            return(NIL);
-        } else if(experp(car(addr))){
-            // generate continuation
             return(NIL);
         }
     }
@@ -1241,7 +1291,7 @@ int execute(int addr)
 int eval_cps(int addr)
 {   
     int exp;
-    cp = cons(addr,cp);
+    cp = cons(transfer(addr),cp);
     while(!nullp(cp)){
         exp = car(cp);
         cp = cdr(cp);
@@ -1363,7 +1413,7 @@ int apply_cps(int func, int args)
 	    while (!(IS_NIL(cp))) {
 		res = car(cp);
 		cp = cdr(cp);
-        res = eval(res);
+        res = eval_cps(res);
 	    }
 	    return (res);
 	}
@@ -1804,6 +1854,7 @@ void initsubr(void)
     defsubr("pop", f_pop);
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
+    defsubr("test", f_test);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3133,7 +3184,12 @@ int f_unbind(int arglist)
     return(T);
 }
 
-
+int f_test(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    return(transfer(arg1));
+}
 
 //--------quasi-quote---------------
 int quasi_transfer1(int x)

@@ -309,6 +309,7 @@ int f_push(int addr);
 int f_pop(int addr);
 int f_bind(int addr);
 int f_unbind(int addr);
+int f_test(int addr);
 
 int quasi_transfer1(int x);
 int quasi_transfer2(int x, int n);
