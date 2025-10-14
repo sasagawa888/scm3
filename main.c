@@ -1330,15 +1330,15 @@ void print_env(void){
 // eval CPS
 int eval_cps(int addr)
 {   
-    int exp;
-    cp = transfer(addr);
-    print(cp);
-    //cp = cons(transfer(addr),cp);
+    int exp,c;
+    cp = append(transfer(addr),cp);
+    if(step_flag)
+        print(cp);
     while(!nullp(cp)){
         exp = car(cp);
         cp = cdr(cp);
         acc = execute(exp);
-         int c;
+        if(step_flag){
         print(exp);
         printf(" in ");
         print_env();
@@ -1346,6 +1346,7 @@ int eval_cps(int addr)
         c = getc(stdin);
         if(c == 'q')
             longjmp(buf, 1);
+        }
     }
     return(acc);
 }
