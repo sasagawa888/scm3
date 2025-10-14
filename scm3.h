@@ -316,3 +316,4 @@ int quasi_transfer2(int x, int n);
 int list1(int x);
 int list2(int x, int y);
 int list3(int x, int y, int z);
+int transfer(int addr);

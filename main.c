@@ -1264,7 +1264,8 @@ int transfer(int addr)
         varlist = car(GET_BIND(GET_BIND(func)));
 	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
         args = transfer_exprargs(cdr(addr),varlist);
-        return(append(args,body));
+        return(append(args,append(body,
+                 list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
     }
 }
 
