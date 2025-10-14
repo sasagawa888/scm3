@@ -779,7 +779,7 @@ int cps_pop(int n)
         cpssp = cdr(cpssp);
         n--;
     }
-    return(reverse(res));
+    return(res);
 }
 
 void cps_bind(int addr)
@@ -1248,6 +1248,17 @@ int transfer_subrargs(int args)
 
 }
 
+int transfer_fsubrargs(int args)
+{
+    if(nullp(args))
+        return(NIL);
+    else {
+        return(cons(list2(makesym("quote"),car(args)),
+                  cons(list1(makesym("push")),
+                      transfer_fsubrargs(cdr(args)))));
+    }
+}
+
 int transfer(int addr)
 {   
     int func,varlist,args,body;
@@ -1255,6 +1266,12 @@ int transfer(int addr)
         return(list1(addr));
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
+        body = list3(makesym("apply"),list2(makesym("quote"),car(addr)),
+                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+        return(append(args,list1(body)));
+    }
+    else if(fsubrp(car(addr))){
+        args = transfer_fsubrargs(cdr(addr));
         body = list3(makesym("apply"),list2(makesym("quote"),car(addr)),
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
@@ -1270,8 +1287,28 @@ int transfer(int addr)
 }
 
 // execute continuation
+int execute_args(int addr)
+{
+    if(nullp(addr))
+        return(NIL);
+    else 
+        return(cons(execute(car(addr)),execute_args(cdr(addr))));
+}
+
 int execute(int addr)
 {
+    if(numberp(addr) || stringp(addr))
+        return(addr);
+    else if(listp(addr)){
+        if(eqp(car(addr),makesym("quote")))
+            return(cadr(addr));
+        else if(subrp(car(addr)) || fsubrp(car(addr))){
+            int func,args;
+            func = GET_BIND(car(addr));
+            args = execute_args(cdr(addr));
+            return ((GET_SUBR(func)) (args));
+        }
+    }
     return(eval(addr));
 }
 
