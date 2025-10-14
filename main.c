@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 	    fflush(stdout);
 	    fflush(stdin);
         cp = NIL;
+        cpssp = NIL;
 	    print(eval(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -1799,6 +1800,10 @@ void initsubr(void)
     defsubr("explode", f_explode);
     defsubr("implode", f_implode);
     defsubr("call/cc", f_call_cc);
+    defsubr("push", f_push);
+    defsubr("pop", f_pop);
+    defsubr("bind", f_bind);
+    defsubr("unbind", f_unbind);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3098,6 +3103,37 @@ int f_call_cc(int arglist)
     cont = eval(cont);
     return (apply(arg1,list1(cont)));
 }
+
+int f_push(int arglist)
+{
+    cps_push(acc);
+    return(T);
+}
+
+int f_pop(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    return(cps_pop(GET_INT(arg1)));
+}
+
+int f_bind(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    cps_bind(arg1);
+    return(T);
+}
+
+int f_unbind(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    cps_unbind(GET_INT(arg1));
+    return(T);
+}
+
+
 
 //--------quasi-quote---------------
 int quasi_transfer1(int x)
