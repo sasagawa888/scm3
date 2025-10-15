@@ -1251,7 +1251,7 @@ int transfer_subrargs(int args)
     if(nullp(args))
         return(NIL);
     else {
-        return(cons(car(args),
+        return(append(transfer(car(args)),
                   cons(list1(makesym("push")),
                       transfer_subrargs(cdr(args)))));
     }
@@ -1335,6 +1335,8 @@ void print_env(void){
         print(car(env));
         env = cdr(env);
     }
+    printf("],[");
+    print(cpssp);
     printf("]");
 }
 
