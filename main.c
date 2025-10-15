@@ -1905,6 +1905,7 @@ void initsubr(void)
     deffsubr("progn", f_progn);
     deffsubr("prog", f_prog);
     deffsubr("return", f_return);
+    deffsubr("if", f_if);
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
@@ -2943,10 +2944,10 @@ int f_if(int arglist)
     arg2 = cadr(arglist);
     arg3 = car(cdr(cdr(arglist)));
 
-    if (!(nullp(eval(arg1))))
-	return (eval(arg2));
+    if (!(nullp(eval_cps(arg1))))
+	return (eval_cps(arg2));
     else
-	return (eval(arg3));
+	return (eval_cps(arg3));
 }
 
 int f_cond(int arglist)
