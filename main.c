@@ -320,6 +320,8 @@ void gbcmark(void)
 {
     int addr, i;
 
+    markcell(cp); // continuation
+    markcell(cpssp); //cps stack 
     //Mark oblist
     markoblist();
     // Mark the cells linked from the oblist.
