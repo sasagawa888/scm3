@@ -304,11 +304,11 @@ void markcell(int addr)
 	markcell(cdr(addr));
     }
 
-    if ((GET_BIND(addr) != 0) && IS_EXPR(addr))
+    if ((GET_BIND(addr) != 0) && IS_EXPR(addr)){
 	markcell(GET_BIND(addr));
-
-    if ((GET_BIND(addr) != 0) && IS_MACRO(addr))
-	markcell(GET_BIND(addr));
+    markcell(GET_CDR(addr)); //ep envinronment
+    }
+    
 
     if ((GET_BIND(addr) != 0) && IS_FEXPR(addr))
 	markcell(GET_BIND(addr));
@@ -770,7 +770,7 @@ int makefunc(int addr)
     val = freshcell();
     SET_TAG(val, EXPR);
     SET_BIND(val, addr);
-    SET_CDR(val, 0);
+    SET_CDR(val, ep);
     return (val);
 }
 
