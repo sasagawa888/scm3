@@ -1868,8 +1868,8 @@ void initsubr(void)
     defsubr("step", f_step);
     defsubr("putprop", f_putprop);
     defsubr("get", f_get);
-    defsubr("greaterp", f_greaterp);
-    defsubr("lessp", f_lessp);
+    defsubr(">", f_greaterp);
+    defsubr("<", f_lessp);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
     defsubr("minusp", f_minusp);
