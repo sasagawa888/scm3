@@ -1893,18 +1893,12 @@ void initsubr(void)
     defsubr("pop", f_pop);
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
-    defsubr("test", f_test);
-    defsubr("test1", f_test1);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
     deffsubr("define", f_define);
     deffsubr("lambda", f_lambda);
-    deffsubr("defmacro", f_defmacro);
-    deffsubr("macro", f_macro);
     deffsubr("progn", f_progn);
-    deffsubr("prog", f_prog);
-    deffsubr("return", f_return);
     deffsubr("if", f_if);
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
@@ -2914,37 +2908,20 @@ int f_lambda(int arglist)
     return (makefunc(arglist));
 }
 
-int f_defmacro(int arglist)
-{
-    int arg1, arg2;
-
-    checkarg(LEN3_TEST, "defmacro", arglist);
-    checkarg(SYMBOL_TEST, "defmacro", car(arglist));
-    checkarg(LIST_TEST, "defmacro", cadr(arglist));
-    checkarg(LIST_TEST, "defmacro", caddr(arglist));
-    arg1 = car(arglist);
-    arg2 = cdr(arglist);
-    bindmacro(arg1, arg2);
-    return (T);
-}
-
-int f_macro(int arglist)
-{
-    checkarg(LEN2_TEST, "macro", arglist);
-    checkarg(LIST_TEST, "macro", car(arglist));
-    return(bindmacro1(arglist));
-}
-
 int f_if(int arglist)
 {
-    int arg1, arg2, arg3;
+    int arg1, arg2, arg3, save, res;
 
     checkarg(LEN3_TEST, "if", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = car(cdr(cdr(arglist)));
 
-    if (!(nullp(eval_cps(arg1))))
+    save = cp;
+    cp = NIL;
+    res = eval_cps(arg1);
+    cp = save;
+    if (!(nullp(res)))
 	return (eval_cps(arg2));
     else
 	return (eval_cps(arg3));
@@ -2978,63 +2955,6 @@ int f_progn(int arglist)
 	arglist = cdr(arglist);
     }
     return (res);
-}
-
-int find_label(int label, int prog)
-{
-    while (!nullp(prog)) {
-	if (eqp(car(prog), label))
-	    return (prog);
-	prog = cdr(prog);
-    }
-    error(ILLEGAL_OBJ_ERR, "prog", label);
-
-    return (NIL);
-}
-
-int f_prog(int arglist)
-{
-    int arg1, arg2, res, prog, save;
-
-    checkarg(SYMLIST_TEST, "prog", car(arglist));
-    arg1 = car(arglist);
-    arg2 = cdr(arglist);
-    prog = arg2;
-    return_flag = 0;
-    save = ep;
-    res = NIL;
-    while (!nullp(arg1)) {
-	ep = cons(cons(car(arg1), NIL),ep);
-	arg1 = cdr(arg1);
-    }
-    while (!nullp(arg2)) {
-	res = car(arg2);
-	if (symbolp(res)) {
-	    goto skip;
-	} else if (listp(res) && eqp(car(res), makesym("go"))) {
-	    arg2 = (find_label(cadr(res), prog));
-	    goto skip;
-	}
-
-	res = eval(res);
-	if (return_flag) {
-	    ep = save;
-	    return (res);
-	}
-      skip:
-	arg2 = cdr(arg2);
-    }
-    ep = save;
-    return (res);
-}
-
-int f_return(int arglist)
-{
-    int arg1;
-    checkarg(LEN1_TEST, "return", arglist);
-    arg1 = car(arglist);
-    return_flag = 1;
-    return (eval(arg1));
 }
 
 
@@ -3209,20 +3129,6 @@ int f_unbind(int arglist)
     arg1 = car(arglist);
     cps_unbind(GET_INT(arg1));
     return(acc);
-}
-
-int f_test(int arglist)
-{
-    int arg1;
-    arg1 = car(arglist);
-    return(transfer(arg1));
-}
-
-int f_test1(int arglist)
-{
-    int arg1;
-    arg1 = car(arglist);
-    return(eval_cps(arg1));
 }
 
 //--------quasi-quote---------------
