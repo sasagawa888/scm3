@@ -468,6 +468,16 @@ int nullp(int addr)
 	return (0);
 }
 
+int numeqp(int addr1, int addr2)
+{
+    if (integerp(addr1) && integerp(addr2) && addr1 == addr2)
+	return (1);
+    else if (floatp(addr1) && floatp(addr2)
+	     && GET_FLT(addr1) - GET_FLT(addr2) < DBL_MIN)
+	return (1);
+    else
+	return (0);
+}
 
 int eqp(int addr1, int addr2)
 {
@@ -1849,6 +1859,7 @@ void initsubr(void)
     defsubr("mapcar", f_mapcar);
     defsubr("mapcon", f_mapcon);
     defsubr("map", f_map);
+    defsubr("=", f_numeqp);
     defsubr("eq", f_eq);
     defsubr("equal", f_equal);
     defsubr("null", f_nullp);
@@ -2312,6 +2323,21 @@ int f_cons(int arglist)
     arg2 = cadr(arglist);
     return (cons(arg1, arg2));
 }
+
+
+int f_numeqp(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "=", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    if (numeqp(arg1, arg2))
+	return (T);
+    else
+	return (NIL);
+}
+
 
 int f_eq(int arglist)
 {

@@ -255,6 +255,7 @@ int f_mapcon(int addr);
 int f_map(int addr);
 int f_nullp(int addr);
 int f_atomp(int addr);
+int f_numeqp(int addr);
 int f_eq(int addr);
 int f_equal(int addr);
 int f_set(int addr);
