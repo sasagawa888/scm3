@@ -278,6 +278,8 @@ int f_symbolp(int addr);
 int f_listp(int addr);
 int f_greaterp(int addr);
 int f_lessp(int addr);
+int f_eqgreaterp(int addr);
+int f_eqlessp(int addr);
 int f_onep(int addr);
 int f_zerop(int addr);
 int f_minusp(int addr);

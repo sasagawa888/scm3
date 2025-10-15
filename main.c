@@ -1233,7 +1233,7 @@ int transfer_exprargs(int args,int varlist)
     if(nullp(args))
         return(NIL);
     else 
-        return(cons(car(args),
+        return(append(transfer(car(args)),
                    cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
                       transfer_exprargs(cdr(args),cdr(varlist)))));
 }
@@ -1883,6 +1883,8 @@ void initsubr(void)
     defsubr("get", f_get);
     defsubr(">", f_greaterp);
     defsubr("<", f_lessp);
+    defsubr(">=" ,f_eqgreaterp);
+    defsubr("<=", f_eqlessp);
     defsubr("zerop", f_zerop);
     defsubr("onep", f_onep);
     defsubr("minusp", f_minusp);
@@ -2582,6 +2584,23 @@ int f_lessp(int arglist)
 	return (NIL);
 }
 
+
+int f_eqlessp(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "<=", arglist);
+    checkarg(NUMLIST_TEST, "<=", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if (lessp(arg1, arg2) || numeqp(arg1,arg2))
+	return (T);
+    else
+	return (NIL);
+}
+
+
 int f_greaterp(int arglist)
 {
     int arg1, arg2;
@@ -2596,6 +2615,23 @@ int f_greaterp(int arglist)
     else
 	return (NIL);
 }
+
+
+int f_eqgreaterp(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, ">=", arglist);
+    checkarg(NUMLIST_TEST, ">=", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if (greaterp(arg1, arg2) || numeqp(arg1,arg2))
+	return (T);
+    else
+	return (NIL);
+}
+
 
 
 int f_gbc(int arglist)
