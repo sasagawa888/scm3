@@ -1284,6 +1284,8 @@ int transfer(int addr)
         return(append(args,append(body,
                  list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
     }
+
+    return(NIL);
 }
 
 // execute continuation
@@ -3094,7 +3096,7 @@ int f_load(int arglist)
 	exp = read();
 	if (exp == EOF)
 	    break;
-	eval(exp);
+	eval_cps(exp);
     }
     fclose(input_stream);
     input_stream = stdin;

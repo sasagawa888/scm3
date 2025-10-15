@@ -38,3 +38,28 @@ You can force garbage collection by using (gbc 1).
 ## Immediate values:
 I made integers immediate values to save cells and improve speed. By setting the second-highest bit of the integer, they are treated as positive integers. Negative numbers are outside the cell area, so they remain immediate values as they are.
 
+## Debug
+- (step t)  stepper on.
+- (step nil) stepper off.
+- q   quit.
+
+```
+> (define (foo x) (+ x x))
+foo
+> (foo 3)
+6
+> (step t)
+(apply (quote step) (pop 1)) in [] >> t
+> (foo 3)
+(3 (bind (quote x)) x (push) x (push) (apply (quote +) (pop 2)) (unbind 1))3 in [] >> (bind (quote x)) in [(x . 3)] >> 
+x in [(x . 3)] >> 
+x in [(x . 3)] >> 
+(push) in [(x . 3)] >> 
+x in [(x . 3)] >> 
+x in [(x . 3)] >> 
+(push) in [(x . 3)] >> 
+(apply (quote +) (pop 2)) in [(x . 3)] >> 
+(unbind 1) in [] >> 
+6
+> 
+```
