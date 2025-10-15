@@ -3,7 +3,7 @@ written by kenichi sasagawa 2025/10~
 */ 
 
 #define HEAPSIZE 10000000
-#define FREESIZE       50
+#define FREESIZE     1000
 #define STACKSIZE  30000
 #define SYMSIZE	256
 #define BUFSIZE 256
