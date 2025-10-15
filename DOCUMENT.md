@@ -63,3 +63,14 @@ x in [(x . 3)] >>
 6
 > 
 ```
+
+
+## expanded function for CPS
+
+(push)  push ACC data
+
+(pop N)   pop N data and generate reversed list.
+
+(bind Arg) bind Arg as ACC in ep(envinronment)
+
+(unbind N) unbind N Arg in ep(envinronment)

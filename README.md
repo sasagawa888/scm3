@@ -44,8 +44,6 @@ T
 
 This is not a full R3RS implementation, but a simplified version that captures the feel of the original.
 
-Dynamic scoping is used.
-
 Core functions like QUOTE, ATOM, EQ, CONS, CAR, CDR, and COND are implemented.
 
 see DOCUMENT.md

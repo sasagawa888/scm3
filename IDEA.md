@@ -37,13 +37,3 @@ When (foo) is a complex composite function, the continuation pointer (cp) change
 
 A continuation object is similar to a lambda, but differs from a normal lambda in that it also saves the stack. It is represented as a separate object called cont.
 
-
-### expanded function for CPS
-
-(push)  push ACC data
-
-(pop N)   pop N data and generate reversed list.
-
-(bind Arg) bind Arg as ACC in ep(envinronment)
-
-(unbind N) unbind N Arg in ep(envinronment)
