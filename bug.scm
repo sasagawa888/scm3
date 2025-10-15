@@ -7,3 +7,8 @@
     (print 3))
 
 (define boo (lambda (x) x))
+
+(define (fact n)
+    (if (eq n 0)
+        1
+        (* n (fact (- n 1)))))
