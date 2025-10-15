@@ -304,14 +304,19 @@ void markcell(int addr)
 	markcell(cdr(addr));
     }
 
-    if ((GET_BIND(addr) != 0) && IS_EXPR(addr)){
+    if(symbolp(addr)){
+        markcell(GET_BIND(addr));
+    }
+
+    if(IS_SUBR(addr) || IS_FSUBR(addr)){
+        markcell(GET_BIND(addr));
+    }
+
+    if (IS_EXPR(addr)){
 	markcell(GET_BIND(addr));
     markcell(GET_CDR(addr)); //ep envinronment
     }
     
-
-    if ((GET_BIND(addr) != 0) && IS_FEXPR(addr))
-	markcell(GET_BIND(addr));
 
 
 }
@@ -1354,6 +1359,7 @@ int eval_cps(int addr)
         exp = car(cp);
         cp = cdr(cp);
         acc = execute(exp);
+        checkgbc();
         if(step_flag){
         print(exp);
         printf(" in ");
