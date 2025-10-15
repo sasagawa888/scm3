@@ -1883,7 +1883,7 @@ void initsubr(void)
     defsubr("set", f_set);
     defsubr("not", f_not);
     defsubr("load", f_load);
-    defsubr("ledit", f_ledit);
+    defsubr("edwin", f_edwin);
     defsubr("subst", f_subst);
     defsubr("functionp", f_functionp);
     defsubr("macrop", f_macrop);
@@ -3103,7 +3103,7 @@ int f_load(int arglist)
     return (T);
 }
 
-int f_ledit(int arglist)
+int f_edwin(int arglist)
 {
     int arg1,res;
     char str[SYMSIZE];
