@@ -2743,7 +2743,7 @@ int f_apply(int arglist)
     if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
         arg1 = GET_BIND(arg1);
     else if(lambdap(arg1))
-        arg1 = eval(arg1);
+        arg1 = eval_cps(arg1);
     else 
         error(ILLEGAL_OBJ_ERR,"apply",arg1);
     return (apply(arg1, arg2));
