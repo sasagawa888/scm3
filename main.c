@@ -1858,11 +1858,10 @@ void initsubr(void)
     defsubr("readc", f_readc);
     defsubr("eval", f_eval);
     defsubr("apply", f_apply);
-    defsubr("funcall", f_funcall);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
     defsubr("princ", f_princ);
-    defsubr("terpri", f_terpri);
+    defsubr("newline", f_newline);
     deffsubr("trace", f_trace);
     deffsubr("untrace", f_untrace);
     defsubr("gensym", f_gensym);
@@ -2628,9 +2627,9 @@ int f_princ(int arglist)
 }
 
 
-int f_terpri(int arglist)
+int f_newline(int arglist)
 {
-    checkarg(LEN0_TEST, "terpri", arglist);
+    checkarg(LEN0_TEST, "newline", arglist);
     printf("\n");
     return(T);
 }
@@ -2729,7 +2728,7 @@ int f_get(int arglist)
 int f_eval(int arglist)
 {
     checkarg(LEN1_TEST, "eval", arglist);
-    return (eval(car(arglist)));
+    return (eval_cps(car(arglist)));
 }
 
 int f_apply(int arglist)
@@ -2747,20 +2746,6 @@ int f_apply(int arglist)
     else 
         error(ILLEGAL_OBJ_ERR,"apply",arg1);
     return (apply(arg1, arg2));
-}
-
-int f_funcall(int arglist)
-{
-    int arg1,arg2;
-    arg1 = car(arglist);
-    arg2 = cdr(arglist);
-    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-        arg1 = GET_BIND(arg1);
-    else if(lambdap(arg1))
-        arg1 = eval(arg1);
-    else 
-        error(ILLEGAL_OBJ_ERR,"funcall",arg1);
-    return(apply(arg1,arg2));
 }
 
 int f_mapcar(int arglist)
