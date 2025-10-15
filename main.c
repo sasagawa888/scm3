@@ -1904,6 +1904,7 @@ void initsubr(void)
     defsubr("pop", f_pop);
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
+    defsubr("transfer", f_transfer);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3155,6 +3156,13 @@ int f_unbind(int arglist)
     arg1 = car(arglist);
     cps_unbind(GET_INT(arg1));
     return(acc);
+}
+
+int f_transfer(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    return(transfer(arg1));
 }
 
 //--------quasi-quote---------------
