@@ -1,3 +1,4 @@
+(define a 1)
 
 (define (foo)
     (call/cc (lambda (c) (set! a c))) (bar))
