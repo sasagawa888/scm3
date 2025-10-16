@@ -1374,7 +1374,7 @@ int eval_cps(int addr)
         acc = execute(exp);
         checkgbc();
         if(step_flag){
-        print(cp);printf("\n");
+        print(cp);printf("---end---\n");
         print(exp);
         printf(" in ");
         print_env();
