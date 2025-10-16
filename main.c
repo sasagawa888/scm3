@@ -1246,21 +1246,15 @@ void princ(int addr)
 
 //--------eval---------------
 // transfer expr arguments
-int transfer_exprargs(int args,int varlist, int func)
+int transfer_exprargs(int args,int varlist)
 {
     if(nullp(args))
         return(NIL);
-    else {
-        if(eqp(car(car(args)),func)){
-        return(append(list3(makesym("apply"),list2(makesym("quote"),func),cdr(car(args))),
-                   cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
-                      transfer_exprargs(cdr(args),cdr(varlist),func))));
-        }
-        else 
+    else 
         return(append(transfer(car(args)),
                    cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
-                      transfer_exprargs(cdr(args),cdr(varlist),func))));
-    }
+                      transfer_exprargs(cdr(args),cdr(varlist)))));
+    
 }
 
 int transfer_exprbody(int addr)
@@ -1294,6 +1288,18 @@ int transfer_fsubrargs(int args)
     }
 }
 
+
+int maltiple_recur_p(int func, int arg)
+{
+    while(!nullp(arg)){
+        if(eqp(car(car(arg)),func))
+            return(1);
+        arg = cdr(arg);
+    }
+    return(0);
+}
+
+
 int transfer(int addr)
 {   
     int func,varlist,args,body;
@@ -1312,12 +1318,17 @@ int transfer(int addr)
         return(append(args,list1(body)));
     }
     else if(functionp(car(addr))){
+        if(maltiple_recur_p(car(addr),cdr(addr))){
+        return(list1(list2(makesym("eval"),list2(makesym("quote"),addr))));
+        }
+        else {
         func = car(addr);
         varlist = car(GET_BIND(GET_BIND(func)));
 	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
-        args = transfer_exprargs(cdr(addr),varlist,func);
+        args = transfer_exprargs(cdr(addr),varlist);
         return(append(args,append(body,
                  list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
+        }
     }
 
     return(NIL);
@@ -2796,7 +2807,7 @@ int f_get(int arglist)
 int f_eval(int arglist)
 {
     checkarg(LEN1_TEST, "eval", arglist);
-    return (eval_cps(car(arglist)));
+    return (eval(car(arglist)));
 }
 
 int f_apply_cps(int arglist)
