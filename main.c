@@ -1368,15 +1368,13 @@ int eval_cps(int addr)
 {   
     int exp,c;
     cp = append(transfer(addr),cp);
-    if(step_flag)
-        print(cp);
     while(!nullp(cp)){
         exp = car(cp);
         cp = cdr(cp);
         acc = execute(exp);
         checkgbc();
         if(step_flag){
-        //print(cp);printf("\n");
+        print(cp);printf("\n");
         print(exp);
         printf(" in ");
         print_env();
