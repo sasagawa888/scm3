@@ -1343,7 +1343,7 @@ int execute(int addr)
             return ((GET_SUBR(func)) (args));
         }
     }
-    //return(eval(addr));
+
 }
 
 
@@ -1399,118 +1399,12 @@ int apply_cps(int func, int args)
 	return ((GET_SUBR(func)) (args));
     case FSUBR:
 	return ((GET_SUBR(func)) (args));
-    case EXPR:
-    {
-	    body = cdr(GET_BIND(func));
-        cp = append(body,cp);
-	    while (!(IS_NIL(cp))) {
-		res = car(cp);
-		cp = cdr(cp);
-        res = eval_cps(res);
-	    }
-	    return (res);
-	}
     
     default:
 	error(ILLEGAL_OBJ_ERR, "apply", func);
     }
     return (0);
 }
-
-/*
-int apply(int func, int args)
-{
-    int varlist, body, res, macrofunc;
-
-    res = NIL;
-    switch (GET_TAG(func)) {
-    case SUBR:
-	return ((GET_SUBR(func)) (args));
-    case FSUBR:
-	return ((GET_SUBR(func)) (args));
-    case EXPR:{
-	    varlist = car(GET_BIND(func));
-	    body = cdr(GET_BIND(func));
-        cp = append(body,cp);
-	    bindarg(varlist, args);
-	    while (!(IS_NIL(cp))) {
-		res = car(cp);
-		cp = cdr(cp);
-        //res = eval(res);
-	    }
-	    unbind();
-	    return (res);
-	}
-    case MACRO:{
-	    macrofunc = GET_BIND(func);
-	    varlist = car(GET_BIND(macrofunc));
-	    body = cdr(GET_BIND(macrofunc));
-	    bindarg(varlist, list1(cons(makesym("_"),args)));
-	    while (!(IS_NIL(body))) {
-		//res = eval(car(body));
-		body = cdr(body);
-	    }
-	    unbind();
-	    //res = eval(res);
-	    return (res);
-	}
-    case FEXPR:{
-	    varlist = car(GET_BIND(func));
-	    body = cdr(GET_BIND(func));
-        cp = cons(body,cp);
-	    bindarg(varlist, list1(args));
-	    while (!(IS_NIL(cp))) {
-		//res = eval(car(cp));
-		cp = cdr(cp);
-	    }
-	    unbind();
-	    return (res);
-	}
-    default:
-	error(ILLEGAL_OBJ_ERR, "apply", func);
-    }
-    return (0);
-}
-*/
-void bindarg(int varlist, int arglist)
-{
-    int arg1, arg2;
-
-    push(ep);
-    while (!(IS_NIL(varlist))) {
-	arg1 = car(varlist);
-	arg2 = car(arglist);
-	assocsym(arg1, arg2);
-	varlist = cdr(varlist);
-	arglist = cdr(arglist);
-    }
-}
-
-void unbind(void)
-{
-    ep = pop();
-}
-
-
-int evlis(int addr)
-{
-    int car_addr, cdr_addr;
-
-    argpush(addr);
-    checkgbc();
-    if (IS_NIL(addr)) {
-	argpop();
-	return (addr);
-    } else {
-	//car_addr = eval(car(addr));
-	argpush(car_addr);
-	cdr_addr = evlis(cdr(addr));
-	argpop();
-	argpop();
-	return (cons(car_addr, cdr_addr));
-    }
-}
-
 
 //-------error------
 void error(int errnum, char *fun, int arg)
