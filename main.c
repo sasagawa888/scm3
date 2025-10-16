@@ -707,24 +707,24 @@ int mapcar(int lis, int fun)
 {
     if (nullp(lis))
 	return (NIL);
-    else
-	return (cons(apply(fun, list1(car(lis))), mapcar(cdr(lis), fun)));
+    //else
+	//return (cons(apply(fun, list1(car(lis))), mapcar(cdr(lis), fun)));
 }
 
 int mapcon(int lis, int fun)
 {
     if (nullp(lis))
 	return (NIL);
-    else
-	return (nconc
-		(list1(apply(fun, list1(car(lis)))),
-		 mapcon(cdr(lis), fun)));
+    //else
+	//return (nconc
+	//	(list1(apply(fun, list1(car(lis)))),
+	//	 mapcon(cdr(lis), fun)));
 }
 
 int map(int lis, int fun)
 {
     while (!nullp(lis)) {
-	apply(fun, list1(car(lis)));
+	//apply(fun, list1(car(lis)));
 	lis = cdr(lis);
     }
     return (NIL);
@@ -1389,89 +1389,6 @@ int eval_cps(int addr)
     return(acc);
 }
 
-/*
-int eval(int addr)
-{
-    int res;
-
-    if(step_flag){
-        int c;
-        print(addr);
-        printf(" in ");
-        print_env();
-        printf(" >> ");
-        c = getc(stdin);
-        if(c == 'q')
-            longjmp(buf, 1);
-    }
-    if (atomp(addr)) {
-	if (numberp(addr) || stringp(addr))
-	    return (addr);
-	if (symbolp(addr)) {
-	    res = findsym(addr);
-	    if (res == NO)
-		error(CANT_FIND_ERR, "eval", addr);
-	    else
-		return (res);
-	}
-    } else if (listp(addr)) {
-	if (numberp(car(addr)))
-	    error(ARG_SYM_ERR, "eval", addr);
-	else if ((symbolp(car(addr)))
-		 && (eqp(car(addr), makesym("quasi-quote"))))
-	    return (eval(quasi_transfer2(cadr(addr), 0)));
-    else if (lambdap(car(addr)))
-        return (apply(eval(car(addr)), cdr(addr)));
-	else if (subrp(car(addr)))
-	    return (apply(GET_BIND(car(addr)), evlis(cdr(addr))));
-	else if (fsubrp(car(addr)))
-	    return (apply(GET_BIND(car(addr)), cdr(addr)));
-	else if (functionp(car(addr))){
-        int sym,i,n,res;
-        sym = car(addr);
-        if(GET_TR(sym) >= 1){
-            SET_TR(sym,GET_TR(sym)+1);
-            n = GET_TR(sym);
-            for(i=2;i<n;i++){
-                printf(" ");
-            }
-            printf("ENTER ");
-            print(sym);
-            print(evlis(cdr(addr)));
-            printf("\n");
-        }
-	    res = apply(GET_BIND(car(addr)), evlis(cdr(addr)));
-        if (GET_TR(sym) > 1){
-            n = GET_TR(sym);
-            for(i=2;i<n;i++){
-                printf(" ");
-            }
-            printf("RETURN ");
-            print(sym);
-            printf(" ");
-            print(res);
-            printf("\n");
-            SET_TR(sym,GET_TR(sym)-1);
-        }
-        return(res);
-    }
-    else if (experp(car(addr))){
-        int func;
-        func = findsym(car(addr));
-        res = apply(func, evlis(cdr(addr)));
-        return(res);
-    }
-	else if (macrop(car(addr)))
-	    return (apply(GET_BIND(car(addr)), cdr(addr)));
-
-    else if (fexprp(car(addr)))
-        return (apply(GET_BIND(car(addr)), cdr(addr)));
-    }
-    error(CANT_FIND_ERR, "eval", addr);
-    return (0);
-}
-*/
-
 int apply_cps(int func, int args)
 {
     int body, res;
@@ -1500,7 +1417,7 @@ int apply_cps(int func, int args)
     return (0);
 }
 
-
+/*
 int apply(int func, int args)
 {
     int varlist, body, res, macrofunc;
@@ -1554,7 +1471,7 @@ int apply(int func, int args)
     }
     return (0);
 }
-
+*/
 void bindarg(int varlist, int arglist)
 {
     int arg1, arg2;
@@ -3189,7 +3106,7 @@ int f_call_cc(int arglist)
     cont = cons(makesym("lambda"),cons(list1(makesym("cont")),cp));
     // (lambda (cont) continuation)
     //cont = eval(cont);
-    return (apply(arg1,list1(cont)));
+    //return (apply(arg1,list1(cont)));
 }
 
 int f_push(int arglist)

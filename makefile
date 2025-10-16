@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -O0 -g
+CFLAGS = -Wall -O2
 TARGET = scm3
 SRC = main.c
 OBJ = $(SRC:.c=.o)
