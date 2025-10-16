@@ -311,6 +311,7 @@ int f_unbind(int addr);
 int f_transfer(int addr);
 int f_execute(int addr);
 int f_apply_cps(int addr);
+int f_eval_cps(int addr);
 
 int quasi_transfer1(int x);
 int quasi_transfer2(int x, int n);

@@ -1887,8 +1887,9 @@ void initsubr(void)
     defsubr("read", f_read);
     defsubr("readc", f_readc);
     defsubr("eval", f_eval);
+    defsubr("eval-cps", f_eval_cps);
     defsubr("apply", f_apply);
-    defsubr("apply-cps",f_apply);
+    defsubr("apply-cps",f_apply_cps);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
     defsubr("princ", f_princ);
@@ -2801,6 +2802,12 @@ int f_get(int arglist)
         return(NIL);
     
     return(cdr(res));
+}
+
+int f_eval_cps(int arglist)
+{
+    checkarg(LEN1_TEST, "eval", arglist);
+    return (eval_cps(car(arglist)));
 }
 
 
