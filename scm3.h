@@ -93,6 +93,7 @@ int sp; //stack pointer
 int fc; //free counter
 int ap; //arglist pointer
 int cp; //continuation pointer
+int cp1; //cp save;
 int acc; //register 
 int cpssp; //stack pointer for CPS
 

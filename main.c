@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 	    fflush(stdout);
 	    fflush(stdin);
         cp = NIL;
+        cp1 = NIL;
         cpssp = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
@@ -290,31 +291,39 @@ void markoblist(void)
 
 void markcell(int addr)
 {
+    if(addr < 0 || addr >= HEAPSIZE)
+    return;
     if (integerp(addr))
 	return;
     if (USED_CELL(addr))
 	return;
 
     MARK_CELL(addr);
+    if(addr == T)
+    return;
+    if(addr == NIL)
+    return;
 
-    if (car(addr) != 0) {
-	markcell(car(addr));
-    }
-    if (cdr(addr) != 0) {
-	markcell(cdr(addr));
+    if (listp(addr)){
+        markcell(car(addr));
+        markcell(cdr(addr));
+        return;
     }
 
     if(symbolp(addr)){
         markcell(GET_BIND(addr));
+        return;
     }
 
     if(IS_SUBR(addr) || IS_FSUBR(addr)){
         markcell(GET_BIND(addr));
+        return;
     }
 
     if (IS_EXPR(addr)){
 	markcell(GET_BIND(addr));
     markcell(GET_CDR(addr)); //ep envinronment
+    return;
     }
     
 
@@ -326,6 +335,7 @@ void gbcmark(void)
     int addr, i;
 
     markcell(cp); // continuation
+    markcell(cp1);
     markcell(cpssp); //cps stack 
     //Mark oblist
     markoblist();
@@ -669,6 +679,7 @@ int list(int arglist)
 
 int append(int x, int y)
 {
+
     if (nullp(x))
 	return (y);
     else
@@ -1361,10 +1372,11 @@ int eval_cps(int addr)
         acc = execute(exp);
         checkgbc();
         if(step_flag){
-        print(exp);
-        printf(" in ");
-        print_env();
-        printf(" >> ");
+        print(cp);printf("\n");
+        //print(exp);
+        //printf(" in ");
+        //print_env();
+        //printf(" >> ");
         c = getc(stdin);
         if(c == 'q')
             longjmp(buf, 1);
@@ -2813,7 +2825,7 @@ int f_apply(int arglist)
         arg1 = eval_cps(arg1);
     else 
         error(ILLEGAL_OBJ_ERR,"apply",arg1);
-    return (apply(arg1, arg2));
+    return (apply_cps(arg1, arg2));
 }
 
 int f_mapcar(int arglist)
@@ -2983,17 +2995,17 @@ int f_lambda(int arglist)
 
 int f_if(int arglist)
 {
-    int arg1, arg2, arg3, save, res;
+    int arg1, arg2, arg3, res;
 
     checkarg(LEN3_TEST, "if", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = car(cdr(cdr(arglist)));
 
-    save = cp;
+    cp1 = cp;
     cp = NIL;
     res = eval_cps(arg1);
-    cp = save;
+    cp = cp1;
     if (!(nullp(res)))
 	return (eval_cps(arg2));
     else
