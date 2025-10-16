@@ -1246,14 +1246,21 @@ void princ(int addr)
 
 //--------eval---------------
 // transfer expr arguments
-int transfer_exprargs(int args,int varlist)
+int transfer_exprargs(int args,int varlist, int func)
 {
     if(nullp(args))
         return(NIL);
-    else 
+    else {
+        if(eqp(car(car(args)),func)){
+        return(append(list3(makesym("apply"),list2(makesym("quote"),func),cdr(car(args))),
+                   cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
+                      transfer_exprargs(cdr(args),cdr(varlist),func))));
+        }
+        else 
         return(append(transfer(car(args)),
                    cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
-                      transfer_exprargs(cdr(args),cdr(varlist)))));
+                      transfer_exprargs(cdr(args),cdr(varlist),func))));
+    }
 }
 
 int transfer_exprbody(int addr)
@@ -1308,7 +1315,7 @@ int transfer(int addr)
         func = car(addr);
         varlist = car(GET_BIND(GET_BIND(func)));
 	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
-        args = transfer_exprargs(cdr(addr),varlist);
+        args = transfer_exprargs(cdr(addr),varlist,func);
         return(append(args,append(body,
                  list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
     }
