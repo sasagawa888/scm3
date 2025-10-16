@@ -1294,13 +1294,13 @@ int transfer(int addr)
         return(list1(addr));
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
-        body = list3(makesym("apply"),list2(makesym("quote"),car(addr)),
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),car(addr)),
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
     }
     else if(fsubrp(car(addr))){
         args = transfer_fsubrargs(cdr(addr));
-        body = list3(makesym("apply"),list2(makesym("quote"),car(addr)),
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),car(addr)),
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
     }
@@ -1870,6 +1870,7 @@ void initsubr(void)
     defsubr("readc", f_readc);
     defsubr("eval", f_eval);
     defsubr("apply", f_apply);
+    defsubr("apply-cps",f_apply);
     defsubr("print", f_print);
     defsubr("prin1", f_prin1);
     defsubr("princ", f_princ);
@@ -2791,10 +2792,10 @@ int f_eval(int arglist)
     return (eval_cps(car(arglist)));
 }
 
-int f_apply(int arglist)
+int f_apply_cps(int arglist)
 {
-    checkarg(LEN2_TEST, "apply", arglist);
-    checkarg(LIST_TEST, "apply", cadr(arglist));
+    checkarg(LEN2_TEST, "apply_cps", arglist);
+    checkarg(LIST_TEST, "apply_cps", cadr(arglist));
     int arg1, arg2;
 
     arg1 = car(arglist);
@@ -2807,6 +2808,24 @@ int f_apply(int arglist)
         error(ILLEGAL_OBJ_ERR,"apply",arg1);
     return (apply_cps(arg1, arg2));
 }
+
+int f_apply(int arglist)
+{
+    checkarg(LEN2_TEST, "apply", arglist);
+    checkarg(LIST_TEST, "apply", cadr(arglist));
+    int arg1, arg2;
+
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"apply",arg1);
+    return (apply(arg1, arg2));
+}
+
 
 int f_mapcar(int arglist)
 {
