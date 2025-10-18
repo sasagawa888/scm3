@@ -14,7 +14,7 @@ written by kenichi sasagawa
 #include <signal.h>
 #include "scm3.h"
 
-double version = 0.08;
+double version = 0.09;
 cell heap[HEAPSIZE];
 int stack[STACKSIZE];
 int argstk[STACKSIZE];
