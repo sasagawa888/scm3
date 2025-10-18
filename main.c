@@ -795,13 +795,14 @@ int makefunc(int addr)
     return (val);
 }
 
-int makecont(int addr)
+int makecont(void)
 {
     int val;
 
     val = freshcell();
     SET_TAG(val, CONT);
-    SET_BIND(val, addr);
+    SET_BIND(val, cp);
+    SET_CAR(val,cpssp);
     SET_CDR(val, ep);
     return (val);
 }
