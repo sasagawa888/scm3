@@ -1169,6 +1169,9 @@ void print(int addr)
     case EXPR:
 	printf("<expr>");
 	break;
+    case CONT:
+    printf("<cont>");
+    break;
     case FEXPR:
 	printf("<fexpr>");
 	break;
@@ -1319,7 +1322,7 @@ int maltiple_recur_p(int func, int arg)
 int transfer(int addr)
 {   
     int func,varlist,args,body;
-    if(numberp(addr) || stringp(addr) || symbolp(addr))
+    if(numberp(addr) || stringp(addr) || symbolp(addr) || IS_CONT(addr))
         return(list1(addr));
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
@@ -1345,6 +1348,11 @@ int transfer(int addr)
         return(append(args,append(body,
                  list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
         }
+    } else if(symbolp(car(addr)) && IS_CONT(findsym(car(addr)))){
+        args = transfer_subrargs(cdr(addr));
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),makesym("exec-cont")),
+                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+        return(append(args,list1(body)));
     }
 
     return(NIL);
@@ -1363,7 +1371,7 @@ int execute(int addr)
 {
     int lam;
 
-    if(numberp(addr) || stringp(addr))
+    if(numberp(addr) || stringp(addr) || IS_CONT(addr))
         return(addr);
     else if(addr == T || addr == NIL)
         return(addr);
@@ -1444,6 +1452,7 @@ int apply_cps(int func, int args)
     cp = append(arglist,
             append(body,
                  append(list1(list2(makesym("unbind"),makeint(length(args)))),cp)));
+    //print(cp);
     return(eval_cps(NIL));
     case CONT:
     //continuation

@@ -22,3 +22,6 @@
   (if (<= x y)
       y
     (tarai (tarai (- x 1) y z) (tarai (- y 1) z x) (tarai (- z 1) x y))))
+
+;;(define f nil)
+;;(+ 1 2 (call/cc (lambda (c) (set! f c))))
