@@ -230,6 +230,9 @@ void cellprint(int addr)
     case EXPR:
 	printf("EXPR   ");
 	break;
+    case CONT:
+	printf("CONT   ");
+	break;
     case FEXPR:
 	printf("EXPR   ");
 	break;
@@ -791,6 +794,18 @@ int makefunc(int addr)
     SET_CDR(val, ep);
     return (val);
 }
+
+int makecont(int addr)
+{
+    int val;
+
+    val = freshcell();
+    SET_TAG(val, CONT);
+    SET_BIND(val, addr);
+    SET_CDR(val, ep);
+    return (val);
+}
+
 
 //-------for CPS--------------------
 void cps_push(int addr)
