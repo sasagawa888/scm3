@@ -1379,7 +1379,7 @@ int execute(int addr)
             return ((GET_SUBR(func)) (args));
         }
         else if(symbolp(car(addr)) && IS_CONT((lam=findsym(car(addr))))){
-            
+            return(apply_cps(lam,cdr(addr)));
         }
     }
 
@@ -1430,13 +1430,23 @@ int eval_cps(int addr)
 
 int apply_cps(int func, int args)
 {
-
+    int varlist,body,arglist;
     switch (GET_TAG(func)) {
     case SUBR:
 	return ((GET_SUBR(func)) (args));
     case FSUBR:
 	return ((GET_SUBR(func)) (args));
+    case EXPR:
+    //(lambda (x) ...)
+    varlist = car(GET_BIND(func));
+	body = transfer_exprbody(cdr(GET_BIND(func)));
+    arglist = transfer_exprargs(args,varlist);
+    cp = append(arglist,
+            append(body,
+                 append(list1(list2(makesym("unbind"),makeint(length(args)))),cp)));
+    return(eval_cps(NIL));
     case CONT:
+    //continuation
     cpssp = GET_CAR(func);
     cp = GET_CDR(func);
     return(eval_cps(NIL));
@@ -3231,10 +3241,9 @@ int f_call_cc(int arglist)
     int arg1,cont;
     checkarg(LEN1_TEST,"call/cc",arglist);
     arg1 = car(arglist);
-    cont = cons(makesym("lambda"),cons(list1(makesym("cont")),cp));
+    cont = makecont();
     // (lambda (cont) continuation)
-    cont = eval(cont);
-    return (apply(arg1,list1(cont)));
+    return (apply_cps(arg1,list1(cont)));
 }
 
 int f_push(int arglist)
