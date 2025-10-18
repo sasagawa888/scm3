@@ -76,6 +76,7 @@ typedef struct token {
 #define IS_EXPR(addr)		heap[addr].tag == EXPR
 #define IS_FEXPR(addr)		heap[addr].tag == FEXPR
 #define IS_MACRO(addr)      heap[addr].tag == MACRO
+#define IS_CONT(addr)		heap[addr].tag == CONT
 #define IS_EMPTY(addr)		heap[addr].tag	== EMP
 #define HAS_NAME(addr,x)	strcmp(heap[addr].name,x) == 0
 #define SAME_NAME(addr1,addr2) strcmp(heap[addr1].name, heap[addr2].name) == 0

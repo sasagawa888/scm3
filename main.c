@@ -1361,6 +1361,8 @@ int execute_args(int addr)
 
 int execute(int addr)
 {
+    int lam;
+
     if(numberp(addr) || stringp(addr))
         return(addr);
     else if(addr == T || addr == NIL)
@@ -1375,6 +1377,9 @@ int execute(int addr)
             func = GET_BIND(car(addr));
             args = execute_args(cdr(addr));
             return ((GET_SUBR(func)) (args));
+        }
+        else if(symbolp(car(addr)) && IS_CONT((lam=findsym(car(addr))))){
+            
         }
     }
 
@@ -1431,7 +1436,10 @@ int apply_cps(int func, int args)
 	return ((GET_SUBR(func)) (args));
     case FSUBR:
 	return ((GET_SUBR(func)) (args));
-    
+    case CONT:
+    cpssp = GET_CAR(func);
+    cp = GET_CDR(func);
+    return(eval_cps(NIL));
     default:
 	error(ILLEGAL_OBJ_ERR, "apply", func);
     }
@@ -1440,7 +1448,7 @@ int apply_cps(int func, int args)
 
 int eval(int addr)
 {
-    int res;
+    int res,lam;
 
     if(step_flag){
         int c;
@@ -1474,6 +1482,8 @@ int eval(int addr)
 	    return (apply(GET_BIND(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
 	    return (apply(GET_BIND(car(addr)), cdr(addr)));
+    else if (symbolp(car(addr)) && IS_EXPR((lam=findsym(car(addr)))))
+        return (apply(lam, evlis(cdr(addr))));        
 	else if (functionp(car(addr))){
         int sym,i,n,res;
         sym = car(addr);
