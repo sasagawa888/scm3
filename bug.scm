@@ -24,4 +24,4 @@
     (tarai (tarai (- x 1) y z) (tarai (- y 1) z x) (tarai (- z 1) x y))))
 
 ;;(define f #f)
-;;(+ 1 2 (call/cc (lambda (c) (set! f c))))
+;;(+ 1 2 (call/cc (lambda (c) (set! f c) 0)))
