@@ -1965,8 +1965,8 @@ void initsubr(void)
     defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("append!", f_nconc);
-    defsubr("rplaca", f_rplaca);
-    defsubr("rplacd", f_rplacd);
+    defsubr("set-car!", f_rplaca);
+    defsubr("set-cdr!", f_rplacd);
     defsubr("mapcar", f_mapcar);
     defsubr("mapcon", f_mapcon);
     defsubr("map", f_map);
