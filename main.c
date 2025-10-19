@@ -3129,10 +3129,14 @@ int f_cond(int arglist)
     checkarg(LIST_TEST, "cond", arg1);
     arg2 = car(arg1);
     arg3 = cdr(arg1);
+    if(eqp(arg2,makesym("else"))){
+    res = TRUE;
+    } else {
     cp1 = cp;
     cp = NIL;
     res = eval_cps(arg2);
     cp = cp1;
+    }
 
     if (res != FAIL)
 	return (f_begin(arg3));
