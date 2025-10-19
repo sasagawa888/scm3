@@ -2003,6 +2003,7 @@ void initsubr(void)
     defsubr("fixp", f_fixp);
     defsubr("symbolp", f_symbolp);
     defsubr("listp", f_listp);
+    defsubr("boolean?", f_booleanp);
     defsubr("assoc", f_assoc);
     defsubr("member", f_member);
     defsubr("set", f_set);
@@ -2441,9 +2442,9 @@ int f_numeqp(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (numeqp(arg1, arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2455,9 +2456,9 @@ int f_eq(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (eqp(arg1, arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_equal(int arglist)
@@ -2468,9 +2469,9 @@ int f_equal(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (equalp(arg1, arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_nullp(int arglist)
@@ -2489,12 +2490,12 @@ int f_atomp(int arglist)
 {
     int arg;
 
-    checkarg(LEN1_TEST, "atom", arglist);
+    checkarg(LEN1_TEST, "atom?", arglist);
     arg = car(arglist);
     if (atomp(arg))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_length(int arglist)
@@ -2589,38 +2590,47 @@ int f_rplacd(int arglist)
 
 int f_symbolp(int arglist)
 {
-    checkarg(LEN1_TEST, "symbolp", arglist);
+    checkarg(LEN1_TEST, "symbol?", arglist);
     if (symbolp(car(arglist)))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_numberp(int arglist)
 {
     checkarg(LEN1_TEST, "numberp", arglist);
     if (numberp(car(arglist)))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_fixp(int arglist)
 {
     checkarg(LEN1_TEST, "fixp", arglist);
     if (fixp(car(arglist)))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
 int f_listp(int arglist)
 {
     if (listp(car(arglist)))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
+}
+
+int f_booleanp(int arglist)
+{
+    checkarg(LEN1_TEST, "boolean?", arglist);
+    if (booleanp(car(arglist)))
+	return (TRUE);
+    else
+	return (FAIL);
 }
 
 int f_onep(int arglist)
@@ -2676,15 +2686,15 @@ int f_lessp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "lessp", arglist);
-    checkarg(NUMLIST_TEST, "lessp", arglist);
+    checkarg(LEN2_TEST, "<", arglist);
+    checkarg(NUMLIST_TEST, "<", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
     if (lessp(arg1, arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2698,9 +2708,9 @@ int f_eqlessp(int arglist)
     arg2 = cadr(arglist);
 
     if (lessp(arg1, arg2) || numeqp(arg1,arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2708,15 +2718,15 @@ int f_greaterp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "greaterp", arglist);
-    checkarg(NUMLIST_TEST, "greaterp", arglist);
+    checkarg(LEN2_TEST, ">", arglist);
+    checkarg(NUMLIST_TEST, ">", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
     if (greaterp(arg1, arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2730,9 +2740,9 @@ int f_eqgreaterp(int arglist)
     arg2 = cadr(arglist);
 
     if (greaterp(arg1, arg2) || numeqp(arg1,arg2))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -3113,7 +3123,7 @@ int f_if(int arglist)
     cp = NIL;
     res = eval_cps(arg1);
     cp = cp1;
-    if (!(nullp(res)))
+    if (res != FAIL)
 	return (eval_cps(arg2));
     else
 	return (eval_cps(arg3));
