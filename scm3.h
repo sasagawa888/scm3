@@ -233,7 +233,7 @@ int f_min(int addr);
 int f_recip(int addr);
 int f_remainder(int addr);
 int f_expt(int addr);
-int f_quit(int addr);
+int f_exit(int addr);
 int f_heapdump(int addr);
 int f_car(int addr);
 int f_cdr(int addr);
@@ -310,7 +310,7 @@ int f_pop(int addr);
 int f_bind(int addr);
 int f_unbind(int addr);
 int f_transfer(int addr);
-int f_execute(int addr);
+int f_exec_cont(int addr);
 int f_apply_cps(int addr);
 int f_eval_cps(int addr);
 

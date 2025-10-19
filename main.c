@@ -1349,9 +1349,9 @@ int transfer(int addr)
                  list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
         }
     } else if(symbolp(car(addr)) && IS_CONT(findsym(car(addr)))){
-        args = transfer_subrargs(cdr(addr));
+        args = transfer_subrargs(addr);
         body = list3(makesym("apply-cps"),list2(makesym("quote"),makesym("exec-cont")),
-                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+                  list2(makesym("pop"),makeint(length(addr))));
         return(append(args,list1(body)));
     }
 
@@ -1416,7 +1416,8 @@ void print_env(void){
 int eval_cps(int addr)
 {   
     int exp,c;
-    cp = append(transfer(addr),cp);
+    if(addr != NIL)
+        cp = append(transfer(addr),cp);
     while(!nullp(cp)){
         exp = car(cp);
         cp = cdr(cp);
@@ -1903,7 +1904,7 @@ void initsubr(void)
     defsubr("recip", f_recip);
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
-    defsubr("quit", f_quit);
+    defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
     defsubr("cdr", f_cdr);
@@ -1973,7 +1974,7 @@ void initsubr(void)
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
     defsubr("transfer", f_transfer);
-    defsubr("execute", f_execute);
+    defsubr("exec-cont", f_exec_cont);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -2285,11 +2286,11 @@ int f_expt(int arglist)
 
 
 
-int f_quit(int arglist)
+int f_exit(int arglist)
 {
     int addr;
 
-    checkarg(LEN0_TEST, "quit", arglist);
+    checkarg(LEN0_TEST, "exit", arglist);
     for (addr = 0; addr < HEAPSIZE; addr++) {
 	free(heap[addr].name);
     }
@@ -3292,11 +3293,16 @@ int f_transfer(int arglist)
 }
 
 
-int f_execute(int arglist)
+int f_exec_cont(int arglist)
 {
-    int arg1;
-    arg1 = car(arglist);
-    return(eval_cps(arg1));
+    int arg1,arg2;
+    arg1 = car(arglist); //continuation
+    arg2 = cadr(arglist); //argument to cont
+    cp = GET_BIND(arg1);  //restore continuation;
+    cpssp = GET_CAR(arg1); //restore stack
+    ep = GET_CDR(arg1);    //restore environment
+    acc = arg2;        
+    return(eval_cps(NIL)); //execute CPS
 }
 
 

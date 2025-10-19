@@ -12,7 +12,7 @@ scm3
 ## REPL
 After startup, the system enters the REPL.
 Enter S-expressions at the prompt.
-To exit, use (quit).
+To exit, use (exit).
 
 
 ## Builtin Functions
@@ -74,3 +74,7 @@ x in [(x . 3)] >>
 (bind Arg) bind Arg as ACC in ep(envinronment)
 
 (unbind N) unbind N Arg in ep(envinronment)
+
+(apply-cps F Args) apply function F with argument Args as CPS
+
+(exec-cont C Arg) execute contifuation C with argument an Arg
