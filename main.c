@@ -1943,8 +1943,6 @@ void initsubr(void)
     defsubr("*", f_times);
     defsubr("/", f_quotient);
     defsubr("divide", f_divide);
-    defsubr("add1", f_add1);
-    defsubr("sub1", f_sub1);
     defsubr("max", f_max);
     defsubr("min", f_min);
     defsubr("recip", f_recip);
@@ -2172,24 +2170,6 @@ int f_plus(int arglist)
 	res = plus(res, arg);
     }
     return (res);
-}
-
-int f_add1(int arglist)
-{
-    int arg1;
-
-    checkarg(NUMLIST_TEST, "add1", arglist);
-    arg1 = car(arglist);
-    return (plus(arg1, makeint(1)));
-}
-
-int f_sub1(int arglist)
-{
-    int arg1;
-
-    checkarg(NUMLIST_TEST, "sub1", arglist);
-    arg1 = car(arglist);
-    return (difference(arg1, makeint(1)));
 }
 
 int f_difference(int arglist)

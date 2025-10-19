@@ -231,8 +231,6 @@ int f_minus(int addr);
 int	f_times(int addr);
 int f_quotient(int addr);
 int f_divide(int addr);
-int f_add1(int addr);
-int f_sub1(int addr);
 int f_max(int addr);
 int f_min(int addr);
 int f_recip(int addr);
