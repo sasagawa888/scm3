@@ -218,6 +218,9 @@ void cellprint(int addr)
     case STR:
 	printf("STR    ");
 	break;
+    case BOOL:
+	printf("BOOL   ");
+	break;
     case LIS:
 	printf("LIS    ");
 	break;
@@ -469,6 +472,17 @@ int symbolp(int addr)
     else
 	return (0);
 }
+
+int booleanp(int addr)
+{
+    if (addr >= HEAPSIZE || addr < 0)
+	return (0);
+    else if (IS_BOOL(addr))
+	return (1);
+    else
+	return (0);
+}
+
 
 int listp(int addr)
 {
@@ -771,6 +785,17 @@ int makestr(char *name)
     return (addr);
 }
 
+int makebool(char *name)
+{
+    int addr;
+
+    addr = freshcell();
+    SET_TAG(addr, BOOL);
+    SET_NAME(addr, name);
+    return (addr);
+}
+
+
 
 int makesym(char *name)
 {
@@ -959,6 +984,11 @@ void gettoken(void)
 
 	    stok.buf[pos] = NUL;
 	    stok.ch = c;
+
+	    if (booltoken(stok.buf)) {
+		stok.type = BOOLEAN;
+		break;
+	    }
 	    if (inttoken(stok.buf)) {
 		stok.type = INTEGER;
 		break;
@@ -974,6 +1004,14 @@ void gettoken(void)
 	    stok.type = OTHER;
 	}
     }
+}
+
+int booltoken(char buf[])
+{
+    if (buf[0] == '#' && (buf[1] == 't' || buf[1] == 'f'))
+    return(1);
+    else
+    return(0);
 }
 
 int inttoken(char buf[])
@@ -1102,6 +1140,8 @@ int read(void)
     return (makestr(stok.buf));
     case SYMBOL:
 	return (makesym(stok.buf));
+    case BOOLEAN:
+    return (makebool(stok.buf));
     case QUOTE:
 	return (cons(makesym("quote"), cons(read(), NIL)));
     case BACKQUOTE:
@@ -1162,6 +1202,9 @@ void print(int addr)
 	printf("\"%s\"", GET_NAME(addr));
 	break;
     case SYM:
+	printf("%s", GET_NAME(addr));
+	break;
+    case BOOL:
 	printf("%s", GET_NAME(addr));
 	break;
     case SUBR:
@@ -1326,7 +1369,8 @@ int maltiple_recur_p(int func, int arg)
 int transfer(int addr)
 {   
     int func,varlist,args,body;
-    if(numberp(addr) || stringp(addr) || symbolp(addr) || IS_CONT(addr))
+    if(numberp(addr) || stringp(addr) || symbolp(addr) 
+       || IS_CONT(addr) || booleanp(addr))
         return(list1(addr));
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
@@ -1376,7 +1420,7 @@ int execute(int addr)
 {
     int lam;
 
-    if(numberp(addr) || stringp(addr) || IS_CONT(addr))
+    if(numberp(addr) || stringp(addr) || IS_CONT(addr) || booleanp(addr))
         return(addr);
     else if(addr == T || addr == NIL)
         return(addr);
