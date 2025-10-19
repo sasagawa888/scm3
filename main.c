@@ -1982,7 +1982,7 @@ void initsubr(void)
     defsubr("eval-cps", f_eval_cps);
     defsubr("apply", f_apply);
     defsubr("apply-cps",f_apply_cps);
-    defsubr("print", f_print);
+    defsubr("display", f_display);
     defsubr("prin1", f_prin1);
     defsubr("princ", f_princ);
     defsubr("newline", f_newline);
@@ -2766,12 +2766,11 @@ int f_readc(int arglist)
     return (makesym(str));
 }
 
-int f_print(int arglist)
+int f_display(int arglist)
 {
-    checkarg(LEN1_TEST, "print", arglist);
+    checkarg(LEN1_TEST, "display", arglist);
     print(car(arglist));
-    printf("\n");
-    return (T);
+    return (TRUE);
 }
 
 int f_prin1(int arglist)

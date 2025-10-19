@@ -296,7 +296,7 @@ int f_eval(int addr);
 int f_apply(int addr);
 int f_read(int addr);
 int f_readc(int addr);
-int f_print(int addr);
+int f_display(int addr);
 int f_prin1(int addr);
 int f_princ(int addr);
 int f_newline(int addr);
