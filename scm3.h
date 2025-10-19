@@ -306,7 +306,7 @@ int f_gensym(int addr);
 int f_step(int addr);
 int f_putprop(int addr);
 int f_get(int addr);
-int f_progn(int addr);
+int f_begin(int addr);
 int f_explode(int addr);
 int f_implode(int addr);
 int f_call_cc(int addr);

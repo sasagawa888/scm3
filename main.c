@@ -2026,7 +2026,7 @@ void initsubr(void)
     deffsubr("set!", f_setq);
     deffsubr("define", f_define);
     deffsubr("lambda", f_lambda);
-    deffsubr("progn", f_progn);
+    deffsubr("begin", f_begin);
     deffsubr("if", f_if);
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
@@ -3131,21 +3131,19 @@ int f_cond(int arglist)
     arg3 = cdr(arg1);
 
     if (!(nullp(eval(arg2))))
-	return (f_progn(arg3));
+	return (f_begin(arg3));
     else
 	return (f_cond(cdr(arglist)));
 }
 
-int f_progn(int arglist)
+int f_begin(int arglist)
 {
-    int res;
 
-    res = NIL;
     while (!(nullp(arglist))) {
-	res = eval(car(arglist));
+	cp = append(transfer(car(arglist)),cp);
 	arglist = cdr(arglist);
     }
-    return (res);
+    return (eval_cps(NIL));
 }
 
 
