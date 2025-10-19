@@ -3060,7 +3060,7 @@ int f_define(int arglist){
     checkarg(LIST_TEST, "define" ,cadr(arglist));
     arg1 = car(arglist);  // function name
     arg2 = cadr(arglist); //lambda exp
-    //SET_BIND(arg1,eval(arg2));
+    SET_BIND(arg1,eval(arg2));
     } else if(symbolp(car(arglist))){
     arg1 = car(arglist); //variable name
     arg2 = cadr(arglist); //value
