@@ -115,6 +115,7 @@ int cpssp; //stack pointer for CPS
 #define ARG_STR_ERR     13
 #define ARG_NUM_ERR		3
 #define ARG_LIS_ERR		4
+#define ARG_BOOL_ERR    15
 #define ARG_LEN0_ERR	5
 #define ARG_LEN1_ERR	6
 #define ARG_LEN2_ERR	7
@@ -140,6 +141,7 @@ int cpssp; //stack pointer for CPS
 #define DEFLIST_TEST	12
 #define SYMLIST_TEST	13
 #define STRING_TEST	    14
+#define BOOL_TEST       15
 
 
 void initcell(void);

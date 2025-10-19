@@ -88,8 +88,6 @@ void initcell(void)
     makesym("nil");
     makebool("#t");
     makebool("#f");
-    assocsym(makesym("nil"), NIL);
-    assocsym(makesym("t"), makesym("t"));
 
     sp = 0;
     ap = 0;
@@ -1144,7 +1142,10 @@ int read(void)
     case SYMBOL:
 	return (makesym(stok.buf));
     case BOOLEAN:
-    return (makebool(stok.buf));
+    if(stok.buf[1] == 't')
+    return(TRUE);
+    else
+    return (FAIL);
     case QUOTE:
 	return (cons(makesym("quote"), cons(read(), NIL)));
     case BACKQUOTE:
@@ -1713,6 +1714,12 @@ void error(int errnum, char *fun, int arg)
 	    print(arg);
 	    break;
 	}
+    
+    case ARG_BOOL_ERR:{
+	    printf("%s require bool but got ", fun);
+	    print(arg);
+	    break;
+	}
 
     case ARG_INT_ERR:{
 	    printf("%s require integer but got ", fun);
@@ -1802,6 +1809,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_LIS_ERR, fun, arg);
+    case BOOL_TEST:
+	if (booleanp(arg))
+	    return;
+	else
+	    error(ARG_BOOL_ERR, fun, arg);
     case LEN0_TEST:
 	if (length(arg) == 0)
 	    return;
@@ -2807,16 +2819,16 @@ int f_step(int arglist){
 
     checkarg(LEN1_TEST,"step",arglist);
     arg1 = car(arglist);
-    if(arg1 == T){
+    if(arg1 == TRUE){
         oblist_len = length(ep);
         step_flag = 1;
     }
-    else if(arg1 == NIL)
+    else if(arg1 == FAIL)
         step_flag = 0;
     else 
         error(ILLEGAL_OBJ_ERR,"step",arg1);
 
-    return(T);
+    return(TRUE);
 }
 
 
