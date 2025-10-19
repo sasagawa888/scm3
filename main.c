@@ -894,8 +894,12 @@ void gettoken(void)
 	c = fgetc(input_stream);
 
     if(c == ';'){
-        while (c != EOL){
+        while (c != EOL && c != EOF){
 	        c = fgetc(input_stream);
+        }
+        if(c == EOF){
+            stok.type = FILEEND;
+	        return;
         }
         goto skip;
     }
