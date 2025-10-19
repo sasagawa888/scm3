@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	    fflush(stdin);
         cp = NIL;
         cp1 = NIL;
-        cpssp = NIL;
+        sp_csp = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -343,7 +343,7 @@ void gbcmark(void)
 
     markcell(cp); // continuation
     markcell(cp1);
-    markcell(cpssp); //cps stack 
+    markcell(sp_csp); //cps stack 
     //Mark oblist
     markoblist();
     // Mark the cells linked from the oblist.
@@ -828,7 +828,7 @@ int makecont(void)
     val = freshcell();
     SET_TAG(val, CONT);
     SET_BIND(val, cp);
-    SET_CAR(val,cpssp);
+    SET_CAR(val,sp_csp);
     SET_CDR(val, ep);
     return (val);
 }
@@ -837,7 +837,7 @@ int makecont(void)
 //-------for CPS--------------------
 void cps_push(int addr)
 {
-    cpssp = cons(addr,cpssp);
+    sp_csp = cons(addr,sp_csp);
 }
 
 int cps_pop(int n)
@@ -845,8 +845,8 @@ int cps_pop(int n)
     int res;
     res = NIL;
     while(n>0){
-        res = cons(car(cpssp),res);
-        cpssp = cdr(cpssp);
+        res = cons(car(sp_csp),res);
+        sp_csp = cdr(sp_csp);
         n--;
     }
     return(res);
@@ -1454,7 +1454,7 @@ void print_env(void){
     printf("env[");
     print(ep);
     printf("],stack[");
-    print(cpssp);
+    print(sp_csp);
     printf("]");
 }
 
@@ -1504,7 +1504,7 @@ int apply_cps(int func, int args)
     return(eval_cps(NIL));
     case CONT:
     //continuation
-    cpssp = GET_CAR(func);
+    sp_csp = GET_CAR(func);
     cp = GET_CDR(func);
     return(eval_cps(NIL));
     default:
@@ -3333,7 +3333,7 @@ int f_exec_cont(int arglist)
     arg1 = car(arglist); //continuation
     arg2 = cadr(arglist); //argument to cont
     cp = GET_BIND(arg1);  //restore continuation;
-    cpssp = GET_CAR(arg1); //restore stack
+    sp_csp = GET_CAR(arg1); //restore stack
     ep = GET_CDR(arg1);    //restore environment
     acc = arg2;        
     return(eval_cps(NIL)); //execute CPS

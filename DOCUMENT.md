@@ -39,8 +39,8 @@ You can force garbage collection by using (gbc 1).
 I made integers immediate values to save cells and improve speed. By setting the second-highest bit of the integer, they are treated as positive integers. Negative numbers are outside the cell area, so they remain immediate values as they are.
 
 ## Debug
-- (step t)  stepper on.
-- (step nil) stepper off.
+- (step #t)  stepper on.
+- (step #f) stepper off.
 - q   quit.
 
 ```
@@ -48,7 +48,7 @@ I made integers immediate values to save cells and improve speed. By setting the
 foo
 > (foo 3)
 6
-> (step t)
+> (step #t)
 (apply (quote step) (pop 1)) in [] >> t
 > (foo 3)
 (3 (bind (quote x)) x (push) x (push) (apply (quote +) (pop 2)) (unbind 1))3 in [] >> (bind (quote x)) in [(x . 3)] >> 
