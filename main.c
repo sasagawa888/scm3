@@ -1355,6 +1355,7 @@ int transfer(int addr)
         return(append(args,list1(body)));
     }
 
+    error(ILLEGAL_OBJ_ERR,"transfer",addr);
     return(NIL);
 }
 
@@ -1397,16 +1398,10 @@ int execute(int addr)
 
 
 void print_env(void){
-    int i,n,env;
 
-    n = length(ep) - oblist_len;
-    env = ep;
-    printf("[");
-    for(i=0;i<n;i++){
-        print(car(env));
-        env = cdr(env);
-    }
-    printf("],[");
+    printf("env[");
+    print(ep);
+    printf("],stack[");
     print(cpssp);
     printf("]");
 }
@@ -1424,7 +1419,7 @@ int eval_cps(int addr)
         acc = execute(exp);
         checkgbc();
         if(step_flag){
-        print(cp);printf("---end---\n");
+        print(cp);printf("---cp---\n");
         print(exp);
         printf(" in ");
         print_env();
@@ -1986,15 +1981,6 @@ void initsubr(void)
     deffsubr("and", f_and);
     deffsubr("or", f_or);
 
-    int addr, addr1, res;
-    res = NIL;
-    addr = ep;
-    while (!(nullp(addr))) {
-	addr1 = caar(addr);
-	res = cons(addr1, res);
-	addr = cdr(addr);
-    }
-    bindsym(makesym("oblist"), res);
 }
 
 //---------calculation-------------------
