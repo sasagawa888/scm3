@@ -8,7 +8,9 @@ written by kenichi sasagawa 2025/10~
 #define SYMSIZE	256
 #define BUFSIZE 256
 #define NIL	0
-#define T 6
+#define T 8
+#define TRUE 2
+#define FAIL 3
 #define HASHTBSIZE 107
 #define NO HEAPSIZE+1
 
@@ -175,6 +177,7 @@ int get_int(int x);
 int integerp(int addr);
 int makenum(int num);
 int makesym(char *name);
+int makebool(char *name);
 int makefunc(int addr);
 void gettoken(void);
 int booltoken(char buf[]);

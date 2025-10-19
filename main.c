@@ -84,7 +84,10 @@ void initcell(void)
 
     // Address 0 is NIL; set up the environment registers.
     // This is the initial environment."
-    ep = makesym("nil");
+    ep = NIL;
+    makesym("nil");
+    makebool("#t");
+    makebool("#f");
     assocsym(makesym("nil"), NIL);
     assocsym(makesym("t"), makesym("t"));
 
@@ -3195,7 +3198,7 @@ int f_load(int arglist)
     }
     fclose(input_stream);
     input_stream = stdin;
-    return (T);
+    return (TRUE);
 }
 
 int f_edwin(int arglist)
@@ -3216,7 +3219,7 @@ int f_edwin(int arglist)
     if (res == -1)
 	error(CANT_OPEN_ERR, "ledit", arg1);
     f_load(arglist);
-    return (T);
+    return (TRUE);
 }
 
 int f_functionp(int arglist)
