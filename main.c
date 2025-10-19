@@ -1971,10 +1971,10 @@ void initsubr(void)
     defsubr("mapcon", f_mapcon);
     defsubr("map", f_map);
     defsubr("=", f_numeqp);
-    defsubr("eq", f_eq);
-    defsubr("equal", f_equal);
+    defsubr("eq?", f_eq);
+    defsubr("equal?", f_equal);
     defsubr("null", f_nullp);
-    defsubr("atom", f_atomp);
+    defsubr("atom?", f_atomp);
     defsubr("gbc", f_gbc);
     defsubr("read", f_read);
     defsubr("readc", f_readc);
@@ -1996,13 +1996,12 @@ void initsubr(void)
     defsubr("<", f_lessp);
     defsubr(">=" ,f_eqgreaterp);
     defsubr("<=", f_eqlessp);
-    defsubr("zerop", f_zerop);
+    defsubr("zero?", f_zerop);
     defsubr("onep", f_onep);
     defsubr("minusp", f_minusp);
-    defsubr("numberp", f_numberp);
-    defsubr("fixp", f_fixp);
-    defsubr("symbolp", f_symbolp);
-    defsubr("listp", f_listp);
+    defsubr("number?", f_numberp);
+    defsubr("symbol?", f_symbolp);
+    defsubr("list?", f_listp);
     defsubr("boolean?", f_booleanp);
     defsubr("assoc", f_assoc);
     defsubr("member", f_member);
@@ -2605,16 +2604,6 @@ int f_numberp(int arglist)
     else
 	return (FAIL);
 }
-
-int f_fixp(int arglist)
-{
-    checkarg(LEN1_TEST, "fixp", arglist);
-    if (fixp(car(arglist)))
-	return (TRUE);
-    else
-	return (FAIL);
-}
-
 
 int f_listp(int arglist)
 {
