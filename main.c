@@ -1964,7 +1964,7 @@ void initsubr(void)
     defsubr("reverse", f_reverse);
     defsubr("length", f_length);
     defsubr("append", f_append);
-    defsubr("nconc", f_nconc);
+    defsubr("append!", f_nconc);
     defsubr("rplaca", f_rplaca);
     defsubr("rplacd", f_rplacd);
     defsubr("mapcar", f_mapcar);
