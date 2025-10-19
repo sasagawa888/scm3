@@ -3120,17 +3120,22 @@ int f_if(int arglist)
 
 int f_cond(int arglist)
 {
-    int arg1, arg2, arg3;
+    int arg1, arg2, arg3, res;
 
     if (nullp(arglist))
 	return (NIL);
 
+    
     arg1 = car(arglist);
     checkarg(LIST_TEST, "cond", arg1);
     arg2 = car(arg1);
     arg3 = cdr(arg1);
+    cp1 = cp;
+    cp = NIL;
+    res = eval_cps(arg2);
+    cp = cp1;
 
-    if (!(nullp(eval(arg2))))
+    if (res != FAIL)
 	return (f_begin(arg3));
     else
 	return (f_cond(cdr(arglist)));
