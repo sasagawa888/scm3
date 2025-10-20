@@ -3272,9 +3272,9 @@ int f_functionp(int arglist)
 {
     checkarg(LEN1_TEST,"functionp",arglist);
     if(functionp(car(arglist)))
-        return(T);
+        return(TRUE);
     else 
-        return(NIL);
+        return(FAIL);
 }
 
 int f_macrop(int arglist)
