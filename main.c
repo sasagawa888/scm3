@@ -1051,6 +1051,10 @@ int flttoken(char buf[])
 	while ((c = buf[i]) != NUL)
 	    if (isdigit(c))
 		i++;		// case {+123..., -123...}
+        else if (c == '.')
+		goto dot;
+	    else if (c == 'e' || c == 'E')
+		goto exp;
 	    else
 		return (0);
     } else {
@@ -1960,6 +1964,7 @@ void initsubr(void)
     defsubr("divide", f_divide);
     defsubr("max", f_max);
     defsubr("min", f_min);
+    defsubr("abs", f_abs);
     defsubr("recip", f_recip);
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
@@ -2273,6 +2278,20 @@ int f_min(int arglist)
 	arglist = cdr(arglist);
     }
     return (res);
+}
+
+int f_abs(int arglist)
+{
+    int arg1,res;
+    checkarg(NUMBER_TEST,"abs",car(arglist));
+    arg1 = car(arglist);
+    res = NIL;
+    if(integerp(arg1))
+        res = makeint(abs(GET_INT(arg1)));
+    else if(floatp(arg1))
+        res = makeflt(fabs(GET_FLT(arg1)));
+    
+    return(res);
 }
 
 
