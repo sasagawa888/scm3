@@ -3202,9 +3202,9 @@ int f_and(int arglist)
 
     res = NIL;
     while (!nullp(arglist)) {
-	//res = eval(car(arglist));
-	if (res == NIL)
-	    return (NIL);
+	res = eval_cps(car(arglist));
+	if (res == FAIL)
+	    return (FAIL);
 	arglist = cdr(arglist);
     }
     return (res);
@@ -3215,12 +3215,12 @@ int f_or(int arglist)
     int res;
 
     while (!nullp(arglist)) {
-	res = eval(car(arglist));
-	if (res != NIL)
+	res = eval_cps(car(arglist));
+	if (res != FAIL)
 	    return (res);
 	arglist = cdr(arglist);
     }
-    return (NIL);
+    return (FAIL);
 }
 
 int f_load(int arglist)
