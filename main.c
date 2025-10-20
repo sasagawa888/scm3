@@ -3,7 +3,6 @@ Scheme R3RS
 written by kenichi sasagawa
 
 */
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -1428,8 +1427,12 @@ int execute(int addr)
         return(addr);
     else if(addr == T || addr == NIL)
         return(addr);
-    else if(symbolp(addr))
+    else if(symbolp(addr)){
+        if(functionp(addr) ||subrp(addr) || fsubrp(addr))
+        return(GET_BIND(addr));
+        else
         return(findsym(addr));
+    }
     else if(listp(addr)){
         if(eqp(car(addr),makesym("quote")))
             return(cadr(addr));
