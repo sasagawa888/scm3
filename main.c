@@ -3042,10 +3042,10 @@ int f_not(int arglist)
     checkarg(LEN1_TEST, "set", arglist);
 
     arg1 = car(arglist);
-    if (arg1 == NIL)
-	return (T);
+    if (arg1 == FAIL)
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int subst(int x, int y, int lis)
