@@ -2403,6 +2403,18 @@ int f_cadr (int arglist)
     return (cadr(arg1));
 }
 
+int f_cdar (int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "cdar", arglist);
+    arg1 = car(arglist);
+    if (atomp(arg1))
+	error(ARG_LIS_ERR, "cdar", arg1);
+    return (cdar(arg1));
+}
+
+
 int f_cddr (int arglist)
 {
     int arg1;
@@ -3065,9 +3077,11 @@ int f_setq(int arglist)
     checkarg(LEN2_TEST, "setq", arglist);
     checkarg(SYMBOL_TEST, "setq", car(arglist));
     arg1 = car(arglist);
-    arg2 = eval(cadr(arglist));
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+    error(ILLEGAL_OBJ_ERR,"set!",arg1);
+    arg2 = eval_cps(cadr(arglist));
     bindsym(arg1, arg2);
-    return (T);
+    return (TRUE);
 }
 
          
