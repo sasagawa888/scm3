@@ -2004,7 +2004,7 @@ void initsubr(void)
     defsubr("=", f_numeqp);
     defsubr("eq?", f_eq);
     defsubr("equal?", f_equal);
-    defsubr("null", f_nullp);
+    defsubr("null?", f_nullp);
     defsubr("atom?", f_atomp);
     defsubr("gbc", f_gbc);
     defsubr("read", f_read);
@@ -2519,9 +2519,9 @@ int f_nullp(int arglist)
     checkarg(LEN1_TEST, "null", arglist);
     arg = car(arglist);
     if (nullp(arg))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 int f_atomp(int arglist)
