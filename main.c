@@ -483,6 +483,16 @@ int booleanp(int addr)
 	return (0);
 }
 
+int continuationp(int addr)
+{
+    if (addr >= HEAPSIZE || addr < 0)
+	return (0);
+    else if (IS_CONT(addr))
+	return (1);
+    else
+	return (0);
+}
+
 
 int listp(int addr)
 {
@@ -1377,8 +1387,11 @@ int transfer(int addr)
 {   
     int func,varlist,args,body;
     if(numberp(addr) || stringp(addr) || symbolp(addr) 
-       || IS_CONT(addr) || booleanp(addr))
+       || continuationp(addr) || booleanp(addr))
         return(list1(addr));
+    else if(listp(addr)){
+    if(numberp(car(addr)))
+        error(ILLEGAL_OBJ_ERR,"transfer",addr);
     else if(subrp(car(addr))){
         args = transfer_subrargs(cdr(addr));
         body = list3(makesym("apply-cps"),list2(makesym("quote"),car(addr)),
@@ -1408,7 +1421,7 @@ int transfer(int addr)
         body = list3(makesym("apply-cps"),list2(makesym("quote"),makesym("exec-cont")),
                   list2(makesym("pop"),makeint(length(addr))));
         return(append(args,list1(body)));
-    }
+    }}
 
     error(ILLEGAL_OBJ_ERR,"transfer",addr);
     return(NIL);
