@@ -3199,7 +3199,7 @@ int f_setq(int arglist)
     arg1 = car(arglist);
     if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
     error(ILLEGAL_OBJ_ERR,"set!",arg1);
-    arg2 = eval_cps(cadr(arglist));
+    arg2 = eval(cadr(arglist));
     bindsym(arg1, arg2);
     return (TRUE);
 }
