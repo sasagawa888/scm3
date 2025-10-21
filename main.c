@@ -454,6 +454,15 @@ int numberp(int addr)
 	return (0);
 }
 
+int rationalp(int addr)
+{
+    if (integerp(addr))
+	return (1);
+    else
+	return (0);
+}
+
+
 int fixp(int addr)
 {
     if (integerp(addr))
@@ -2042,6 +2051,7 @@ void initsubr(void)
     defsubr("onep", f_onep);
     defsubr("minusp", f_minusp);
     defsubr("number?", f_numberp);
+    defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
     defsubr("list?", f_listp);
     defsubr("boolean?", f_booleanp);
@@ -2053,6 +2063,7 @@ void initsubr(void)
     defsubr("edwin", f_edwin);
     defsubr("subst", f_subst);
     defsubr("functionp", f_functionp);
+    defsubr("procedure?", f_procedurep);
     defsubr("macrop", f_macrop);
     defsubr("call/cc", f_call_cc);
     defsubr("push", f_push);
@@ -2646,8 +2657,17 @@ int f_symbolp(int arglist)
 
 int f_numberp(int arglist)
 {
-    checkarg(LEN1_TEST, "numberp", arglist);
+    checkarg(LEN1_TEST, "number?", arglist);
     if (numberp(car(arglist)))
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
+int f_rationalp(int arglist)
+{
+    checkarg(LEN1_TEST, "rational?", arglist);
+    if (rationalp(car(arglist)))
 	return (TRUE);
     else
 	return (FAIL);
@@ -3285,6 +3305,19 @@ int f_functionp(int arglist)
     else 
         return(FAIL);
 }
+
+int f_procedurep(int arglist)
+{   
+    int arg1;
+    checkarg(LEN1_TEST,"procedure?",arglist);
+    arg1 = car(arglist);
+    if(arg1 >= 0 && arg1 <HEAPSIZE && (IS_EXPR(arg1) || IS_SUBR(arg1) || IS_FSUBR(arg1)))
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
 
 int f_macrop(int arglist)
 {
