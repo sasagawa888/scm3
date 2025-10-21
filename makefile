@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -O2
+LDFLAGS = -lm
 TARGET = scm3
 SRC = main.c
 OBJ = $(SRC:.c=.o)
@@ -9,9 +10,9 @@ OBJ = $(SRC:.c=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LDFLAGS)
 
-%.o: %.c lisp15.h
+%.o: %.c scm3.h
 	$(CC) $(CFLAGS) -c $<
 
 install: $(TARGET)

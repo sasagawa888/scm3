@@ -239,6 +239,7 @@ int f_abs(int addr);
 int f_recip(int addr);
 int f_remainder(int addr);
 int f_expt(int addr);
+int f_sqrt(int addr);
 int f_exit(int addr);
 int f_heapdump(int addr);
 int f_car(int addr);

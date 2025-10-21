@@ -2001,6 +2001,7 @@ void initsubr(void)
     defsubr("recip", f_recip);
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
+    defsubr("sqrt", f_sqrt);
     defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -2367,6 +2368,21 @@ int f_expt(int arglist)
     return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
 }
 
+int f_sqrt(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "sqrt", arglist);
+    checkarg(NUMBER_TEST, "sqrt", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if(integerp(arg1))
+        res = sqrt((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = sqrt(GET_FLT(arg1));
+
+    return(makeflt(res));
+}
 
 
 
