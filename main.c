@@ -13,7 +13,7 @@ written by kenichi sasagawa
 #include <signal.h>
 #include "scm3.h"
 
-double version = 1.00;
+double version = 1.09;
 cell heap[HEAPSIZE];
 int stack[STACKSIZE];
 int argstk[STACKSIZE];
@@ -844,7 +844,14 @@ int makechar(char *name)
     return (addr);
 }
 
-
+/*
+int makevec(int addr)
+{
+    int n;
+    n = length(addr);
+    (int)malloc(n); 
+}
+*/
 
 int makesym(char *name)
 {
