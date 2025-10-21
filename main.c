@@ -2071,6 +2071,9 @@ void initsubr(void)
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
     defsubr("sqrt", f_sqrt);
+    defsubr("sin", f_sin);
+    defsubr("cos", f_cos);
+    defsubr("tan", f_tan);
     defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -2449,6 +2452,57 @@ int f_sqrt(int arglist)
         res = sqrt((double)GET_INT(arg1));
     else if(floatp(arg1))
         res = sqrt(GET_FLT(arg1));
+
+    return(makeflt(res));
+}
+
+
+int f_sin(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "sin", arglist);
+    checkarg(NUMBER_TEST, "sin", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if(integerp(arg1))
+        res = sin((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = sin(GET_FLT(arg1));
+
+    return(makeflt(res));
+}
+
+
+int f_cos(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "cos", arglist);
+    checkarg(NUMBER_TEST, "cos", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if(integerp(arg1))
+        res = cos((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = cos(GET_FLT(arg1));
+
+    return(makeflt(res));
+}
+
+
+int f_tan(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "tan", arglist);
+    checkarg(NUMBER_TEST, "tan", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if(integerp(arg1))
+        res = tan((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = tan(GET_FLT(arg1));
 
     return(makeflt(res));
 }
