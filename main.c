@@ -809,13 +809,24 @@ int makebool(char *name)
 
 int makesym(char *name)
 {
-    int index, res;
+    int index, res, pos;
+    char name1[SYMSIZE];
 
-    index = hash(name);
-    if ((res = getsym(name, index)) != 0)
+    memset(name1, 0, SYMSIZE);
+    pos = 0;
+    while (name[pos] != 0) {
+	if (isupper(name[pos]))
+	    name1[pos] = name[pos] + 32;
+	else
+	    name1[pos] = name[pos];
+	pos++;
+    }
+
+    index = hash(name1);
+    if ((res = getsym(name1, index)) != 0)
 	return (res);
     else
-	return (addsym(name, index));
+	return (addsym(name1, index));
 }
 
 
