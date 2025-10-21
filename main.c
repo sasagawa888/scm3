@@ -2054,8 +2054,6 @@ void initsubr(void)
     defsubr("subst", f_subst);
     defsubr("functionp", f_functionp);
     defsubr("macrop", f_macrop);
-    defsubr("explode", f_explode);
-    defsubr("implode", f_implode);
     defsubr("call/cc", f_call_cc);
     defsubr("push", f_push);
     defsubr("pop", f_pop);
@@ -3297,48 +3295,6 @@ int f_macrop(int arglist)
         return(NIL);
 }
 
-int f_explode(int arglist)
-{
-    int arg1,pos,temp,res;
-    char c,str[SYMSIZE],ch[5];
-
-    checkarg(LEN1_TEST,"explode",arglist);
-    checkarg(SYMBOL_TEST,"explode",car(arglist));
-    arg1 = car(arglist);
-    memset(str,0,SYMSIZE);
-    strcpy(str,GET_NAME(arg1));
-    temp = NIL;
-    pos = 0;
-    c = str[pos];
-    while(c != 0){
-        ch[0] = c;
-        ch[1] = 0;
-        pos++;
-        c = str[pos];
-        temp = cons(makesym(ch),temp);
-    }
-    res = NIL;
-    while(temp != NIL){
-        res = cons(car(temp),res);
-        temp = cdr(temp);
-    }
-    return(res);
-}
-
-int f_implode(int arglist)
-{
-    int arg1;
-    char str[SYMSIZE];
-
-    checkarg(SYMLIST_TEST,"implode",car(arglist));
-    arg1 = car(arglist);
-    memset(str,0,SYMSIZE);
-    while(arg1 != NIL){
-        strcat(str,GET_NAME(car(arg1)));
-        arg1 = cdr(arg1);
-    }
-    return(makesym(str));
-}
 
 int f_call_cc(int arglist)
 {

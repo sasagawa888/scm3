@@ -308,8 +308,6 @@ int f_step(int addr);
 int f_putprop(int addr);
 int f_get(int addr);
 int f_begin(int addr);
-int f_explode(int addr);
-int f_implode(int addr);
 int f_call_cc(int addr);
 int f_push(int addr);
 int f_pop(int addr);
