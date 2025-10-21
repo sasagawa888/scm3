@@ -221,8 +221,14 @@ void cellprint(int addr)
     case BOOL:
 	printf("BOOL   ");
 	break;
+    case CHAR:
+	printf("CHAR   ");
+	break;
     case LIS:
 	printf("LIS    ");
+	break;
+    case VEC:
+    printf("VEC    ");
 	break;
     case SUBR:
 	printf("SUBR   ");
@@ -491,6 +497,18 @@ int booleanp(int addr)
     else
 	return (0);
 }
+
+int characterp(int addr)
+{
+    if (addr >= HEAPSIZE || addr < 0)
+	return (0);
+    else if (IS_CHAR(addr))
+	return (1);
+    else
+	return (0);
+}
+
+
 
 int continuationp(int addr)
 {
@@ -804,12 +822,24 @@ int makestr(char *name)
     return (addr);
 }
 
+
+
 int makebool(char *name)
 {
     int addr;
 
     addr = freshcell();
     SET_TAG(addr, BOOL);
+    SET_NAME(addr, name);
+    return (addr);
+}
+
+int makechar(char *name)
+{
+    int addr;
+
+    addr = freshcell();
+    SET_TAG(addr, CHAR);
     SET_NAME(addr, name);
     return (addr);
 }
@@ -923,7 +953,7 @@ void argpop(void)
 
 void gettoken(void)
 {
-    char c;
+    char c,c1;
     int pos;
 
     if (stok.flag == BACK) {
@@ -981,6 +1011,16 @@ void gettoken(void)
 	stok.buf[pos] = NUL;
     stok.type = STRING;
     return;
+    case '#':
+    c1 = c;
+    c = getc(input_stream);
+    if(c == '('){
+        stok.type = VECTOR;
+        return;
+    } 
+    ungetc(c,input_stream);
+    c = c1;
+    goto etc;
     case '|':
     pos = 0;
     stok.buf[pos++] = c;
@@ -1005,6 +1045,7 @@ void gettoken(void)
 	stok.type = FILEEND;
 	return;
     default:{
+        etc:
 	    pos = 0;
 	    stok.buf[pos++] = c;
 	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
@@ -1019,6 +1060,10 @@ void gettoken(void)
 		stok.type = BOOLEAN;
 		break;
 	    }
+        if (chartoken(stok.buf)) {
+        stok.type = CHARACTER;
+        break;    
+        }
 	    if (inttoken(stok.buf)) {
 		stok.type = INTEGER;
 		break;
@@ -1043,6 +1088,15 @@ int booltoken(char buf[])
     else
     return(0);
 }
+
+int chartoken(char buf[])
+{
+    if (buf[0] == '#' && buf[1] == '\\')
+    return(1);
+    else
+    return(0);
+}
+
 
 int inttoken(char buf[])
 {
@@ -1179,6 +1233,8 @@ int read(void)
     return(TRUE);
     else
     return (FAIL);
+    case CHARACTER:
+    return (makechar(stok.buf));
     case QUOTE:
 	return (cons(makesym("quote"), cons(read(), NIL)));
     case BACKQUOTE:
@@ -1195,6 +1251,9 @@ int read(void)
 	}
     case LPAREN:
 	return (readlist());
+    case VECTOR:
+    return (readlist());
+    break;
     default:
 	break;
     }
@@ -1242,6 +1301,9 @@ void print(int addr)
 	printf("%s", GET_NAME(addr));
 	break;
     case BOOL:
+	printf("%s", GET_NAME(addr));
+	break;
+    case CHAR:
 	printf("%s", GET_NAME(addr));
 	break;
     case SUBR:
@@ -1407,7 +1469,7 @@ int transfer(int addr)
 {   
     int func,varlist,args,body;
     if(numberp(addr) || stringp(addr) || symbolp(addr) 
-       || continuationp(addr) || booleanp(addr))
+       || continuationp(addr) || booleanp(addr) || characterp(addr))
         return(list1(addr));
     else if(listp(addr)){
     if(numberp(car(addr)))
@@ -1460,7 +1522,7 @@ int execute(int addr)
 {
     int lam;
 
-    if(numberp(addr) || stringp(addr) || IS_CONT(addr) || booleanp(addr))
+    if(numberp(addr) || stringp(addr) || continuationp(addr) || booleanp(addr) || characterp(addr))
         return(addr);
     else if(addr == T || addr == NIL)
         return(addr);

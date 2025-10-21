@@ -19,7 +19,7 @@ written by kenichi sasagawa 2025/10~
 
 #define DEBUG longjmp(buf, 2);
 
-typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,FEXPR,MACRO,BOOL} tag;
+typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,FEXPR,MACRO,BOOL,CHAR,VEC} tag;
 typedef enum flag {FRE,USE} flag;
 
 
@@ -38,7 +38,7 @@ typedef struct cell {
 } cell;
 
 
-typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,INTEGER,FLOAT,STRING,SYMBOL,BOOLEAN,OTHER,FILEEND} toktype;
+typedef enum toktype {LPAREN,RPAREN,QUOTE,DOT,BACKQUOTE,COMMA,ATMARK,INTEGER,FLOAT,STRING,SYMBOL,BOOLEAN,CHARACTER,VECTOR,OTHER,FILEEND} toktype;
 typedef enum backtrack {GO,BACK} backtrack;
 
 typedef struct token {
@@ -72,6 +72,7 @@ typedef struct token {
 #define IS_FLT(addr)		heap[addr].tag == FLTN
 #define IS_STR(addr)		heap[addr].tag == STR
 #define IS_BOOL(addr)		heap[addr].tag == BOOL
+#define IS_CHAR(addr)	    heap[addr].tag == CHAR
 #define IS_LIST(addr)		heap[addr].tag == LIS
 #define IS_NIL(addr)        (addr == 0 || addr == 1)
 #define IS_SUBR(addr)		heap[addr].tag == SUBR
@@ -183,6 +184,7 @@ int makebool(char *name);
 int makefunc(int addr);
 void gettoken(void);
 int booltoken(char buf[]);
+int chartoken(char buf[]);
 int inttoken(char buf[]);
 int flttoken(char buf[]);
 int symboltoken(char buf[]);
