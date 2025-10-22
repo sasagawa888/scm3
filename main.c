@@ -1637,7 +1637,7 @@ int eval(int addr)
             longjmp(buf, 1);
     }
     if (atomp(addr)) {
-	if (numberp(addr) || stringp(addr))
+	if (numberp(addr) || stringp(addr) || characterp(addr) || booleanp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
 	    res = findsym(addr);
@@ -3294,7 +3294,7 @@ int f_define(int arglist){
     SET_BIND(arg1,eval(arg2));
     } else if(symbolp(car(arglist))){
     arg1 = car(arglist); //variable name
-    arg2 = eval(cadr(arglist)); //value
+    arg2 = cadr(arglist); //value
     bindsym(arg1,arg2);
     }
     return(arg1);
