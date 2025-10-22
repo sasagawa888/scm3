@@ -3394,10 +3394,10 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {   
-    int arg1,arg2,vars,var,val,res;
+    int arg1,arg2,vars,var,val,res,save;
     checkarg(LIST_TEST,"len",cadr(arglist));
-    arg1 = cadr(arglist);
-    arg2 = cddr(arglist);
+    arg1 = car(arglist);
+    arg2 = cdr(arglist);
     vars = NIL;
 
     while(!nullp(arg1)){
@@ -3406,13 +3406,15 @@ int f_let(int arglist)
         arg1 = cdr(arg1);
         vars = cons(cons(var,val),vars);
     }
+    save = ep;
     while(!nullp(vars)){
         var = caar(vars);
-        val = cadar(vars);
+        val = cdar(vars);
         vars = cdr(vars);
         assocsym(var,val);
     }
     res = f_begin(arg2);
+    ep = save;
     return(res);
 }
 
