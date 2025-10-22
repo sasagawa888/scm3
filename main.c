@@ -2156,6 +2156,7 @@ void initsubr(void)
     deffsubr("and", f_and);
     deffsubr("or", f_or);
     deffsubr("let", f_let);
+    deffsubr("let*", f_let_star);
 
 }
 
@@ -3395,7 +3396,7 @@ int f_or(int arglist)
 int f_let(int arglist)
 {   
     int arg1,arg2,vars,var,val,res,save;
-    checkarg(LIST_TEST,"len",cadr(arglist));
+    checkarg(LIST_TEST,"let",cdr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     vars = NIL;
@@ -3417,6 +3418,26 @@ int f_let(int arglist)
     ep = save;
     return(res);
 }
+
+int f_let_star(int arglist)
+{   
+    int arg1,arg2,var,val,res,save;
+    checkarg(LIST_TEST,"let*",car(arglist));
+    arg1 = car(arglist);
+    arg2 = cdr(arglist);
+
+    save = ep;
+    while(!nullp(arg1)){
+        var = caar(arg1);
+        val = eval_cps(cadar(arg1));
+        arg1 = cdr(arg1);
+        assocsym(var,val);
+    }
+    res = f_begin(arg2);
+    ep = save;
+    return(res);
+}
+
 
 int f_load(int arglist)
 {

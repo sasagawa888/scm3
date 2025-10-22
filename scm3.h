@@ -287,6 +287,7 @@ int f_cond(int addr);
 int f_and(int addr);
 int f_or(int addr);
 int f_let(int addr);
+int f_let_star(int addr);
 int f_load(int addr);
 int f_edwin(int addr);
 int f_numberp(int addr);
