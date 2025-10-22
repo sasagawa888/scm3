@@ -411,7 +411,7 @@ int atomp(int addr)
 {
     if (integerp(addr))
 	return (1);
-    if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr))
+    if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr) || IS_CHAR(addr))
 	return (1);
     else
 	return (0);
@@ -3294,7 +3294,7 @@ int f_define(int arglist){
     SET_BIND(arg1,eval(arg2));
     } else if(symbolp(car(arglist))){
     arg1 = car(arglist); //variable name
-    arg2 = cadr(arglist); //value
+    arg2 = eval(cadr(arglist)); //value
     bindsym(arg1,arg2);
     }
     return(arg1);
