@@ -2155,6 +2155,7 @@ void initsubr(void)
     deffsubr("cond", f_cond);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
+    deffsubr("let", f_let);
 
 }
 
@@ -3389,6 +3390,30 @@ int f_or(int arglist)
 	arglist = cdr(arglist);
     }
     return (FAIL);
+}
+
+int f_let(int arglist)
+{   
+    int arg1,arg2,vars,var,val,res;
+    checkarg(LIST_TEST,"len",cadr(arglist));
+    arg1 = cadr(arglist);
+    arg2 = cddr(arglist);
+    vars = NIL;
+
+    while(!nullp(arg1)){
+        var = caar(arg1);
+        val = eval_cps(cadar(arg1));
+        arg1 = cdr(arg1);
+        vars = cons(cons(var,val),vars);
+    }
+    while(!nullp(vars)){
+        var = caar(vars);
+        val = cadar(vars);
+        vars = cdr(vars);
+        assocsym(var,val);
+    }
+    res = f_begin(arg2);
+    return(res);
 }
 
 int f_load(int arglist)
