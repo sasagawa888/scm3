@@ -25,3 +25,12 @@
 
 ;;(define f #f)
 ;;(+ 1 2 (call/cc (lambda (c) (set! f c) 0)))
+
+(define (counter)
+    (let ((x 0))
+     (lambda ()
+          (set! x (+ x 1))
+          x)))
+
+(define c1 (counter))
+(define c2 (counter))
