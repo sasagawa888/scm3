@@ -3294,7 +3294,7 @@ int f_define(int arglist){
     SET_BIND(arg1,eval(arg2));
     } else if(symbolp(car(arglist))){
     arg1 = car(arglist); //variable name
-    arg2 = cadr(arglist); //value
+    arg2 = eval(cadr(arglist)); //value
     bindsym(arg1,arg2);
     }
     return(arg1);
