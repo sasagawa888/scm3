@@ -323,6 +323,7 @@ int f_push(int addr);
 int f_pop(int addr);
 int f_bind(int addr);
 int f_unbind(int addr);
+int f_closure(int addr);
 int f_transfer(int addr);
 int f_exec_cont(int addr);
 int f_apply_cps(int addr);

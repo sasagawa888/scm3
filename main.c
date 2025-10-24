@@ -1502,8 +1502,9 @@ int transfer(int addr)
         varlist = car(GET_BIND(GET_BIND(func)));
 	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
         args = transfer_exprargs(cdr(addr),varlist);
-        return(append(args,append(body,
-                 list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
+        return(append(list1(list2(makesym("closure"),func)),
+                  append(args,append(body,
+                     list1(list2(makesym("unbind"),makeint(length(cdr(addr)))))))));
         }
     } else if(symbolp(car(addr)) && IS_CONT(findsym(car(addr)))){
         args = transfer_subrargs(addr);
@@ -2143,6 +2144,7 @@ void initsubr(void)
     defsubr("pop", f_pop);
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
+    defsubr("closure", f_closure);
     defsubr("transfer", f_transfer);
     defsubr("exec-cont", f_exec_cont);
 
@@ -3553,6 +3555,22 @@ int f_unbind(int arglist)
     arg1 = car(arglist);
     cps_unbind(GET_INT(arg1));
     return(acc);
+}
+
+int f_closure(int arglist)
+{
+    /*
+    int arg1,clos;
+    arg1 = car(arglist);
+    if (functionp(arg1)){
+        clos = GET_BIND(arg1);
+    } else {
+        clos = findsym(arg1);
+    }
+    cps_push(ep);
+    ep = GET_CDR(clos);
+    */
+    return(TRUE);
 }
 
 int f_transfer(int arglist)
