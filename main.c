@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	    fflush(stdin);
         cp = NIL;
         cp1 = NIL;
-        sp_csp = NIL;
+        sp_cps = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -348,7 +348,7 @@ void gbcmark(void)
 
     markcell(cp); // continuation
     markcell(cp1);
-    markcell(sp_csp); //cps stack 
+    markcell(sp_cps); //cps stack 
     //Mark oblist
     markoblist();
     // Mark the cells linked from the oblist.
@@ -904,7 +904,7 @@ int makecont(void)
     val = freshcell();
     SET_TAG(val, CONT);
     SET_BIND(val, cp);
-    SET_CAR(val,sp_csp);
+    SET_CAR(val,sp_cps);
     SET_CDR(val, ep);
     return (val);
 }
@@ -913,16 +913,24 @@ int makecont(void)
 //-------for CPS--------------------
 void cps_push(int addr)
 {
-    sp_csp = cons(addr,sp_csp);
+    sp_cps = cons(addr,sp_cps);
 }
 
-int cps_pop(int n)
+int cps_pop(void)
+{
+    int res;
+    res = car(sp_cps);
+    sp_cps = cdr(sp_cps);
+    return(res);
+}
+
+int cps_pops(int n)
 {
     int res;
     res = NIL;
     while(n>0){
-        res = cons(car(sp_csp),res);
-        sp_csp = cdr(sp_csp);
+        res = cons(car(sp_cps),res);
+        sp_cps = cdr(sp_cps);
         n--;
     }
     return(res);
@@ -1512,7 +1520,7 @@ int transfer(int addr)
         varlist = car(GET_BIND(GET_BIND(func)));
 	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
         args = transfer_exprargs(cdr(addr),varlist);
-        return(append(list1(list2(makesym("closure"),func)),
+        return(append(list1(list2(makesym("set-clos"),func)),
                   append(args,append(body,
                      list1(list2(makesym("unbind"),makeint(length(cdr(addr)))))))));
         }
@@ -1574,7 +1582,7 @@ void print_env(void){
     printf("env[");
     print(ep);
     printf("],stack[");
-    print(sp_csp);
+    print(sp_cps);
     printf("]");
 }
 
@@ -1624,7 +1632,7 @@ int apply_cps(int func, int args)
     return(eval_cps(NIL));
     case CONT:
     //continuation
-    sp_csp = GET_CAR(func);
+    sp_cps = GET_CAR(func);
     cp = GET_CDR(func);
     return(eval_cps(NIL));
     default:
@@ -2154,7 +2162,8 @@ void initsubr(void)
     defsubr("pop", f_pop);
     defsubr("bind", f_bind);
     defsubr("unbind", f_unbind);
-    defsubr("closure", f_closure);
+    defsubr("set-clos", f_set_clos);
+    defsubr("free-clos", f_free_clos);
     defsubr("transfer", f_transfer);
     defsubr("exec-cont", f_exec_cont);
 
@@ -3548,7 +3557,7 @@ int f_pop(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return(cps_pop(GET_INT(arg1)));
+    return(cps_pops(GET_INT(arg1)));
 }
 
 int f_bind(int arglist)
@@ -3567,21 +3576,28 @@ int f_unbind(int arglist)
     return(acc);
 }
 
-int f_closure(int arglist)
+int f_set_clos(int arglist)
 {
-    /*
-    int arg1,clos;
+    int arg1;
     arg1 = car(arglist);
-    if (functionp(arg1)){
-        clos = GET_BIND(arg1);
-    } else {
-        clos = findsym(arg1);
+    if(GET_REC(arg1) == 0){
+    SET_REC(arg1,1);
+    //cps_push(ep);
+    //cps_push(arg1);
+    //ep = GET_CDR(arg1);
     }
-    cps_push(ep);
-    ep = GET_CDR(clos);
-    */
     return(TRUE);
 }
+
+int f_free_clos(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    cps_unbind(GET_INT(arg1));
+    return(TRUE);
+}
+
+
 
 int f_transfer(int arglist)
 {
@@ -3597,7 +3613,7 @@ int f_exec_cont(int arglist)
     arg1 = car(arglist); //continuation
     arg2 = cadr(arglist); //argument to cont
     cp = GET_BIND(arg1);  //restore continuation;
-    sp_csp = GET_CAR(arg1); //restore stack
+    sp_cps = GET_CAR(arg1); //restore stack
     ep = GET_CDR(arg1);    //restore environment
     acc = arg2;        
     return(eval_cps(NIL)); //execute CPS
