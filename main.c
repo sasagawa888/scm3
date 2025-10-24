@@ -784,6 +784,16 @@ int map(int lis, int fun)
     return (NIL);
 }
 
+int copy(int addr)
+{
+    if(nullp(addr))
+        return(NIL);
+    else if(atomp(addr))
+        return(addr);
+    else 
+        return(cons(copy(car(addr)),copy(cdr(addr))));
+}
+
 //----------------------------------------
 int get_int(int addr)
 {
@@ -883,7 +893,7 @@ int makefunc(int addr)
     val = freshcell();
     SET_TAG(val, EXPR);
     SET_BIND(val, addr);
-    SET_CDR(val, ep);
+    SET_CDR(val, copy(ep));
     return (val);
 }
 
@@ -2023,7 +2033,7 @@ void bindfunc(char *name, tag tag, int (*func)(int))
     val = freshcell();
     SET_TAG(val, tag);
     SET_SUBR(val, func);
-    SET_CDR(val, 0);
+    SET_CDR(val, copy(ep));
     SET_BIND(sym,val);
 }
 

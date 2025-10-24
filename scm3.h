@@ -34,7 +34,8 @@ typedef struct cell {
     } val;
     int car;
     int cdr;
-	int trace;
+	char used;
+	char trace;
 } cell;
 
 
@@ -51,6 +52,7 @@ typedef struct token {
 
 #define GET_CAR(addr)		heap[addr].car
 #define GET_CDR(addr)		heap[addr].cdr
+#define GET_USE(addr)		heap[addr].use
 #define GET_TR(addr)		heap[addr].trace
 #define GET_INT(addr)		get_int(addr)
 #define GET_FLT(addr)		((addr < HEAPSIZE && addr >0) ? heap[addr].val.fltnum: NIL)
@@ -62,6 +64,7 @@ typedef struct token {
 #define SET_TAG(addr,x)		heap[addr].tag = x
 #define SET_CAR(addr,x)		heap[addr].car = x
 #define SET_CDR(addr,x)		heap[addr].cdr = x
+#define SET_USE(addr,x)	 	heap[addr].used = x
 #define SET_TR(addr,x)		heap[addr].trace = x
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
