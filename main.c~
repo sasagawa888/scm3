@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     initcell();
     initsubr();
     signal(SIGINT, signal_handler_c);
-
+    
     input_stream = stdin;
     int ret = setjmp(buf);
 
@@ -53,9 +53,9 @@ int main(int argc, char *argv[])
 	    printf("> ");
 	    fflush(stdout);
 	    fflush(stdin);
-	    cp = NIL;
-	    cp1 = NIL;
-	    sp_cps = NIL;
+        cp = NIL;
+        cp1 = NIL;
+        sp_cps = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -228,7 +228,7 @@ void cellprint(int addr)
 	printf("LIS    ");
 	break;
     case VEC:
-	printf("VEC    ");
+    printf("VEC    ");
 	break;
     case SUBR:
 	printf("SUBR   ");
@@ -297,41 +297,41 @@ void markoblist(void)
 
 void markcell(int addr)
 {
-    if (addr < 0 || addr >= HEAPSIZE)
-	return;
+    if(addr < 0 || addr >= HEAPSIZE)
+    return;
     if (integerp(addr))
 	return;
     if (USED_CELL(addr))
 	return;
 
     MARK_CELL(addr);
-    if (addr == T)
-	return;
-    if (addr == NIL)
-	return;
+    if(addr == T)
+    return;
+    if(addr == NIL)
+    return;
 
-    if (listp(addr)) {
-	markcell(car(addr));
-	markcell(cdr(addr));
-	return;
+    if (listp(addr)){
+        markcell(car(addr));
+        markcell(cdr(addr));
+        return;
     }
 
-    if (symbolp(addr)) {
+    if(symbolp(addr)){
+        markcell(GET_BIND(addr));
+        return;
+    }
+
+    if(IS_SUBR(addr) || IS_FSUBR(addr)){
+        markcell(GET_BIND(addr));
+        return;
+    }
+
+    if (IS_EXPR(addr)){
 	markcell(GET_BIND(addr));
-	return;
+    markcell(GET_CDR(addr)); //ep envinronment
+    return;
     }
-
-    if (IS_SUBR(addr) || IS_FSUBR(addr)) {
-	markcell(GET_BIND(addr));
-	return;
-    }
-
-    if (IS_EXPR(addr)) {
-	markcell(GET_BIND(addr));
-	markcell(GET_CDR(addr));	//ep envinronment
-	return;
-    }
-
+    
 
 
 }
@@ -340,9 +340,9 @@ void gbcmark(void)
 {
     int addr, i;
 
-    markcell(cp);		// continuation
+    markcell(cp); // continuation
     markcell(cp1);
-    markcell(sp_cps);		//cps stack 
+    markcell(sp_cps); //cps stack 
     //Mark oblist
     markoblist();
     // Mark the cells linked from the oblist.
@@ -391,9 +391,9 @@ void clrcell(int addr)
 // If the number of free cells falls below a certain threshold, trigger GBC.
 void checkgbc(void)
 {
-    if (ctrl_c_flag) {
-	ctrl_c_flag = 0;
-	longjmp(buf, 1);
+    if (ctrl_c_flag){
+        ctrl_c_flag = 0;
+        longjmp(buf, 1);
     }
     if (fc < FREESIZE)
 	gbc();
@@ -405,8 +405,7 @@ int atomp(int addr)
 {
     if (integerp(addr))
 	return (1);
-    if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr)
-	|| IS_CHAR(addr))
+    if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr) || IS_CHAR(addr))
 	return (1);
     else
 	return (0);
@@ -572,43 +571,42 @@ int equalp(int x, int y)
 
 int subrp(int addr)
 {
-    return (IS_SUBR(GET_BIND(addr)));
+	return (IS_SUBR(GET_BIND(addr)));
 }
 
 int fsubrp(int addr)
 {
-    return (IS_FSUBR(GET_BIND(addr)));
+	return (IS_FSUBR(GET_BIND(addr)));
 }
 
 int functionp(int addr)
 {
-    return (IS_EXPR(GET_BIND(addr)));
+	return (IS_EXPR(GET_BIND(addr)));
 }
 
-int experp(int addr)
-{
+int experp(int addr){
 
-    if (symbolp(addr))
-	return (IS_EXPR(findsym(addr)));
-    else
-	return (0);
+    if(symbolp(addr))
+        return(IS_EXPR(findsym(addr)));
+    else 
+        return(0);
 }
 
 
 int lambdap(int addr)
 {
-    if (listp(addr) && car(addr) == makesym("lambda"))
-	return (1);
-    else
-	return (0);
+    if(listp(addr) && car(addr) == makesym("lambda"))
+        return(1);
+    else 
+        return (0);
 }
 
 int in_recur_p(int addr)
 {
-    if (GET_REC(GET_BIND(addr)))
-	return (1);
-    else
-	return (0);
+    if(GET_REC(GET_BIND(addr)))
+        return(1);
+    else 
+        return(0);
 }
 
 //--------------list---------------------
@@ -699,11 +697,11 @@ int reverse(int addr)
 {
     int res;
     res = NIL;
-    while (!nullp(addr)) {
-	res = cons(car(addr), res);
-	addr = cdr(addr);
+    while(!nullp(addr)){
+        res = cons(car(addr),res);
+        addr = cdr(addr);
     }
-    return (res);
+    return(res);
 }
 
 int length(int addr)
@@ -780,12 +778,12 @@ int map(int lis, int fun)
 
 int copy(int addr)
 {
-    if (nullp(addr))
-	return (NIL);
-    else if (atomp(addr))
-	return (addr);
-    else
-	return (cons(copy(car(addr)), copy(cdr(addr))));
+    if(nullp(addr))
+        return(NIL);
+    else if(atomp(addr))
+        return(addr);
+    else 
+        return(cons(copy(car(addr)),copy(cdr(addr))));
 }
 
 //----------------------------------------
@@ -898,7 +896,7 @@ int makecont(void)
     val = freshcell();
     SET_TAG(val, CONT);
     SET_BIND(val, cp);
-    SET_CAR(val, sp_cps);
+    SET_CAR(val,sp_cps);
     SET_CDR(val, ep);
     return (val);
 }
@@ -907,7 +905,7 @@ int makecont(void)
 //-------for CPS--------------------
 void push_cps(int addr)
 {
-    sp_cps = cons(addr, sp_cps);
+    sp_cps = cons(addr,sp_cps);
 }
 
 int pop_cps(void)
@@ -915,33 +913,33 @@ int pop_cps(void)
     int res;
     res = car(sp_cps);
     sp_cps = cdr(sp_cps);
-    return (res);
+    return(res);
 }
 
 int pops_cps(int n)
 {
     int res;
     res = NIL;
-    while (n > 0) {
-	res = cons(car(sp_cps), res);
-	sp_cps = cdr(sp_cps);
-	n--;
+    while(n>0){
+        res = cons(car(sp_cps),res);
+        sp_cps = cdr(sp_cps);
+        n--;
     }
-    return (res);
+    return(res);
 }
 
 void cps_bind(int addr)
 {
-    assocsym(addr, acc);
+    assocsym(addr,acc);
 }
 
 void cps_unbind(int n)
 {
     int new;
     new = ep;
-    while (n > 0) {
-	new = cdr(new);
-	n--;
+    while(n > 0){
+        new = cdr(new);
+        n--;
     }
     ep = new;
 }
@@ -972,7 +970,7 @@ void argpop(void)
 
 void gettoken(void)
 {
-    char c, c1;
+    char c,c1;
     int pos;
 
     if (stok.flag == BACK) {
@@ -992,20 +990,20 @@ void gettoken(void)
 	return;
     }
 
-  skip:
+    skip:
     c = fgetc(input_stream);
     while ((c == SPACE) || (c == EOL) || (c == TAB))
 	c = fgetc(input_stream);
 
-    if (c == ';') {
-	while (c != EOL && c != EOF) {
-	    c = fgetc(input_stream);
-	}
-	if (c == EOF) {
-	    stok.type = FILEEND;
-	    return;
-	}
-	goto skip;
+    if(c == ';'){
+        while (c != EOL && c != EOF){
+	        c = fgetc(input_stream);
+        }
+        if(c == EOF){
+            stok.type = FILEEND;
+	        return;
+        }
+        goto skip;
     }
 
     switch (c) {
@@ -1022,35 +1020,35 @@ void gettoken(void)
 	stok.type = DOT;
 	break;
     case '"':
-	pos = 0;
+    pos = 0;
 	while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
-	       (c != '"'))
-	    stok.buf[pos++] = c;
+		   (c != '"'))
+	stok.buf[pos++] = c;
 
 	stok.buf[pos] = NUL;
-	stok.type = STRING;
-	return;
+    stok.type = STRING;
+    return;
     case '#':
-	c1 = c;
-	c = getc(input_stream);
-	if (c == '(') {
-	    stok.type = VECTOR;
-	    return;
-	}
-	ungetc(c, input_stream);
-	c = c1;
-	goto etc;
+    c1 = c;
+    c = getc(input_stream);
+    if(c == '('){
+        stok.type = VECTOR;
+        return;
+    } 
+    ungetc(c,input_stream);
+    c = c1;
+    goto etc;
     case '|':
-	pos = 0;
-	stok.buf[pos++] = c;
+    pos = 0;
+    stok.buf[pos++] = c;
 	while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
-	       (c != '|'))
-	    stok.buf[pos++] = c;
-
+		   (c != '|'))
 	stok.buf[pos++] = c;
+    
+    stok.buf[pos++] = c;
 	stok.buf[pos] = NUL;
-	stok.type = SYMBOL;
-	return;
+    stok.type = SYMBOL;
+    return;
     case '`':
 	stok.type = BACKQUOTE;
 	break;
@@ -1064,7 +1062,7 @@ void gettoken(void)
 	stok.type = FILEEND;
 	return;
     default:{
-	  etc:
+        etc:
 	    pos = 0;
 	    stok.buf[pos++] = c;
 	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
@@ -1079,10 +1077,10 @@ void gettoken(void)
 		stok.type = BOOLEAN;
 		break;
 	    }
-	    if (chartoken(stok.buf)) {
-		stok.type = CHARACTER;
-		break;
-	    }
+        if (chartoken(stok.buf)) {
+        stok.type = CHARACTER;
+        break;    
+        }
 	    if (inttoken(stok.buf)) {
 		stok.type = INTEGER;
 		break;
@@ -1103,17 +1101,17 @@ void gettoken(void)
 int booltoken(char buf[])
 {
     if (buf[0] == '#' && (buf[1] == 't' || buf[1] == 'f'))
-	return (1);
+    return(1);
     else
-	return (0);
+    return(0);
 }
 
 int chartoken(char buf[])
 {
     if (buf[0] == '#' && buf[1] == '\\')
-	return (1);
+    return(1);
     else
-	return (0);
+    return(0);
 }
 
 
@@ -1154,7 +1152,7 @@ int flttoken(char buf[])
 	while ((c = buf[i]) != NUL)
 	    if (isdigit(c))
 		i++;		// case {+123..., -123...}
-	    else if (c == '.')
+        else if (c == '.')
 		goto dot;
 	    else if (c == 'e' || c == 'E')
 		goto exp;
@@ -1244,16 +1242,16 @@ int read(void)
     case FLOAT:
 	return (makeflt(atof(stok.buf)));
     case STRING:
-	return (makestr(stok.buf));
+    return (makestr(stok.buf));
     case SYMBOL:
 	return (makesym(stok.buf));
     case BOOLEAN:
-	if (stok.buf[1] == 't')
-	    return (TRUE);
-	else
-	    return (FAIL);
+    if(stok.buf[1] == 't')
+    return(TRUE);
+    else
+    return (FAIL);
     case CHARACTER:
-	return (makechar(stok.buf));
+    return (makechar(stok.buf));
     case QUOTE:
 	return (cons(makesym("quote"), cons(read(), NIL)));
     case BACKQUOTE:
@@ -1271,8 +1269,8 @@ int read(void)
     case LPAREN:
 	return (readlist());
     case VECTOR:
-	return (readlist());
-	break;
+    return (readlist());
+    break;
     default:
 	break;
     }
@@ -1335,8 +1333,8 @@ void print(int addr)
 	printf("<expr>");
 	break;
     case CONT:
-	printf("<cont>");
-	break;
+    printf("<cont>");
+    break;
     case LIS:{
 	    printf("(");
 	    printlist(addr);
@@ -1368,7 +1366,7 @@ void printlist(int addr)
 
 void princ(int addr)
 {
-    char c, str[SYMSIZE];
+    char c,str[SYMSIZE];
     int pos;
     if (integerp(addr)) {
 	printf("%d", GET_INT(addr));
@@ -1384,15 +1382,15 @@ void princ(int addr)
 	printf("%s", GET_NAME(addr));
 	break;
     case SYM:
-	memset(str, 0, SYMSIZE);
-	pos = 0;
-	strcpy(str, GET_NAME(addr));
-	c = str[pos++];
-	while (c != 0) {
-	    if (c != '|')
-		printf("%c", c);
-	    c = str[pos++];
-	}
+    memset(str,0,SYMSIZE);
+    pos = 0;
+    strcpy(str,GET_NAME(addr));
+    c = str[pos++];
+    while(c != 0){
+        if(c != '|')
+            printf("%c",c);
+        c = str[pos++];
+    }
 	break;
     case SUBR:
 	printf("<subr>");
@@ -1418,193 +1416,166 @@ void princ(int addr)
 
 //--------eval---------------
 // transfer expr arguments
-int transfer_exprargs(int args, int varlist)
+int transfer_exprargs(int args,int varlist)
 {
-    if (nullp(args))
-	return (NIL);
-    else
-	return (append(transfer(car(args)),
-		       cons(list2
-			    (makesym("bind"),
-			     list2(makesym("quote"), car(varlist))),
-			    transfer_exprargs(cdr(args), cdr(varlist)))));
-
+    if(nullp(args))
+        return(NIL);
+    else 
+        return(append(transfer(car(args)),
+                   cons(list2(makesym("bind"),list2(makesym("quote"),car(varlist))),
+                      transfer_exprargs(cdr(args),cdr(varlist)))));
+    
 }
 
 int transfer_exprbody(int addr)
 {
-    if (nullp(addr))
-	return (NIL);
-    else
-	return (append(transfer(car(addr)), transfer_exprbody(cdr(addr))));
+    if(nullp(addr))
+        return(NIL);
+    else 
+        return(append(transfer(car(addr)),transfer_exprbody(cdr(addr))));
 }
 
 int transfer_subrargs(int args)
 {
-    if (nullp(args))
-	return (NIL);
+    if(nullp(args))
+        return(NIL);
     else {
-	return (append(transfer(car(args)),
-		       cons(list1(makesym("push")),
-			    transfer_subrargs(cdr(args)))));
+        return(append(transfer(car(args)),
+                  cons(list1(makesym("push")),
+                      transfer_subrargs(cdr(args)))));
     }
 
 }
 
 int transfer_fsubrargs(int args)
 {
-    if (nullp(args))
-	return (NIL);
+    if(nullp(args))
+        return(NIL);
     else {
-	return (cons(list2(makesym("quote"), car(args)),
-		     cons(list1(makesym("push")),
-			  transfer_fsubrargs(cdr(args)))));
+        return(cons(list2(makesym("quote"),car(args)),
+                  cons(list1(makesym("push")),
+                      transfer_fsubrargs(cdr(args)))));
     }
 }
 
 
 int maltiple_recur_p(int func, int arg)
 {
-    while (!nullp(arg)) {
-	if (eqp(car(car(arg)), func))
-	    return (1);
-	arg = cdr(arg);
+    while(!nullp(arg)){
+        if(eqp(car(car(arg)),func))
+            return(1);
+        arg = cdr(arg);
     }
-    return (0);
+    return(0);
 }
 
 
 int transfer(int addr)
-{
-    int func, varlist, args, body;
-    if (numberp(addr) || stringp(addr) || symbolp(addr)
-	|| continuationp(addr) || booleanp(addr) || characterp(addr))
-	return (list1(addr));
-    else if (listp(addr)) {
-	if (numberp(car(addr)))
-	    error(ILLEGAL_OBJ_ERR, "transfer", addr);
-	else if (subrp(car(addr))) {
-	    args = transfer_subrargs(cdr(addr));
-	    body =
-		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), car(addr)),
-		      list2(makesym("pop"), makeint(length(cdr(addr)))));
-	    return (append(args, list1(body)));
-	} else if (fsubrp(car(addr))) {
-	    args = transfer_fsubrargs(cdr(addr));
-	    body =
-		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), car(addr)),
-		      list2(makesym("pop"), makeint(length(cdr(addr)))));
-	    return (append(args, list1(body)));
-	} else if (experp(car(addr))) {
-	    func = findsym(car(addr));
-	    varlist = car(GET_BIND(func));
-	    body = transfer_exprbody(cdr(GET_BIND(func)));
-	    args = transfer_exprargs(cdr(addr), varlist);
-	    return (append(list1(list2(makesym("set-clos"), car(addr))),
-			   append(args, append(body,
-					       append(list1
-						      (list2
-						       (makesym("unbind"),
-							makeint(length
-								(cdr
-								 (addr))))),
-						      list1(list1
-							    (makesym
-							     ("free-clos"))))))));
-	} else if (functionp(car(addr))) {
-	    if (maltiple_recur_p(car(addr), cdr(addr))) {
-		return (list1
-			(list2
-			 (makesym("eval"),
-			  list2(makesym("quote"), addr))));
-	    } else if (in_recur_p(car(addr))) {
-		func = car(addr);
-		varlist = car(GET_BIND(GET_BIND(func)));
-		body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
-		args = transfer_exprargs(cdr(addr), varlist);
-		return (append(args, append(body,
-					    list1(list2
-						  (makesym("unbind"),
-						   makeint(length
-							   (cdr
-							    (addr))))))));
-	    } else {
-		func = car(addr);
-		varlist = car(GET_BIND(GET_BIND(func)));
-		body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
-		args = transfer_exprargs(cdr(addr), varlist);
-		return (append(list1(list2(makesym("set-clos"), func)),
-			       append(args, append(body,
-						   append(list1
-							  (list2
-							   (makesym
-							    ("unbind"),
-							    makeint(length
-								    (cdr
-								     (addr))))),
-							  list1(list1
-								(makesym
-								 ("free-clos"))))))));
-	    }
-	} else if (symbolp(car(addr)) && IS_CONT(findsym(car(addr)))) {
-	    args = transfer_subrargs(addr);
-	    body =
-		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), makesym("exec-cont")),
-		      list2(makesym("pop"), makeint(length(addr))));
-	    return (append(args, list1(body)));
-	}
+{   
+    int func,varlist,args,body;
+    if(numberp(addr) || stringp(addr) || symbolp(addr) 
+       || continuationp(addr) || booleanp(addr) || characterp(addr))
+        return(list1(addr));
+    else if(listp(addr)){
+    if(numberp(car(addr)))
+        error(ILLEGAL_OBJ_ERR,"transfer",addr);
+    else if(subrp(car(addr))){
+        args = transfer_subrargs(cdr(addr));
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),car(addr)),
+                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+        return(append(args,list1(body)));
     }
+    else if(fsubrp(car(addr))){
+        args = transfer_fsubrargs(cdr(addr));
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),car(addr)),
+                  list2(makesym("pop"),makeint(length(cdr(addr)))));
+        return(append(args,list1(body)));
+    }
+    else if(experp(car(addr))){
+        func = findsym(car(addr));
+        varlist = car(GET_BIND(func));
+	    body = transfer_exprbody(cdr(GET_BIND(func)));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(list1(list2(makesym("set-clos"),car(addr))),
+                  append(args,append(body,
+                     append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
+                            list1(list1(makesym("free-clos"))))))));
+    }
+    else if(functionp(car(addr))){
+        if(maltiple_recur_p(car(addr),cdr(addr))){
+        return(list1(list2(makesym("eval"),list2(makesym("quote"),addr))));
+        } else if(in_recur_p(car(addr))){
+        func = car(addr);
+        varlist = car(GET_BIND(GET_BIND(func)));
+	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(args,append(body,
+                     list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
+        } 
+        else {
+        func = car(addr);
+        varlist = car(GET_BIND(GET_BIND(func)));
+	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(list1(list2(makesym("set-clos"),func)),
+                  append(args,append(body,
+                     append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
+                            list1(list1(makesym("free-clos"))))))));
+        }
+    } else if(symbolp(car(addr)) && IS_CONT(findsym(car(addr)))){
+        args = transfer_subrargs(addr);
+        body = list3(makesym("apply-cps"),list2(makesym("quote"),makesym("exec-cont")),
+                  list2(makesym("pop"),makeint(length(addr))));
+        return(append(args,list1(body)));
+    }}
 
-    error(ILLEGAL_OBJ_ERR, "transfer", addr);
-    return (NIL);
+    error(ILLEGAL_OBJ_ERR,"transfer",addr);
+    return(NIL);
 }
 
 // execute continuation
 int execute_args(int addr)
 {
-    if (nullp(addr))
-	return (NIL);
-    else
-	return (cons(execute(car(addr)), execute_args(cdr(addr))));
+    if(nullp(addr))
+        return(NIL);
+    else 
+        return(cons(execute(car(addr)),execute_args(cdr(addr))));
 }
 
 int execute(int addr)
 {
     int lam;
 
-    if (numberp(addr) || stringp(addr) || continuationp(addr)
-	|| booleanp(addr) || characterp(addr))
-	return (addr);
-    else if (addr == T || addr == NIL)
-	return (addr);
-    else if (symbolp(addr)) {
-	if (functionp(addr) || subrp(addr) || fsubrp(addr))
-	    return (GET_BIND(addr));
-	else
-	    return (findsym(addr));
-    } else if (listp(addr)) {
-	if (eqp(car(addr), makesym("quote")))
-	    return (cadr(addr));
-	else if (subrp(car(addr)) || fsubrp(car(addr))) {
-	    int func, args;
-	    func = GET_BIND(car(addr));
-	    args = execute_args(cdr(addr));
-	    return ((GET_SUBR(func)) (args));
-	} else if (symbolp(car(addr))
-		   && IS_CONT((lam = findsym(car(addr))))) {
-	    return (apply_cps(lam, cdr(addr)));
-	}
+    if(numberp(addr) || stringp(addr) || continuationp(addr) || booleanp(addr) || characterp(addr))
+        return(addr);
+    else if(addr == T || addr == NIL)
+        return(addr);
+    else if(symbolp(addr)){
+        if(functionp(addr) ||subrp(addr) || fsubrp(addr))
+        return(GET_BIND(addr));
+        else
+        return(findsym(addr));
     }
+    else if(listp(addr)){
+        if(eqp(car(addr),makesym("quote")))
+            return(cadr(addr));
+        else if(subrp(car(addr)) || fsubrp(car(addr))){
+            int func,args;
+            func = GET_BIND(car(addr));
+            args = execute_args(cdr(addr));
+            return ((GET_SUBR(func)) (args));
+        }
+        else if(symbolp(car(addr)) && IS_CONT((lam=findsym(car(addr))))){
+            return(apply_cps(lam,cdr(addr)));
+        }
+    }
+
     //dummy to avoid warning
-    return (NIL);
+    return(NIL);
 }
 
 
-void print_env(void)
-{
+void print_env(void){
 
     printf("env[");
     print(ep);
@@ -1616,56 +1587,52 @@ void print_env(void)
 
 // eval CPS
 int eval_cps(int addr)
-{
-    int exp, c;
-    if (addr != NIL)
-	cp = append(transfer(addr), cp);
-    while (!nullp(cp)) {
-	exp = car(cp);
-	cp = cdr(cp);
-	acc = execute(exp);
-	checkgbc();
-	if (step_flag) {
-	    print(cp);
-	    printf("---cont---\n");
-	    print(exp);
-	    printf(" in ");
-	    print_env();
-	    printf(" >> ");
-	    c = getc(stdin);
-	    if (c == 'q')
-		longjmp(buf, 1);
-	}
+{   
+    int exp,c;
+    if(addr != NIL)
+        cp = append(transfer(addr),cp);
+    while(!nullp(cp)){
+        exp = car(cp);
+        cp = cdr(cp);
+        acc = execute(exp);
+        checkgbc();
+        if(step_flag){
+        print(cp);printf("---cont---\n");
+        print(exp);
+        printf(" in ");
+        print_env();
+        printf(" >> ");
+        c = getc(stdin);
+        if(c == 'q')
+            longjmp(buf, 1);
+        }
     }
-    return (acc);
+    return(acc);
 }
 
 int apply_cps(int func, int args)
 {
-    int varlist, body, arglist;
+    int varlist,body,arglist;
     switch (GET_TAG(func)) {
     case SUBR:
 	return ((GET_SUBR(func)) (args));
     case FSUBR:
 	return ((GET_SUBR(func)) (args));
     case EXPR:
-	//(lambda (x) ...)
-	varlist = car(GET_BIND(func));
+    //(lambda (x) ...)
+    varlist = car(GET_BIND(func));
 	body = transfer_exprbody(cdr(GET_BIND(func)));
-	arglist = transfer_exprargs(args, varlist);
-	cp = append(arglist,
-		    append(body,
-			   append(list1
-				  (list2
-				   (makesym("unbind"),
-				    makeint(length(args)))), cp)));
-	//print(cp);
-	return (eval_cps(NIL));
+    arglist = transfer_exprargs(args,varlist);
+    cp = append(arglist,
+            append(body,
+                 append(list1(list2(makesym("unbind"),makeint(length(args)))),cp)));
+    //print(cp);
+    return(eval_cps(NIL));
     case CONT:
-	//continuation
-	sp_cps = GET_CAR(func);
-	cp = GET_CDR(func);
-	return (eval_cps(NIL));
+    //continuation
+    sp_cps = GET_CAR(func);
+    cp = GET_CDR(func);
+    return(eval_cps(NIL));
     default:
 	error(ILLEGAL_OBJ_ERR, "apply", func);
     }
@@ -1674,21 +1641,20 @@ int apply_cps(int func, int args)
 
 int eval(int addr)
 {
-    int res, lam;
+    int res,lam;
 
-    if (step_flag) {
-	int c;
-	print(addr);
-	printf(" in ");
-	print_env();
-	printf(" >> ");
-	c = getc(stdin);
-	if (c == 'q')
-	    longjmp(buf, 1);
+    if(step_flag){
+        int c;
+        print(addr);
+        printf(" in ");
+        print_env();
+        printf(" >> ");
+        c = getc(stdin);
+        if(c == 'q')
+            longjmp(buf, 1);
     }
     if (atomp(addr)) {
-	if (numberp(addr) || stringp(addr) || characterp(addr)
-	    || booleanp(addr))
+	if (numberp(addr) || stringp(addr) || characterp(addr) || booleanp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
 	    res = findsym(addr);
@@ -1700,43 +1666,43 @@ int eval(int addr)
     } else if (listp(addr)) {
 	if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	else if (lambdap(car(addr)))
-	    return (apply(eval(car(addr)), cdr(addr)));
+    else if (lambdap(car(addr)))
+        return (apply(eval(car(addr)), cdr(addr)));
 	else if (subrp(car(addr)))
 	    return (apply(GET_BIND(car(addr)), evlis(cdr(addr))));
 	else if (fsubrp(car(addr)))
 	    return (apply(GET_BIND(car(addr)), cdr(addr)));
-	else if (symbolp(car(addr)) && IS_EXPR((lam = findsym(car(addr)))))
-	    return (apply(lam, evlis(cdr(addr))));
-	else if (functionp(car(addr))) {
-	    int sym, i, n, res;
-	    sym = car(addr);
-	    if (GET_TR(sym) >= 1) {
-		SET_TR(sym, GET_TR(sym) + 1);
-		n = GET_TR(sym);
-		for (i = 2; i < n; i++) {
-		    printf(" ");
-		}
-		printf("ENTER ");
-		print(sym);
-		print(evlis(cdr(addr)));
-		printf("\n");
-	    }
+    else if (symbolp(car(addr)) && IS_EXPR((lam=findsym(car(addr)))))
+        return (apply(lam, evlis(cdr(addr))));        
+	else if (functionp(car(addr))){
+        int sym,i,n,res;
+        sym = car(addr);
+        if(GET_TR(sym) >= 1){
+            SET_TR(sym,GET_TR(sym)+1);
+            n = GET_TR(sym);
+            for(i=2;i<n;i++){
+                printf(" ");
+            }
+            printf("ENTER ");
+            print(sym);
+            print(evlis(cdr(addr)));
+            printf("\n");
+        }
 	    res = apply(GET_BIND(car(addr)), evlis(cdr(addr)));
-	    if (GET_TR(sym) > 1) {
-		n = GET_TR(sym);
-		for (i = 2; i < n; i++) {
-		    printf(" ");
-		}
-		printf("RETURN ");
-		print(sym);
-		printf(" ");
-		print(res);
-		printf("\n");
-		SET_TR(sym, GET_TR(sym) - 1);
-	    }
-	    return (res);
-	}
+        if (GET_TR(sym) > 1){
+            n = GET_TR(sym);
+            for(i=2;i<n;i++){
+                printf(" ");
+            }
+            printf("RETURN ");
+            print(sym);
+            printf(" ");
+            print(res);
+            printf("\n");
+            SET_TR(sym,GET_TR(sym)-1);
+        }
+        return(res);
+    }
     }
     error(CANT_FIND_ERR, "eval", addr);
     return (0);
@@ -1763,7 +1729,7 @@ int apply(int func, int args)
 	    unbind();
 	    return (res);
 	}
-
+    
     default:
 	error(ILLEGAL_OBJ_ERR, "apply", func);
     }
@@ -1827,7 +1793,7 @@ void error(int errnum, char *fun, int arg)
 
     case CANT_OPEN_ERR:{
 	    printf("%s can't open ", fun);
-	    print(arg);
+        print(arg);
 	    break;
 	}
 
@@ -1843,7 +1809,7 @@ void error(int errnum, char *fun, int arg)
 	    print(arg);
 	    break;
 	}
-
+    
     case ARG_BOOL_ERR:{
 	    printf("%s require bool but got ", fun);
 	    print(arg);
@@ -1929,7 +1895,7 @@ void checkarg(int test, char *fun, int arg)
 	else
 	    error(ARG_NUM_ERR, fun, arg);
     case STRING_TEST:
-	if (stringp(arg))
+    if (stringp(arg))
 	    return;
 	else
 	    error(ARG_STR_ERR, fun, arg);
@@ -1973,7 +1939,7 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ILLEGAL_OBJ_ERR, fun, arg);
-
+    
     }
 }
 
@@ -2011,12 +1977,12 @@ int isdeflis(int arg)
 
 int issymlis(int arg)
 {
-    while (!nullp(arg)) {
-	if (!symbolp(car(arg)))
-	    return (0);
-	arg = cdr(arg);
+    while(!nullp(arg)){
+        if(!symbolp(car(arg)))
+            return(0);
+        arg = cdr(arg);
     }
-    return (1);
+    return(1);
 }
 
 
@@ -2043,7 +2009,7 @@ void bindfunc(char *name, tag tag, int (*func)(int))
     SET_TAG(val, tag);
     SET_SUBR(val, func);
     SET_CDR(val, copy(ep));
-    SET_BIND(sym, val);
+    SET_BIND(sym,val);
 }
 
 void initsubr(void)
@@ -2095,7 +2061,7 @@ void initsubr(void)
     defsubr("eval", f_eval);
     defsubr("eval-cps", f_eval_cps);
     defsubr("apply", f_apply);
-    defsubr("apply-cps", f_apply_cps);
+    defsubr("apply-cps",f_apply_cps);
     defsubr("display", f_display);
     defsubr("prin1", f_prin1);
     defsubr("princ", f_princ);
@@ -2108,7 +2074,7 @@ void initsubr(void)
     defsubr("get", f_get);
     defsubr(">", f_greaterp);
     defsubr("<", f_lessp);
-    defsubr(">=", f_eqgreaterp);
+    defsubr(">=" ,f_eqgreaterp);
     defsubr("<=", f_eqlessp);
     defsubr("zero?", f_zerop);
     defsubr("onep", f_onep);
@@ -2335,7 +2301,7 @@ int f_quotient(int arglist)
     checkarg(NUMLIST_TEST, "quotient", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (quotient(arg1, arg2));
+    return (quotient(arg1,arg2));
 }
 
 int f_divide(int arglist)
@@ -2383,16 +2349,16 @@ int f_min(int arglist)
 
 int f_abs(int arglist)
 {
-    int arg1, res;
-    checkarg(NUMBER_TEST, "abs", car(arglist));
+    int arg1,res;
+    checkarg(NUMBER_TEST,"abs",car(arglist));
     arg1 = car(arglist);
     res = NIL;
-    if (integerp(arg1))
-	res = makeint(abs(GET_INT(arg1)));
-    else if (floatp(arg1))
-	res = makeflt(fabs(GET_FLT(arg1)));
-
-    return (res);
+    if(integerp(arg1))
+        res = makeint(abs(GET_INT(arg1)));
+    else if(floatp(arg1))
+        res = makeflt(fabs(GET_FLT(arg1)));
+    
+    return(res);
 }
 
 
@@ -2443,12 +2409,12 @@ int f_sqrt(int arglist)
     checkarg(NUMBER_TEST, "sqrt", car(arglist));
     arg1 = car(arglist);
     res = 0;
-    if (integerp(arg1))
-	res = sqrt((double) GET_INT(arg1));
-    else if (floatp(arg1))
-	res = sqrt(GET_FLT(arg1));
+    if(integerp(arg1))
+        res = sqrt((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = sqrt(GET_FLT(arg1));
 
-    return (makeflt(res));
+    return(makeflt(res));
 }
 
 
@@ -2460,12 +2426,12 @@ int f_sin(int arglist)
     checkarg(NUMBER_TEST, "sin", car(arglist));
     arg1 = car(arglist);
     res = 0;
-    if (integerp(arg1))
-	res = sin((double) GET_INT(arg1));
-    else if (floatp(arg1))
-	res = sin(GET_FLT(arg1));
+    if(integerp(arg1))
+        res = sin((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = sin(GET_FLT(arg1));
 
-    return (makeflt(res));
+    return(makeflt(res));
 }
 
 
@@ -2477,12 +2443,12 @@ int f_cos(int arglist)
     checkarg(NUMBER_TEST, "cos", car(arglist));
     arg1 = car(arglist);
     res = 0;
-    if (integerp(arg1))
-	res = cos((double) GET_INT(arg1));
-    else if (floatp(arg1))
-	res = cos(GET_FLT(arg1));
+    if(integerp(arg1))
+        res = cos((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = cos(GET_FLT(arg1));
 
-    return (makeflt(res));
+    return(makeflt(res));
 }
 
 
@@ -2494,12 +2460,12 @@ int f_tan(int arglist)
     checkarg(NUMBER_TEST, "tan", car(arglist));
     arg1 = car(arglist);
     res = 0;
-    if (integerp(arg1))
-	res = tan((double) GET_INT(arg1));
-    else if (floatp(arg1))
-	res = tan(GET_FLT(arg1));
+    if(integerp(arg1))
+        res = tan((double)GET_INT(arg1));
+    else if(floatp(arg1))
+        res = tan(GET_FLT(arg1));
 
-    return (makeflt(res));
+    return(makeflt(res));
 }
 
 
@@ -2548,7 +2514,7 @@ int f_cdr(int arglist)
     return (cdr(arg1));
 }
 
-int f_caar(int arglist)
+int f_caar (int arglist)
 {
     int arg1;
 
@@ -2559,7 +2525,7 @@ int f_caar(int arglist)
     return (caar(arg1));
 }
 
-int f_cadr(int arglist)
+int f_cadr (int arglist)
 {
     int arg1;
 
@@ -2570,7 +2536,7 @@ int f_cadr(int arglist)
     return (cadr(arg1));
 }
 
-int f_cdar(int arglist)
+int f_cdar (int arglist)
 {
     int arg1;
 
@@ -2582,7 +2548,7 @@ int f_cdar(int arglist)
 }
 
 
-int f_cddr(int arglist)
+int f_cddr (int arglist)
 {
     int arg1;
 
@@ -2593,7 +2559,7 @@ int f_cddr(int arglist)
     return (cddr(arg1));
 }
 
-int f_caddr(int arglist)
+int f_caddr (int arglist)
 {
     int arg1;
 
@@ -2604,7 +2570,7 @@ int f_caddr(int arglist)
     return (caddr(arg1));
 }
 
-int f_cadddr(int arglist)
+int f_cadddr (int arglist)
 {
     int arg1;
 
@@ -2743,8 +2709,8 @@ int f_member(int arglist)
 
 int f_append(int arglist)
 {
-    if (nullp(arglist))
-	return (NIL);
+    if(nullp(arglist))
+        return(NIL);
     return (append(car(arglist), f_append(cdr(arglist))));
 }
 
@@ -2898,7 +2864,7 @@ int f_eqlessp(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (lessp(arg1, arg2) || numeqp(arg1, arg2))
+    if (lessp(arg1, arg2) || numeqp(arg1,arg2))
 	return (TRUE);
     else
 	return (FAIL);
@@ -2930,7 +2896,7 @@ int f_eqgreaterp(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (greaterp(arg1, arg2) || numeqp(arg1, arg2))
+    if (greaterp(arg1, arg2) || numeqp(arg1,arg2))
 	return (TRUE);
     else
 	return (FAIL);
@@ -2960,9 +2926,9 @@ int f_read(int arglist)
 
 int f_readc(int arglist)
 {
-    char c, str[5];
+    char c,str[5];
     checkarg(LEN0_TEST, "readc", arglist);
-    memset(str, 0, 5);
+    memset(str,0,5);
     c = fgetc(input_stream);
     str[0] = c;
     return (makesym(str));
@@ -2994,97 +2960,97 @@ int f_newline(int arglist)
 {
     checkarg(LEN0_TEST, "newline", arglist);
     printf("\n");
-    return (T);
+    return(T);
 }
 
 int f_trace(int arglist)
 {
     int arg1;
-    checkarg(SYMBOL_TEST, "trace", car(arglist));
+    checkarg(SYMBOL_TEST,"trace",car(arglist));
     arg1 = car(arglist);
-    SET_TR(arg1, 1);
-    return (T);
+    SET_TR(arg1,1);
+    return(T);
 }
 
 int f_untrace(int arglist)
 {
     int arg1;
-    checkarg(SYMBOL_TEST, "untrace", car(arglist));
+    checkarg(SYMBOL_TEST,"untrace",car(arglist));
     arg1 = car(arglist);
-    SET_TR(arg1, 0);
-    return (T);
+    SET_TR(arg1,0);
+    return(T);
 }
 
 int f_gensym(int arglist)
-{
+{   
     char gsym[SYMSIZE];
-    checkarg(LEN0_TEST, "gensym", arglist);
-    sprintf(gsym, "G%05d", gennum);
+    checkarg(LEN0_TEST,"gensym",arglist);
+    sprintf(gsym,"G%05d",gennum);
     gennum++;
-    return (makesym(gsym));
+    return(makesym(gsym));
 }
 
-int f_step(int arglist)
-{
+int f_step(int arglist){
     int arg1;
 
-    checkarg(LEN1_TEST, "step", arglist);
+    checkarg(LEN1_TEST,"step",arglist);
     arg1 = car(arglist);
-    if (arg1 == TRUE) {
-	oblist_len = length(ep);
-	step_flag = 1;
-    } else if (arg1 == FAIL)
-	step_flag = 0;
-    else
-	error(ILLEGAL_OBJ_ERR, "step", arg1);
+    if(arg1 == TRUE){
+        oblist_len = length(ep);
+        step_flag = 1;
+    }
+    else if(arg1 == FAIL)
+        step_flag = 0;
+    else 
+        error(ILLEGAL_OBJ_ERR,"step",arg1);
 
-    return (TRUE);
+    return(TRUE);
 }
 
 
 int f_putprop(int arglist)
 {
-    int arg1, arg2, arg3, plist, res;
-    checkarg(LEN3_TEST, "putprop", arglist);
-    checkarg(SYMBOL_TEST, "putprop", car(arglist));
-    checkarg(SYMBOL_TEST, "putprop", cadr(arglist));
+    int arg1,arg2,arg3,plist,res;
+    checkarg(LEN3_TEST,"putprop",arglist);
+    checkarg(SYMBOL_TEST,"putprop",car(arglist));
+    checkarg(SYMBOL_TEST,"putprop",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = caddr(arglist);
     plist = GET_CDR(arg1);
-    res = assoc(arg2, plist);
-    if (res == NO)
-	SET_CDR(arg1, cons(cons(arg2, arg3), plist));
+    res = assoc(arg2,plist);
+    if(res == NO)
+        SET_CDR(arg1,cons(cons(arg2,arg3),plist));
     else
-	SET_CDR(res, arg3);
-    return (T);
+        SET_CDR(res,arg3);
+    return(T);
 }
 
 int f_defprop(int arglist)
 {
-    int arg1, arg2, arg3;
-    checkarg(LEN3_TEST, "defprop", arglist);
-    checkarg(SYMBOL_TEST, "defprop", car(arglist));
-    checkarg(SYMBOL_TEST, "defprop", cadr(arglist));
+    int arg1,arg2,arg3;
+    checkarg(LEN3_TEST,"defprop",arglist);
+    checkarg(SYMBOL_TEST,"defprop",car(arglist));
+    checkarg(SYMBOL_TEST,"defprop",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = caddr(arglist);
-    SET_CDR(arg1, cons(cons(arg2, arg3), NIL));
-    return (T);
+    SET_CDR(arg1,cons(cons(arg2,arg3),NIL));
+    return(T);
 }
 
 
 int f_get(int arglist)
 {
-    int arg1, arg2, res;
-    checkarg(LEN2_TEST, "get", arglist);
+    int arg1,arg2,res;
+    checkarg(LEN2_TEST,"get",arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    res = assoc(arg2, GET_CDR(arg1));
-    if (res == NO)
-	return (NIL);
-
-    return (cdr(res));
+    res = assoc(arg2,GET_CDR(arg1));
+    if(res == NO)
+        return(NIL);
+    
+    return(cdr(res));
 }
 
 int f_eval_cps(int arglist)
@@ -3108,12 +3074,12 @@ int f_apply_cps(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval_cps(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "apply", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval_cps(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"apply",arg1);
     return (apply_cps(arg1, arg2));
 }
 
@@ -3125,12 +3091,12 @@ int f_apply(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "apply", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"apply",arg1);
     return (apply(arg1, arg2));
 }
 
@@ -3142,12 +3108,12 @@ int f_mapcar(int arglist)
     checkarg(LIST_TEST, "mapcar", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "mapcar", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"mapcar",arg1);
     return (mapcar(arg2, arg1));
 
 }
@@ -3159,12 +3125,12 @@ int f_mapcon(int arglist)
     checkarg(LIST_TEST, "mapcon", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "mapcon", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"mapcon",arg1);
     return (mapcon(arg2, arg1));
 
 }
@@ -3176,12 +3142,12 @@ int f_map(int arglist)
     checkarg(LIST_TEST, "map", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "map", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+        arg1 = GET_BIND(arg1);
+    else if(lambdap(arg1))
+        arg1 = eval(arg1);
+    else 
+        error(ILLEGAL_OBJ_ERR,"map",arg1);
     return (map(arg2, arg1));
 
 }
@@ -3213,26 +3179,26 @@ int f_not(int arglist)
 
 int subst(int x, int y, int lis)
 {
-    if (nullp(lis))
-	return (NIL);
-    else if (eqp(y, lis))
-	return (x);
-    else if (atomp(lis))
-	return (lis);
-    else
-	return (cons(subst(x, y, car(lis)), (subst(x, y, cdr(lis)))));
+    if(nullp(lis))
+        return(NIL);
+    else if(eqp(y,lis))
+        return(x);
+    else if(atomp(lis))
+        return(lis);
+    else return(cons(subst(x,y,car(lis)),
+                    (subst(x,y,cdr(lis)))));
 }
 
 int f_subst(int arglist)
 {
-    int arg1, arg2, arg3;
+    int arg1,arg2,arg3;
 
-    checkarg(LIST_TEST, "subst", caddr(arglist));
+    checkarg(LIST_TEST,"subst",caddr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = caddr(arglist);
 
-    return (subst(arg1, arg2, arg3));
+    return(subst(arg1,arg2,arg3));
 }
 
 int f_analyze(int arglist)
@@ -3240,14 +3206,11 @@ int f_analyze(int arglist)
     int arg1;
     arg1 = car(arglist);
     print(arg1);
-    printf("\nBIND");
-    print(GET_BIND(arg1));
-    printf("\nCAR");
-    print(GET_CAR(arg1));
-    printf("\nCDR");
-    print(GET_CDR(arg1));
+    printf("\nBIND");print(GET_BIND(arg1));
+    printf("\nCAR");print(GET_CAR(arg1));
+    printf("\nCDR");print(GET_CDR(arg1));
 
-    return (TRUE);
+    return(TRUE);
 }
 
 
@@ -3268,46 +3231,44 @@ int f_setq(int arglist)
     checkarg(LEN2_TEST, "setq", arglist);
     checkarg(SYMBOL_TEST, "setq", car(arglist));
     arg1 = car(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	error(ILLEGAL_OBJ_ERR, "set!", arg1);
+    if(functionp(arg1) || subrp(arg1) || fsubrp(arg1))
+    error(ILLEGAL_OBJ_ERR,"set!",arg1);
     arg2 = eval(cadr(arglist));
     bindsym(arg1, arg2);
     return (TRUE);
 }
 
-
-void bindfunc1(int sym, int type, int addr)
-{
+         
+void bindfunc1(int sym, int type, int addr){
     int val;
-
-    val = freshcell();
-    SET_TAG(val, type);
-    SET_BIND(val, addr);
-    SET_CDR(val, 0);
-    SET_BIND(sym, val);
+	
+	val = freshcell();
+    SET_TAG(val,type);
+    SET_BIND(val,addr);
+    SET_CDR(val,0);
+    SET_BIND(sym,val);
 }
 
 
-int f_define(int arglist)
-{
-    int arg1, arg2;
-
+int f_define(int arglist){
+	int arg1,arg2;
+    
     arg1 = NIL;
-    if (listp(car(arglist))) {
-	arg1 = caar(arglist);	// function name
-	arg2 = cons(cdar(arglist), cdr(arglist));	// argument + body
-	bindfunc1(arg1, EXPR, arg2);
-    } else if (symbolp(car(arglist)) && lambdap(cadr(arglist))) {
-	checkarg(LIST_TEST, "define", cadr(arglist));
-	arg1 = car(arglist);	// function name
-	arg2 = cadr(arglist);	//lambda exp
-	SET_BIND(arg1, eval(arg2));
-    } else if (symbolp(car(arglist))) {
-	arg1 = car(arglist);	//variable name
-	arg2 = eval(cadr(arglist));	//value
-	bindsym(arg1, arg2);
+    if(listp(car(arglist))){
+    arg1 = caar(arglist); // function name
+    arg2 = cons(cdar(arglist),cdr(arglist)); // argument + body
+    bindfunc1(arg1,EXPR,arg2);
+    } else if(symbolp(car(arglist)) && lambdap(cadr(arglist))){
+    checkarg(LIST_TEST, "define" ,cadr(arglist));
+    arg1 = car(arglist);  // function name
+    arg2 = cadr(arglist); //lambda exp
+    SET_BIND(arg1,eval(arg2));
+    } else if(symbolp(car(arglist))){
+    arg1 = car(arglist); //variable name
+    arg2 = eval(cadr(arglist)); //value
+    bindsym(arg1,arg2);
     }
-    return (arg1);
+    return(arg1);
 }
 
 
@@ -3345,18 +3306,18 @@ int f_cond(int arglist)
     if (nullp(arglist))
 	return (NIL);
 
-
+    
     arg1 = car(arglist);
     checkarg(LIST_TEST, "cond", arg1);
     arg2 = car(arg1);
     arg3 = cdr(arg1);
-    if (eqp(arg2, makesym("else"))) {
-	res = TRUE;
+    if(eqp(arg2,makesym("else"))){
+    res = TRUE;
     } else {
-	cp1 = cp;
-	cp = NIL;
-	res = eval_cps(arg2);
-	cp = cp1;
+    cp1 = cp;
+    cp = NIL;
+    res = eval_cps(arg2);
+    cp = cp1;
     }
 
     if (res != FAIL)
@@ -3369,7 +3330,7 @@ int f_begin(int arglist)
 {
 
     while (!(nullp(arglist))) {
-	cp = append(transfer(car(arglist)), cp);
+	cp = append(transfer(car(arglist)),cp);
 	arglist = cdr(arglist);
     }
     return (eval_cps(NIL));
@@ -3404,48 +3365,48 @@ int f_or(int arglist)
 }
 
 int f_let(int arglist)
-{
-    int arg1, arg2, vars, var, val, res, save;
-    checkarg(LIST_TEST, "let", cdr(arglist));
+{   
+    int arg1,arg2,vars,var,val,res,save;
+    checkarg(LIST_TEST,"let",cdr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     vars = NIL;
 
-    while (!nullp(arg1)) {
-	var = caar(arg1);
-	val = eval_cps(cadar(arg1));
-	arg1 = cdr(arg1);
-	vars = cons(cons(var, val), vars);
+    while(!nullp(arg1)){
+        var = caar(arg1);
+        val = eval_cps(cadar(arg1));
+        arg1 = cdr(arg1);
+        vars = cons(cons(var,val),vars);
     }
     save = ep;
-    while (!nullp(vars)) {
-	var = caar(vars);
-	val = cdar(vars);
-	vars = cdr(vars);
-	assocsym(var, val);
+    while(!nullp(vars)){
+        var = caar(vars);
+        val = cdar(vars);
+        vars = cdr(vars);
+        assocsym(var,val);
     }
     res = f_begin(arg2);
     ep = save;
-    return (res);
+    return(res);
 }
 
 int f_let_star(int arglist)
-{
-    int arg1, arg2, var, val, res, save;
-    checkarg(LIST_TEST, "let*", car(arglist));
+{   
+    int arg1,arg2,var,val,res,save;
+    checkarg(LIST_TEST,"let*",car(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
 
     save = ep;
-    while (!nullp(arg1)) {
-	var = caar(arg1);
-	val = eval_cps(cadar(arg1));
-	arg1 = cdr(arg1);
-	assocsym(var, val);
+    while(!nullp(arg1)){
+        var = caar(arg1);
+        val = eval_cps(cadar(arg1));
+        arg1 = cdr(arg1);
+        assocsym(var,val);
     }
     res = f_begin(arg2);
     ep = save;
-    return (res);
+    return(res);
 }
 
 
@@ -3457,9 +3418,9 @@ int f_load(int arglist)
     arg1 = car(arglist);
 
     input_stream = fopen(GET_NAME(arg1), "r");
-    if (!input_stream)
-	error(CANT_OPEN_ERR, "load", arg1);
-
+    if (!input_stream) 
+	error(CANT_OPEN_ERR,"load",arg1);
+    
 
     int exp;
     while (1) {
@@ -3475,18 +3436,18 @@ int f_load(int arglist)
 
 int f_edwin(int arglist)
 {
-    int arg1, res;
+    int arg1,res;
     char str[SYMSIZE];
 
     arg1 = car(arglist);
     char *ed;
-    if ((ed = getenv("EDITOR")) == NULL) {
-	strcpy(str, "edlis");
-    } else
-	strcpy(str, ed);
-
-    strcat(str, " ");
-    strcat(str, GET_NAME(arg1));
+	if ((ed = getenv("EDITOR")) == NULL) {
+	    strcpy(str,"edlis");
+	} else 
+        strcpy(str,ed);
+    
+    strcat(str," ");
+    strcat(str,GET_NAME(arg1));
     res = system(str);
     if (res == -1)
 	error(CANT_OPEN_ERR, "ledit", arg1);
@@ -3496,48 +3457,47 @@ int f_edwin(int arglist)
 
 int f_functionp(int arglist)
 {
-    checkarg(LEN1_TEST, "functionp", arglist);
-    if (functionp(car(arglist)))
-	return (TRUE);
-    else
-	return (FAIL);
+    checkarg(LEN1_TEST,"functionp",arglist);
+    if(functionp(car(arglist)))
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_procedurep(int arglist)
-{
+{   
     int arg1;
-    checkarg(LEN1_TEST, "procedure?", arglist);
+    checkarg(LEN1_TEST,"procedure?",arglist);
     arg1 = car(arglist);
-    if (arg1 >= 0 && arg1 < HEAPSIZE
-	&& (IS_EXPR(arg1) || IS_SUBR(arg1) || IS_FSUBR(arg1)))
-	return (TRUE);
-    else
-	return (FAIL);
+    if(arg1 >= 0 && arg1 <HEAPSIZE && (IS_EXPR(arg1) || IS_SUBR(arg1) || IS_FSUBR(arg1)))
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 
 int f_call_cc(int arglist)
 {
-    int arg1, cont;
-    checkarg(LEN1_TEST, "call/cc", arglist);
+    int arg1,cont;
+    checkarg(LEN1_TEST,"call/cc",arglist);
     arg1 = car(arglist);
     cont = makecont();
     // (lambda (cont) continuation)
-    return (apply_cps(arg1, list1(cont)));
+    return (apply_cps(arg1,list1(cont)));
 }
 
 int f_push(int arglist)
 {
     push_cps(acc);
-    return (T);
+    return(T);
 }
 
 int f_pop(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return (pops_cps(GET_INT(arg1)));
+    return(pops_cps(GET_INT(arg1)));
 }
 
 int f_bind(int arglist)
@@ -3545,7 +3505,7 @@ int f_bind(int arglist)
     int arg1;
     arg1 = car(arglist);
     cps_bind(arg1);
-    return (T);
+    return(T);
 }
 
 int f_unbind(int arglist)
@@ -3553,29 +3513,29 @@ int f_unbind(int arglist)
     int arg1;
     arg1 = car(arglist);
     cps_unbind(GET_INT(arg1));
-    return (acc);
+    return(acc);
 }
 
 int f_set_clos(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    if (GET_REC(arg1) == 0) {
-	SET_REC(arg1, 1);
-	push_cps(ep);
-	push_cps(arg1);
-	ep = GET_CDR(arg1);
+    if(GET_REC(arg1) == 0){
+    SET_REC(arg1,1);
+    push_cps(ep);
+    push_cps(arg1);
+    ep = GET_CDR(arg1);
     }
-    return (TRUE);
+    return(TRUE);
 }
 
 int f_free_clos(int arglist)
 {
     int expr;
     expr = pop_cps();
-    SET_REC(expr, 0);
+    SET_REC(expr,0);
     ep = pop_cps();
-    return (acc);
+    return(acc);
 }
 
 
@@ -3584,27 +3544,27 @@ int f_transfer(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return (transfer(arg1));
+    return(transfer(arg1));
 }
 
 
 int f_exec_cont(int arglist)
 {
-    int arg1, arg2;
-    arg1 = car(arglist);	//continuation
-    arg2 = cadr(arglist);	//argument to cont
-    cp = GET_BIND(arg1);	//restore continuation;
-    sp_cps = GET_CAR(arg1);	//restore stack
-    ep = GET_CDR(arg1);		//restore environment
-    acc = arg2;
-    return (eval_cps(NIL));	//execute CPS
+    int arg1,arg2;
+    arg1 = car(arglist); //continuation
+    arg2 = cadr(arglist); //argument to cont
+    cp = GET_BIND(arg1);  //restore continuation;
+    sp_cps = GET_CAR(arg1); //restore stack
+    ep = GET_CDR(arg1);    //restore environment
+    acc = arg2;        
+    return(eval_cps(NIL)); //execute CPS
 }
 
 int f_environment(int arglist)
 {
     print(ep);
     printf("\n");
-    return (TRUE);
+    return(TRUE);
 }
 
 
@@ -3623,3 +3583,4 @@ int list3(int x, int y, int z)
 {
     return (cons(x, cons(y, cons(z, NIL))));
 }
+

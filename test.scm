@@ -30,7 +30,6 @@
     (let ((x 0))
      (lambda ()
           (set! x (+ x 1))
-          (display x)
           x)))
 
 (define c1 (counter))
