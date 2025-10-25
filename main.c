@@ -2053,7 +2053,6 @@ void initsubr(void)
     defsubr("minus", f_minus);
     defsubr("*", f_times);
     defsubr("/", f_quotient);
-    defsubr("divide", f_divide);
     defsubr("max", f_max);
     defsubr("min", f_min);
     defsubr("abs", f_abs);
@@ -2097,8 +2096,6 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("apply-cps", f_apply_cps);
     defsubr("display", f_display);
-    defsubr("prin1", f_prin1);
-    defsubr("princ", f_princ);
     defsubr("newline", f_newline);
     deffsubr("trace", f_trace);
     deffsubr("untrace", f_untrace);
@@ -2111,8 +2108,7 @@ void initsubr(void)
     defsubr(">=", f_eqgreaterp);
     defsubr("<=", f_eqlessp);
     defsubr("zero?", f_zerop);
-    defsubr("onep", f_onep);
-    defsubr("minusp", f_minusp);
+    defsubr("minus?", f_minusp);
     defsubr("number?", f_numberp);
     defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
@@ -2337,18 +2333,6 @@ int f_quotient(int arglist)
     return (quotient(arg1, arg2));
 }
 
-int f_divide(int arglist)
-{
-    int arg1, arg2, q, m;
-
-    checkarg(LEN2_TEST, "divide", arglist);
-    checkarg(INTLIST_TEST, "divide", arglist);
-    arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    q = makeint(GET_INT(arg1) / GET_INT(arg2));
-    m = makeint(GET_INT(arg1) % GET_INT(arg2));
-    return (cons(q, cons(m, NIL)));
-}
 
 int f_max(int arglist)
 {
@@ -2823,22 +2807,6 @@ int f_booleanp(int arglist)
 	return (FAIL);
 }
 
-int f_onep(int arglist)
-{
-    int arg1;
-
-    checkarg(LEN1_TEST, "onep", arglist);
-    checkarg(NUMLIST_TEST, "onep", arglist);
-    arg1 = car(arglist);
-
-    if (integerp(arg1) && GET_INT(arg1) == 1)
-	return (T);
-    else if (floatp(arg1) && fabs(GET_FLT(arg1) - 1.0) < DBL_MIN)
-	return (T);
-    else
-	return (NIL);
-}
-
 int f_zerop(int arglist)
 {
     int arg1;
@@ -2848,11 +2816,11 @@ int f_zerop(int arglist)
     arg1 = car(arglist);
 
     if (integerp(arg1) && GET_INT(arg1) == 0)
-	return (T);
+	return (TRUE);
     else if (floatp(arg1) && fabs(GET_FLT(arg1)) < DBL_MIN)
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2865,9 +2833,9 @@ int f_minusp(int arglist)
     arg1 = car(arglist);
 
     if (lessp(arg1, makeint(0)))
-	return (T);
+	return (TRUE);
     else
-	return (NIL);
+	return (FAIL);
 }
 
 
@@ -2972,20 +2940,6 @@ int f_display(int arglist)
     checkarg(LEN1_TEST, "display", arglist);
     print(car(arglist));
     return (TRUE);
-}
-
-int f_prin1(int arglist)
-{
-    checkarg(LEN1_TEST, "prin1", arglist);
-    print(car(arglist));
-    return (T);
-}
-
-int f_princ(int arglist)
-{
-    checkarg(LEN1_TEST, "princ", arglist);
-    princ(car(arglist));
-    return (T);
 }
 
 
