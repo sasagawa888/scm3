@@ -331,6 +331,7 @@ int f_exec_cont(int addr);
 int f_apply_cps(int addr);
 int f_eval_cps(int addr);
 int f_environment(int addr);
+int f_analyze(int addr);
 
 int list1(int x);
 int list2(int x, int y);

@@ -1491,7 +1491,6 @@ int transfer(int addr)
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
     }
-    /*
     else if(experp(car(addr))){
         func = findsym(car(addr));
         varlist = car(GET_BIND(func));
@@ -1502,7 +1501,6 @@ int transfer(int addr)
                      append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
                             list1(list1(makesym("free-clos"))))))));
     }
-    */
     else if(functionp(car(addr))){
         if(maltiple_recur_p(car(addr),cdr(addr))){
         return(list1(list2(makesym("eval"),list2(makesym("quote"),addr))));
@@ -2105,6 +2103,7 @@ void initsubr(void)
     defsubr("transfer", f_transfer);
     defsubr("exec-cont", f_exec_cont);
     defsubr("environment", f_environment);
+    defsubr("analyze", f_analyze);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -2908,9 +2907,9 @@ int f_eqgreaterp(int arglist)
 int f_gbc(int arglist)
 {
 
-    if (car(arglist) == T)
+    if (car(arglist) == TRUE)
 	gbc_flag = 1;
-    else if (car(arglist) == NIL)
+    else if (car(arglist) == FAIL)
 	gbc_flag = 0;
     else if (car(arglist) == makeint(1)) {
 	printf("execute gc!\n");
@@ -3200,6 +3199,18 @@ int f_subst(int arglist)
     arg3 = caddr(arglist);
 
     return(subst(arg1,arg2,arg3));
+}
+
+int f_analyze(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    print(arg1);
+    printf("\nBIND");print(GET_BIND(arg1));
+    printf("\nCAR");print(GET_CAR(arg1));
+    printf("\nCDR");print(GET_CDR(arg1));
+
+    return(TRUE);
 }
 
 
