@@ -612,6 +612,14 @@ int lambdap(int addr)
         return (0);
 }
 
+int in_recur_p(int addr)
+{
+    if(GET_REC(GET_BIND(addr)))
+        return(1);
+    else 
+        return(0);
+}
+
 int macrop(int addr)
 {
 	return (IS_MACRO(GET_BIND(addr)));
@@ -1514,6 +1522,13 @@ int transfer(int addr)
     else if(functionp(car(addr))){
         if(maltiple_recur_p(car(addr),cdr(addr))){
         return(list1(list2(makesym("eval"),list2(makesym("quote"),addr))));
+        } else if(in_recur_p(car(addr))){
+        func = car(addr);
+        varlist = car(GET_BIND(GET_BIND(func)));
+	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(args,append(body,
+                     list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
         }
         else {
         func = car(addr);
@@ -3579,19 +3594,20 @@ int f_unbind(int arglist)
 
 int f_set_clos(int arglist)
 {
-    //int arg1;
-    //arg1 = car(arglist);
-    //if(GET_REC(arg1) == 0){
-    //SET_REC(arg1,1);
+    int arg1;
+    arg1 = car(arglist);
+    if(GET_REC(arg1) == 0){
+    SET_REC(arg1,1);
     //push_cps(ep);
     //push_cps(arg1);
     //ep = GET_CDR(arg1);
-    //}
+    }
     return(TRUE);
 }
 
 int f_free_clos(int arglist)
 {
+    //SET_REC(arg1,0);
     return(acc);
 }
 
