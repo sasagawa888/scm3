@@ -1491,6 +1491,16 @@ int transfer(int addr)
                   list2(makesym("pop"),makeint(length(cdr(addr)))));
         return(append(args,list1(body)));
     }
+    else if(experp(car(addr))){
+        func = findsym(car(addr));
+        varlist = car(GET_BIND(GET_BIND(func)));
+	    body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
+        args = transfer_exprargs(cdr(addr),varlist);
+        return(append(list1(list2(makesym("set-clos"),func)),
+                  append(args,append(body,
+                     append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
+                            list1(list1(makesym("free-clos"))))))));
+    }
     else if(functionp(car(addr))){
         if(maltiple_recur_p(car(addr),cdr(addr))){
         return(list1(list2(makesym("eval"),list2(makesym("quote"),addr))));
@@ -1501,7 +1511,7 @@ int transfer(int addr)
         args = transfer_exprargs(cdr(addr),varlist);
         return(append(args,append(body,
                      list1(list2(makesym("unbind"),makeint(length(cdr(addr))))))));
-        }
+        } 
         else {
         func = car(addr);
         varlist = car(GET_BIND(GET_BIND(func)));
