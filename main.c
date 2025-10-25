@@ -242,12 +242,6 @@ void cellprint(int addr)
     case CONT:
 	printf("CONT   ");
 	break;
-    case FEXPR:
-	printf("EXPR   ");
-	break;
-    case MACRO:
-	printf("MACRO  ");
-	break;
     }
     printf("%07d ", GET_CAR(addr));
     printf("%07d ", GET_CDR(addr));
@@ -613,11 +607,6 @@ int in_recur_p(int addr)
         return(1);
     else 
         return(0);
-}
-
-int macrop(int addr)
-{
-	return (IS_MACRO(GET_BIND(addr)));
 }
 
 //--------------list---------------------
@@ -1346,12 +1335,6 @@ void print(int addr)
     case CONT:
     printf("<cont>");
     break;
-    case FEXPR:
-	printf("<fexpr>");
-	break;
-    case MACRO:
-	printf("<macro>");
-	break;
     case LIS:{
 	    printf("(");
 	    printlist(addr);
@@ -1417,12 +1400,6 @@ void princ(int addr)
 	break;
     case EXPR:
 	printf("<expr>");
-	break;
-    case FEXPR:
-	printf("<fexpr>");
-	break;
-    case MACRO:
-	printf("<macro>");
 	break;
     case LIS:{
 	    printf("(");
@@ -1726,7 +1703,7 @@ int eval(int addr)
 
 int apply(int func, int args)
 {
-    int varlist, body, res, macrofunc;
+    int varlist, body, res;
 
     res = NIL;
     switch (GET_TAG(func)) {
@@ -1745,30 +1722,7 @@ int apply(int func, int args)
 	    unbind();
 	    return (res);
 	}
-    case MACRO:{
-	    macrofunc = GET_BIND(func);
-	    varlist = car(GET_BIND(macrofunc));
-	    body = cdr(GET_BIND(macrofunc));
-	    bindarg(varlist, list1(cons(makesym("_"),args)));
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
-	    }
-	    unbind();
-	    res = eval(res);
-	    return (res);
-	}
-    case FEXPR:{
-	    varlist = car(GET_BIND(func));
-	    body = cdr(GET_BIND(func));
-	    bindarg(varlist, list1(args));
-	    while (!(IS_NIL(body))) {
-		res = eval(car(body));
-		body = cdr(body);
-	    }
-	    unbind();
-	    return (res);
-	}
+    
     default:
 	error(ILLEGAL_OBJ_ERR, "apply", func);
     }
@@ -2051,36 +2005,6 @@ void bindfunc(char *name, tag tag, int (*func)(int))
     SET_BIND(sym,val);
 }
 
-void bindmacro(int sym, int addr)
-{
-    int val1, val2;
-
-    val1 = freshcell();
-    SET_TAG(val1, EXPR);
-    SET_BIND(val1, addr);
-    SET_CDR(val1, 0);
-    val2 = freshcell();
-    SET_TAG(val2, MACRO);
-    SET_BIND(val2, val1);
-    SET_CDR(val2, 0);
-    bindsym(sym, val2);
-}
-
-int bindmacro1(int addr)
-{
-    int val1, val2;
-
-    val1 = freshcell();
-    SET_TAG(val1, EXPR);
-    SET_BIND(val1, addr);
-    SET_CDR(val1, 0);
-    val2 = freshcell();
-    SET_TAG(val2, MACRO);
-    SET_BIND(val2, val1);
-    SET_CDR(val2, 0);
-    return(val2);
-}
-
 void initsubr(void)
 {
     defsubr("+", f_plus);
@@ -2162,7 +2086,6 @@ void initsubr(void)
     defsubr("subst", f_subst);
     defsubr("functionp", f_functionp);
     defsubr("procedure?", f_procedurep);
-    defsubr("macrop", f_macrop);
     defsubr("call/cc", f_call_cc);
     defsubr("push", f_push);
     defsubr("pop", f_pop);
@@ -3531,16 +3454,6 @@ int f_procedurep(int arglist)
         return(FAIL);
 }
 
-
-
-int f_macrop(int arglist)
-{
-    checkarg(LEN1_TEST,"macrop",arglist);
-    if(macrop(car(arglist)))
-        return(T);
-    else 
-        return(NIL);
-}
 
 
 int f_call_cc(int arglist)
