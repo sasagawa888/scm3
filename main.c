@@ -2124,7 +2124,6 @@ void initsubr(void)
     defsubr("not", f_not);
     defsubr("load", f_load);
     defsubr("edwin", f_edwin);
-    defsubr("subst", f_subst);
     defsubr("functionp", f_functionp);
     defsubr("procedure?", f_procedurep);
     defsubr("call/cc", f_call_cc);
@@ -3211,41 +3210,18 @@ int f_not(int arglist)
 	return (FAIL);
 }
 
-int subst(int x, int y, int lis)
-{
-    if (nullp(lis))
-	return (NIL);
-    else if (eqp(y, lis))
-	return (x);
-    else if (atomp(lis))
-	return (lis);
-    else
-	return (cons(subst(x, y, car(lis)), (subst(x, y, cdr(lis)))));
-}
-
-int f_subst(int arglist)
-{
-    int arg1, arg2, arg3;
-
-    checkarg(LIST_TEST, "subst", caddr(arglist));
-    arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    arg3 = caddr(arglist);
-
-    return (subst(arg1, arg2, arg3));
-}
-
 int f_analyze(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
     print(arg1);
-    printf("\nBIND");
+    printf("\nBIND ");
     print(GET_BIND(arg1));
-    printf("\nCAR");
+    printf("\nCAR ");
     print(GET_CAR(arg1));
-    printf("\nCDR");
+    printf("\nCDR ");
     print(GET_CDR(arg1));
+    printf("\n");
 
     return (TRUE);
 }

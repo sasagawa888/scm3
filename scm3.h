@@ -275,7 +275,6 @@ int f_eq(int addr);
 int f_equal(int addr);
 int f_set(int addr);
 int f_not(int addr);
-int f_subst(int addr);
 int f_functionp(int addr);
 int f_procedurep(int addr);
 int f_macrop(int addr);
