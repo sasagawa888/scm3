@@ -598,11 +598,6 @@ int experp(int addr){
         return(0);
 }
 
-int fexprp(int addr)
-{
-	return (IS_FEXPR(GET_BIND(addr)));
-}
-
 
 int lambdap(int addr)
 {
@@ -1724,11 +1719,6 @@ int eval(int addr)
         }
         return(res);
     }
-	else if (macrop(car(addr)))
-	    return (apply(GET_BIND(car(addr)), cdr(addr)));
-
-    else if (fexprp(car(addr)))
-        return (apply(GET_BIND(car(addr)), cdr(addr)));
     }
     error(CANT_FIND_ERR, "eval", addr);
     return (0);
