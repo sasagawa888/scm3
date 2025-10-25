@@ -1522,7 +1522,8 @@ int transfer(int addr)
         args = transfer_exprargs(cdr(addr),varlist);
         return(append(list1(list2(makesym("set-clos"),func)),
                   append(args,append(body,
-                     list1(list2(makesym("unbind"),makeint(length(cdr(addr)))))))));
+                     append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
+                            list1(list1(makesym("free-clos"))))))));
         }
     } else if(symbolp(car(addr)) && IS_CONT(findsym(car(addr)))){
         args = transfer_subrargs(addr);
@@ -3578,23 +3579,20 @@ int f_unbind(int arglist)
 
 int f_set_clos(int arglist)
 {
-    int arg1;
-    arg1 = car(arglist);
-    if(GET_REC(arg1) == 0){
-    SET_REC(arg1,1);
+    //int arg1;
+    //arg1 = car(arglist);
+    //if(GET_REC(arg1) == 0){
+    //SET_REC(arg1,1);
     //cps_push(ep);
     //cps_push(arg1);
     //ep = GET_CDR(arg1);
-    }
+    //}
     return(TRUE);
 }
 
 int f_free_clos(int arglist)
 {
-    int arg1;
-    arg1 = car(arglist);
-    cps_unbind(GET_INT(arg1));
-    return(TRUE);
+    return(acc);
 }
 
 
