@@ -3598,16 +3598,19 @@ int f_set_clos(int arglist)
     arg1 = car(arglist);
     if(GET_REC(arg1) == 0){
     SET_REC(arg1,1);
-    //push_cps(ep);
-    //push_cps(arg1);
-    //ep = GET_CDR(arg1);
+    push_cps(ep);
+    push_cps(arg1);
+    ep = GET_CDR(arg1);
     }
     return(TRUE);
 }
 
 int f_free_clos(int arglist)
 {
-    //SET_REC(arg1,0);
+    int expr;
+    expr = pop_cps();
+    SET_REC(expr,0);
+    ep = pop_cps();
     return(acc);
 }
 
