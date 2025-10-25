@@ -2104,6 +2104,7 @@ void initsubr(void)
     defsubr("free-clos", f_free_clos);
     defsubr("transfer", f_transfer);
     defsubr("exec-cont", f_exec_cont);
+    defsubr("environment", f_environment);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3546,6 +3547,13 @@ int f_exec_cont(int arglist)
     ep = GET_CDR(arg1);    //restore environment
     acc = arg2;        
     return(eval_cps(NIL)); //execute CPS
+}
+
+int f_environment(int arglist)
+{
+    print(ep);
+    printf("\n");
+    return(TRUE);
 }
 
 
