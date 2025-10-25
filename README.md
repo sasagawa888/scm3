@@ -20,7 +20,7 @@ scm3
 ```
 Exit the interpreter by typing:
 ```
-(quit)
+(exit)
 ```
 ![](start.png)
 
