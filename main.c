@@ -911,12 +911,12 @@ int makecont(void)
 
 
 //-------for CPS--------------------
-void cps_push(int addr)
+void push_cps(int addr)
 {
     sp_cps = cons(addr,sp_cps);
 }
 
-int cps_pop(void)
+int pop_cps(void)
 {
     int res;
     res = car(sp_cps);
@@ -924,7 +924,7 @@ int cps_pop(void)
     return(res);
 }
 
-int cps_pops(int n)
+int pops_cps(int n)
 {
     int res;
     res = NIL;
@@ -3550,7 +3550,7 @@ int f_call_cc(int arglist)
 
 int f_push(int arglist)
 {
-    cps_push(acc);
+    push_cps(acc);
     return(T);
 }
 
@@ -3558,7 +3558,7 @@ int f_pop(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return(cps_pops(GET_INT(arg1)));
+    return(pops_cps(GET_INT(arg1)));
 }
 
 int f_bind(int arglist)
@@ -3583,8 +3583,8 @@ int f_set_clos(int arglist)
     //arg1 = car(arglist);
     //if(GET_REC(arg1) == 0){
     //SET_REC(arg1,1);
-    //cps_push(ep);
-    //cps_push(arg1);
+    //push_cps(ep);
+    //push_cps(arg1);
     //ep = GET_CDR(arg1);
     //}
     return(TRUE);
