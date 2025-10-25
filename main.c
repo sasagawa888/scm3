@@ -2056,7 +2056,6 @@ void initsubr(void)
     defsubr("max", f_max);
     defsubr("min", f_min);
     defsubr("abs", f_abs);
-    defsubr("recip", f_recip);
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
     defsubr("sqrt", f_sqrt);
@@ -2378,19 +2377,6 @@ int f_abs(int arglist)
     return (res);
 }
 
-
-int f_recip(int arglist)
-{
-    int arg1;
-
-    checkarg(LEN1_TEST, "recip", arglist);
-    checkarg(NUMLIST_TEST, "recip", arglist);
-    arg1 = car(arglist);
-    if (integerp(arg1))
-	return (makeint(0));
-
-    return (quotient(makeflt(1.0), arg1));
-}
 
 int f_remainder(int arglist)
 {

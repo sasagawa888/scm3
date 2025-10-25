@@ -238,7 +238,6 @@ int f_quotient(int addr);
 int f_max(int addr);
 int f_min(int addr);
 int f_abs(int addr);
-int f_recip(int addr);
 int f_remainder(int addr);
 int f_expt(int addr);
 int f_sqrt(int addr);
