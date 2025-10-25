@@ -1496,7 +1496,7 @@ int transfer(int addr)
         varlist = car(GET_BIND(func));
 	    body = transfer_exprbody(cdr(GET_BIND(func)));
         args = transfer_exprargs(cdr(addr),varlist);
-        return(append(list1(list2(makesym("set-clos"),func)),
+        return(append(list1(list2(makesym("set-clos"),car(addr))),
                   append(args,append(body,
                      append(list1(list2(makesym("unbind"),makeint(length(cdr(addr))))),
                             list1(list1(makesym("free-clos"))))))));
