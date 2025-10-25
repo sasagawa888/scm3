@@ -1656,9 +1656,6 @@ int eval(int addr)
     } else if (listp(addr)) {
 	if (numberp(car(addr)))
 	    error(ARG_SYM_ERR, "eval", addr);
-	else if ((symbolp(car(addr)))
-		 && (eqp(car(addr), makesym("quasi-quote"))))
-	    return (eval(quasi_transfer2(cadr(addr), 0)));
     else if (lambdap(car(addr)))
         return (apply(eval(car(addr)), cdr(addr)));
 	else if (subrp(car(addr)))
@@ -3541,24 +3538,6 @@ int f_exec_cont(int arglist)
 
 
 
-//--------quasi-quote---------------
-int quasi_transfer1(int x)
-{
-    if (nullp(x))
-	return (NIL);
-    else if (atomp(x))
-	return (list2(makesym("quote"), x));
-    else if (listp(x) && eqp(caar(x), makesym("unquote")))
-	return (list3(makesym("cons"), cadar(x), quasi_transfer1(cdr(x))));
-    else if (listp(x) && eqp(caar(x), makesym("unquote-splicing")))
-	return (list3
-		(makesym("append"), cadar(x), quasi_transfer1(cdr(x))));
-    else
-	return (list3
-		(makesym("cons"), quasi_transfer1(car(x)),
-		 quasi_transfer1(cdr(x))));
-}
-
 int list1(int x)
 {
     return (cons(x, NIL));
@@ -3574,46 +3553,3 @@ int list3(int x, int y, int z)
     return (cons(x, cons(y, cons(z, NIL))));
 }
 
-
-int quasi_transfer2(int x, int n)
-{
-    if (nullp(x))
-	return (NIL);
-    else if (atomp(x))
-	return (list2(makesym("quote"), x));
-    else if (listp(x) && eqp(car(x), makesym("unquote")) && n == 0)
-	return (cadr(x));
-    else if (listp(x) && eqp(car(x), makesym("unquote-splicing"))
-	     && n == 0)
-	return (cadr(x));
-    else if (listp(x) && eqp(car(x), makesym("quasi-quote")))
-	return (list3(makesym("list"),
-		      list2(makesym("quote"), makesym("quasi-quote")),
-		      quasi_transfer2(cadr(x), n + 1)));
-    else if (listp(x) && eqp(caar(x), makesym("unquote")) && n == 0)
-	return (list3
-		(makesym("cons"), cadar(x), quasi_transfer2(cdr(x), n)));
-    else if (listp(x) && eqp(caar(x), makesym("unquote-splicing"))
-	     && n == 0)
-	return (list3
-		(makesym("append"), cadar(x),
-		 quasi_transfer2(cdr(x), n - 1)));
-    else if (listp(x) && eqp(caar(x), makesym("unquote")))
-	return (list3(makesym("cons"),
-		      list3(makesym("list"),
-			    list2(makesym("quote"), makesym("unquote")),
-			    quasi_transfer2(cadar(x), n - 1)),
-		      quasi_transfer2(cdr(x), n)));
-    else if (listp(x) && eqp(caar(x), makesym("unquote-splicing")))
-	return (list3(makesym("cons"),
-		      list3(makesym("list"),
-			    list2(makesym("quote"),
-				  makesym("unquote-splicing")),
-			    quasi_transfer2(cadar(x), n - 1)),
-		      quasi_transfer2(cdr(x), n)));
-    else
-	return (list3
-		(makesym("cons"), quasi_transfer2(car(x), n),
-		 quasi_transfer2(cdr(x), n)));
-
-}
