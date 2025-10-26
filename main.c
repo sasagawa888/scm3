@@ -1562,14 +1562,14 @@ int transfer(int addr)
 	    args = transfer_subrargs(cdr(addr));
 	    body =
 		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), car(addr)),
+		      car(addr),
 		      list2(makesym("pop"), makeint(length(cdr(addr)))));
 	    return (append(args, list1(body)));
 	} else if (fsubrp(car(addr))) {
 	    args = transfer_fsubrargs(cdr(addr));
 	    body =
 		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), car(addr)),
+		      car(addr),
 		      list2(makesym("pop"), makeint(length(cdr(addr)))));
 	    return (append(args, list1(body)));
 	} else if (experp(car(addr))) {
@@ -1627,7 +1627,7 @@ int transfer(int addr)
 	    args = transfer_subrargs(addr);
 	    body =
 		list3(makesym("apply-cps"),
-		      list2(makesym("quote"), makesym("exec-cont")),
+		      makesym("exec-cont"),
 		      list2(makesym("pop"), makeint(length(addr))));
 	    return (append(args, list1(body)));
 	}
@@ -3220,12 +3220,14 @@ int f_apply_cps(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
+    /*
     if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
 	arg1 = GET_BIND(arg1);
     else if (lambdap(arg1))
 	arg1 = eval_cps(arg1);
     else
 	error(ILLEGAL_OBJ_ERR, "apply", arg1);
+    */
     return (apply_cps(arg1, arg2));
 }
 
