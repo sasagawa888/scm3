@@ -144,6 +144,7 @@ int sp_cps; //stack pointer for CPS
 #define SYMLIST_TEST	13
 #define STRING_TEST	    14
 #define BOOL_TEST       15
+#define INTEGER_TEST 	16
 
 
 void initcell(void);
@@ -256,6 +257,8 @@ int f_cons(int addr);
 int f_length(int addr);
 int f_list(int addr);
 int f_reverse(int addr);
+int f_list_tail(int addr);
+int f_list_ref(int addr);
 int f_assoc(int addr);
 int f_member(int addr);
 int f_append(int addr);

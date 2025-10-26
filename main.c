@@ -714,6 +714,15 @@ int reverse(int addr)
     return (res);
 }
 
+int list_tail(int x, int k)
+{
+    if(k==0)
+        return(x);
+    else 
+        return(list_tail(cdr(x),k-1));
+}
+
+
 int length(int addr)
 {
     int len = 0;
@@ -1926,6 +1935,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_NUM_ERR, fun, arg);
+    case INTEGER_TEST:
+	if (integerp(arg))
+	    return;
+	else
+	    error(ARG_INT_ERR, fun, arg);
     case STRING_TEST:
 	if (stringp(arg))
 	    return;
@@ -2072,6 +2086,8 @@ void initsubr(void)
     defsubr("cons", f_cons);
     defsubr("list", f_list);
     defsubr("reverse", f_reverse);
+    defsubr("list-tail", f_list_tail);
+    defsubr("list-ref", f_list_ref);
     defsubr("length", f_length);
     defsubr("append", f_append);
     defsubr("append!", f_nconc);
@@ -2698,6 +2714,32 @@ int f_reverse(int arglist)
     }
     return (res);
 }
+
+int f_list_tail(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST, "list-tail", arglist);
+    checkarg(LIST_TEST, "list-tail", car(arglist));
+    checkarg(INTEGER_TEST, "list-tail", cadr(arglist));
+
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (list_tail(arg1,GET_INT(arg2)));
+}
+
+int f_list_ref(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST, "list-ref", arglist);
+    checkarg(LIST_TEST, "list-ref", car(arglist));
+    checkarg(INTEGER_TEST, "list-ref", cadr(arglist));
+
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (car(list_tail(arg1,GET_INT(arg2))));
+}
+
+
 
 int f_assoc(int arglist)
 {
