@@ -31,6 +31,7 @@ typedef struct cell {
     	int bind;
 		int ( *subr) ();
 		double fltnum;
+		int *vector;
     } val;
     int car;
     int cdr;
@@ -60,6 +61,7 @@ typedef struct token {
 #define GET_TAG(addr)		heap[addr].tag
 #define GET_BIND(addr)		heap[addr].val.bind
 #define GET_SUBR(addr)		heap[addr].val.subr
+#define GET_VEC_ELT(addr,i) heap[addr].val.vector[i]
 #define GET_FLAG(addr)		heap[addr].flag
 #define SET_TAG(addr,x)		heap[addr].tag = x
 #define SET_CAR(addr,x)		heap[addr].car = x
@@ -70,6 +72,8 @@ typedef struct token {
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
 #define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(SYMSIZE); strcpy(heap[addr].name,x);
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
+#define SET_VEC(addr,x)		heap[addr].val.vector = x;
+#define SET_VEC_ELT(addr,i,x) heap[addr].val.vector[i] = x;
 #define IS_SYMBOL(addr)		heap[addr].tag == SYM
 #define IS_NUMBER(addr)		heap[addr].tag == NUM
 #define IS_FLT(addr)		heap[addr].tag == FLTN
@@ -77,6 +81,7 @@ typedef struct token {
 #define IS_BOOL(addr)		heap[addr].tag == BOOL
 #define IS_CHAR(addr)	    heap[addr].tag == CHAR
 #define IS_LIST(addr)		heap[addr].tag == LIS
+#define IS_VECTOR(addr)     heap[addr].tag == VEC
 #define IS_NIL(addr)        (addr == 0 || addr == 1)
 #define IS_SUBR(addr)		heap[addr].tag == SUBR
 #define IS_FSUBR(addr)		heap[addr].tag == FSUBR
@@ -195,6 +200,7 @@ int read(void);
 int readlist(void);
 void print(int addr);
 void printlist(int addr);
+void printvec(int addr);
 void princ(int addr);
 int eval(int addr);
 void bindarg(int lambda, int arglist);

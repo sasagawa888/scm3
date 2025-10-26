@@ -406,7 +406,7 @@ int atomp(int addr)
     if (integerp(addr))
 	return (1);
     if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr)
-	|| IS_CHAR(addr))
+	|| IS_CHAR(addr) || IS_VECTOR(addr))
 	return (1);
     else
 	return (0);
@@ -525,6 +525,17 @@ int listp(int addr)
     else
 	return (0);
 }
+
+int vectorp(int addr)
+{
+    if (addr >= HEAPSIZE || addr < 0)
+	return (0);
+    else if (IS_VECTOR(addr))
+	return (1);
+    else
+	return (0);
+}
+
 
 int pairp(int addr)
 {
@@ -862,7 +873,7 @@ int makestr(char *name)
     SET_NAME(addr, name);
     return (addr);
 }
-
+int res, i, *vec;
 
 
 int makebool(char *name)
@@ -885,14 +896,23 @@ int makechar(char *name)
     return (addr);
 }
 
-/*
+
 int makevec(int addr)
-{
-    int n;
+{   
+    int n, i, *vec;
     n = length(addr);
-    (int)malloc(n); 
+    res = freshcell();
+    vec = (int *) malloc(sizeof(int) * n);
+    SET_TAG(res, VEC);
+    SET_VEC(res, vec);
+    for (i = 0; i < n; i++){
+	SET_VEC_ELT(res, i, car(addr));
+    addr = cdr(addr);
+    }
+    SET_CDR(res, n);
+    return(res);
 }
-*/
+
 
 int makesym(char *name)
 {
@@ -1308,7 +1328,7 @@ int read(void)
     case LPAREN:
 	return (readlist());
     case VECTOR:
-	return (readlist());
+	return (makevec(readlist()));
 	break;
     default:
 	break;
@@ -1379,6 +1399,12 @@ void print(int addr)
 	    printlist(addr);
 	    break;
 	}
+    case VEC:{
+        printf("#(");
+        printvec(addr);
+        printf(")");
+        break;
+    }
     default:
 	printf("<undef>");
 	break;
@@ -1400,6 +1426,17 @@ void printlist(int addr)
 	if (!(IS_NIL(GET_CDR(addr))))
 	    printf(" ");
 	printlist(GET_CDR(addr));
+    }
+}
+
+void printvec(int addr)
+{
+    int n,i;
+    n = GET_CDR(addr);
+    for(i=0;i<n;i++){
+        print(GET_VEC_ELT(addr,i));
+        if(i < n-1)
+            printf(" ");
     }
 }
 
@@ -1515,7 +1552,7 @@ int transfer(int addr)
 {
     int func, varlist, args, body;
     if (numberp(addr) || stringp(addr) || symbolp(addr)
-	|| continuationp(addr) || booleanp(addr) || characterp(addr))
+	|| continuationp(addr) || booleanp(addr) || characterp(addr) || vectorp(addr))
 	return (list1(addr));
     else if (listp(addr)) {
 	if (numberp(car(addr)))
@@ -1613,7 +1650,7 @@ int execute(int addr)
     int lam;
 
     if (numberp(addr) || stringp(addr) || continuationp(addr)
-	|| booleanp(addr) || characterp(addr))
+	|| booleanp(addr) || characterp(addr) || vectorp(addr))
 	return (addr);
     else if (addr == T || addr == NIL)
 	return (addr);
