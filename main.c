@@ -27,8 +27,8 @@ int gbc_flag = 0;
 int return_flag = 0;
 int step_flag = 0;
 int gennum = 1;
-int oblist_len;
 int ctrl_c_flag;
+int letrec_flag = 0;
 
 void signal_handler_c(int signo)
 {
@@ -406,7 +406,8 @@ int atomp(int addr)
     if (integerp(addr))
 	return (1);
     if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr)
-	|| IS_CHAR(addr) || IS_VECTOR(addr))
+	|| IS_CHAR(addr) || IS_VECTOR(addr) || IS_SUBR(addr) || IS_FSUBR(addr)
+    || IS_EXPR(addr))
 	return (1);
     else
 	return (0);
@@ -1703,8 +1704,8 @@ int eval_cps(int addr)
 	    print(cp);
 	    printf("---cont---\n");
 	    print(exp);
-	    printf(" in ");
-	    print_env();
+	    //printf(" in ");
+	    //print_env();
 	    printf(" >> ");
 	    c = getc(stdin);
 	    if (c == 'q')
@@ -3143,7 +3144,6 @@ int f_step(int arglist)
     checkarg(LEN1_TEST, "step", arglist);
     arg1 = car(arglist);
     if (arg1 == TRUE) {
-	oblist_len = length(ep);
 	step_flag = 1;
     } else if (arg1 == FAIL)
 	step_flag = 0;
@@ -3520,12 +3520,13 @@ int f_letrec(int arglist)
         arg1 = cdr(arg1);
         assocsym(fun,lam);
     }
-    while(!nullp(lams)){
-        lam = car(lams);
-        lams = cdr(lams);
-        SET_CDR(lam,copy(ep));
-    }
+    /* In the case of mutual recursion, each closure needs to share a common environment.
+    * Therefore, set-clos and free-clos are disabled 
+    * while the body of letrec is being executed.
+    */
+    letrec_flag = 1;
     res = f_begin(arg2);
+    letrec_flag = 0;
     ep = save;
     return(res);
 }
@@ -3641,6 +3642,8 @@ int f_unbind(int arglist)
 int f_set_clos(int arglist)
 {
     int arg1;
+    if(letrec_flag) return(TRUE);
+
     arg1 = car(arglist);
     if (GET_REC(arg1) == 0) {
 	SET_REC(arg1, 1);
@@ -3654,6 +3657,8 @@ int f_set_clos(int arglist)
 int f_free_clos(int arglist)
 {
     int expr;
+    if(letrec_flag) return(TRUE);
+
     expr = pop_cps();
     SET_REC(expr, 0);
     ep = pop_cps();
