@@ -3507,16 +3507,23 @@ int f_let_star(int arglist)
 
 int f_letrec(int arglist)
 {
-    int arg1,arg2,fun,lam,res,save;
+    int arg1,arg2,fun,lam,lams,res,save;
     checkarg(LIST_TEST, "letrec", car(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     save = ep;
+    lams = NIL;
     while (!nullp(arg1)){
         fun = caar(arg1);
         lam = eval(cadar(arg1));
+        lams = cons(lam,lams);
         arg1 = cdr(arg1);
         assocsym(fun,lam);
+    }
+    while(!nullp(lams)){
+        lam = car(lams);
+        lams = cdr(lams);
+        SET_CDR(lam,copy(ep));
     }
     res = f_begin(arg2);
     ep = save;
