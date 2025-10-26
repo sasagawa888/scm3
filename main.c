@@ -2230,6 +2230,7 @@ void initsubr(void)
     deffsubr("or", f_or);
     deffsubr("let", f_let);
     deffsubr("let*", f_let_star);
+    deffsubr("letrec", f_letrec);
 
 }
 
@@ -3502,6 +3503,24 @@ int f_let_star(int arglist)
     res = f_begin(arg2);
     ep = save;
     return (res);
+}
+
+int f_letrec(int arglist)
+{
+    int arg1,arg2,fun,lam,res,save;
+    checkarg(LIST_TEST, "letrec", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cdr(arglist);
+    save = ep;
+    while (!nullp(arg1)){
+        fun = caar(arg1);
+        lam = eval(cadar(arg1));
+        arg1 = cdr(arg1);
+        assocsym(fun,lam);
+    }
+    res = f_begin(arg2);
+    ep = save;
+    return(res);
 }
 
 
