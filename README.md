@@ -41,9 +41,6 @@ T
 
 
 ## Notes
-
-This is not a full R3RS implementation, but a simplified version that captures the feel of the original.
-
-Core functions like QUOTE, ATOM?, EQ?, CONS, CAR, CDR, and COND are implemented.
+This implementation is not fully R3RS-compliant. It does not include bignums or complex numbers. It focuses specifically on Scheme's unique continuations and closures.
 
 see DOCUMENT.md
