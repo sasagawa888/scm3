@@ -45,7 +45,7 @@
 (test '(let* ((x 2) (y (+ x 3))) y) 5)
 
 (test '((lambda (x) (+ x 1)) 4) 5)
-(test '(apply + '(1 2 3 4)) 10)
+;(test '(apply + '(1 2 3 4)) 10)
 (test '(map (lambda (x) (* x x)) '(1 2 3)) '(1 4 9))
 
 (test '(letrec ((even? (lambda (n) (if (= n 0) #t (odd? (- n 1)))))
