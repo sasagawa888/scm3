@@ -567,7 +567,7 @@ int eqp(int addr1, int addr2)
 	return (0);
 }
 
-int eqv(int addr1, int addr2)
+int eqvp(int addr1, int addr2)
 {
     if(eqp(addr1,addr2) || numeqp(addr1,addr2))
         return(1);
@@ -710,6 +710,28 @@ int member(int x, int lis)
     else
 	return (member(x, cdr(lis)));
 }
+
+int memq(int x, int lis)
+{
+    if (nullp(lis))
+	return (NIL);
+    else if (eqp(x, car(lis)))
+	return (T);
+    else
+	return (memq(x, cdr(lis)));
+}
+
+
+int memv(int x, int lis)
+{
+    if (nullp(lis))
+	return (NIL);
+    else if (eqvp(x, car(lis)))
+	return (T);
+    else
+	return (memv(x, cdr(lis)));
+}
+
 
 int reverse(int addr)
 {
@@ -2138,6 +2160,8 @@ void initsubr(void)
     defsubr("boolean?", f_booleanp);
     defsubr("assoc", f_assoc);
     defsubr("member", f_member);
+    defsubr("memq", f_memq);
+    defsubr("memv", f_memv);
     defsubr("set", f_set);
     defsubr("not", f_not);
     defsubr("load", f_load);
@@ -2653,7 +2677,7 @@ int f_eqv(int arglist)
     checkarg(LEN2_TEST, "eqv", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (eqv(arg1, arg2))
+    if (eqvp(arg1, arg2))
 	return (TRUE);
     else
 	return (FAIL);
@@ -2772,6 +2796,31 @@ int f_member(int arglist)
     arg2 = cadr(arglist);
     return (member(arg1, arg2));
 }
+
+
+int f_memq(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "memq", arglist);
+    checkarg(LIST_TEST, "memq", cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (memq(arg1, arg2));
+}
+
+
+int f_memv(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "memv", arglist);
+    checkarg(LIST_TEST, "memv", cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (memv(arg1, arg2));
+}
+
 
 
 int f_append(int arglist)

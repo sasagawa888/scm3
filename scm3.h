@@ -261,6 +261,8 @@ int f_list_tail(int addr);
 int f_list_ref(int addr);
 int f_assoc(int addr);
 int f_member(int addr);
+int f_memq(int addr);
+int f_memv(int addr);
 int f_append(int addr);
 int f_nconc(int addr);
 int f_rplaca(int addr);
