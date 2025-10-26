@@ -751,32 +751,22 @@ int nconc(int x, int y)
     return (x);
 }
 
-int mapcar(int lis, int fun)
-{
-    if (nullp(lis))
-	return (NIL);
-    else
-	return (cons(apply(fun, list1(car(lis))), mapcar(cdr(lis), fun)));
-}
-
-int mapcon(int lis, int fun)
-{
-    if (nullp(lis))
-	return (NIL);
-    else
-	return (nconc
-		(list1(apply(fun, list1(car(lis)))),
-		 mapcon(cdr(lis), fun)));
-}
-
 int map(int lis, int fun)
 {
-    while (!nullp(lis)) {
-	apply(fun, list1(car(lis)));
-	lis = cdr(lis);
-    }
-    return (NIL);
+    if (nullp(lis))
+	return (NIL);
+    else
+	return (cons(apply(fun, list1(car(lis))), map(cdr(lis), fun)));
 }
+
+int for_each(int lis, int fun)
+{
+    if (nullp(lis))
+	return (NIL);
+    else
+	return (apply(fun, list1(car(lis))), for_each(cdr(lis), fun));
+}
+
 
 int copy(int addr)
 {
@@ -2079,9 +2069,8 @@ void initsubr(void)
     defsubr("append!", f_nconc);
     defsubr("set-car!", f_rplaca);
     defsubr("set-cdr!", f_rplacd);
-    defsubr("mapcar", f_mapcar);
-    defsubr("mapcon", f_mapcon);
     defsubr("map", f_map);
+    defsubr("for-each", f_for_each);
     defsubr("=", f_numeqp);
     defsubr("eq?", f_eq);
     defsubr("equal?", f_equal);
@@ -3074,55 +3063,23 @@ int f_apply(int arglist)
 }
 
 
-int f_mapcar(int arglist)
-{
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "mapcar", arglist);
-    checkarg(LIST_TEST, "mapcar", cadr(arglist));
-    arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "mapcar", arg1);
-    return (mapcar(arg2, arg1));
-
-}
-
-int f_mapcon(int arglist)
-{
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "mapcon", arglist);
-    checkarg(LIST_TEST, "mapcon", cadr(arglist));
-    arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "mapcon", arg1);
-    return (mapcon(arg2, arg1));
-
-}
-
 int f_map(int arglist)
 {
     int arg1, arg2;
     checkarg(LEN2_TEST, "map", arglist);
-    checkarg(LIST_TEST, "map", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "map", arg1);
     return (map(arg2, arg1));
+}
 
+
+int f_for_each(int arglist)
+{
+    int arg1, arg2;
+    checkarg(LEN2_TEST, "for-each", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (for_each(arg2, arg1));
 }
 
 
