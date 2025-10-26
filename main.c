@@ -3107,7 +3107,7 @@ int f_newline(int arglist)
 {
     checkarg(LEN0_TEST, "newline", arglist);
     printf("\n");
-    return (T);
+    return (TRUE);
 }
 
 int f_trace(int arglist)
@@ -3424,7 +3424,7 @@ int f_cond(int arglist)
 
 int f_begin(int arglist)
 {
-
+    arglist = reverse(arglist);
     while (!(nullp(arglist))) {
 	cp = append(transfer(car(arglist)), cp);
 	arglist = cdr(arglist);
