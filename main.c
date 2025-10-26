@@ -526,6 +526,14 @@ int listp(int addr)
 	return (0);
 }
 
+int pairp(int addr)
+{
+    if(listp(addr) && addr != NIL)
+        return(1);
+    else 
+        return(0);
+}
+
 int nullp(int addr)
 {
     if (IS_NIL(addr))
@@ -2126,6 +2134,7 @@ void initsubr(void)
     defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
     defsubr("list?", f_listp);
+    defsubr("pair?", f_pairp);
     defsubr("boolean?", f_booleanp);
     defsubr("assoc", f_assoc);
     defsubr("member", f_member);
@@ -2838,6 +2847,15 @@ int f_listp(int arglist)
     else
 	return (FAIL);
 }
+
+int f_pairp(int arglist)
+{
+    if (pairp(car(arglist)))
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
 
 int f_booleanp(int arglist)
 {

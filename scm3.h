@@ -293,6 +293,7 @@ int f_numberp(int addr);
 int f_rationalp(int addr);
 int f_symbolp(int addr);
 int f_listp(int addr);
+int f_pairp(int addr);
 int f_booleanp(int addr);
 int f_greaterp(int addr);
 int f_lessp(int addr);
