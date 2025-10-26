@@ -559,6 +559,14 @@ int eqp(int addr1, int addr2)
 	return (0);
 }
 
+int eqv(int addr1, int addr2)
+{
+    if(eqp(addr1,addr2) || numeqp(addr1,addr2))
+        return(1);
+    else 
+        return(0);
+}
+
 int equalp(int x, int y)
 {
     if (atomp(x) && atomp(y))
@@ -566,7 +574,7 @@ int equalp(int x, int y)
     else if (eqp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
 	return (1);
 
-    return (NIL);
+    return (0);
 }
 
 
@@ -2073,6 +2081,7 @@ void initsubr(void)
     defsubr("for-each", f_for_each);
     defsubr("=", f_numeqp);
     defsubr("eq?", f_eq);
+    defsubr("eqv?", f_eqv);
     defsubr("equal?", f_equal);
     defsubr("null?", f_nullp);
     defsubr("atom?", f_atomp);
@@ -2610,6 +2619,21 @@ int f_eq(int arglist)
     else
 	return (FAIL);
 }
+
+
+int f_eqv(int arglist)
+{
+    int arg1, arg2;
+
+    checkarg(LEN2_TEST, "eqv", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    if (eqv(arg1, arg2))
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
 
 int f_equal(int arglist)
 {
