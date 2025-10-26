@@ -2193,6 +2193,7 @@ void initsubr(void)
     defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
     defsubr("list?", f_listp);
+    defsubr("vector?", f_vectorp);
     defsubr("pair?", f_pairp);
     defsubr("boolean?", f_booleanp);
     defsubr("assoc", f_assoc);
@@ -2216,6 +2217,7 @@ void initsubr(void)
     defsubr("exec-cont", f_exec_cont);
     defsubr("environment", f_environment);
     defsubr("analyze", f_analyze);
+    defsubr("vector", f_vector);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -2934,6 +2936,17 @@ int f_listp(int arglist)
 	return (FAIL);
 }
 
+
+int f_vectorp(int arglist)
+{
+    if (vectorp(car(arglist)))
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
+
+
 int f_pairp(int arglist)
 {
     if (pairp(car(arglist)))
@@ -3650,6 +3663,10 @@ int f_environment(int arglist)
     return (TRUE);
 }
 
+int f_vector(int arglist)
+{
+    return(makevec(arglist));
+}
 
 
 int list1(int x)
