@@ -3661,7 +3661,7 @@ int f_set_clos(int arglist)
 int f_free_clos(int arglist)
 {
     int expr;
-    if(letrec_flag) return(TRUE);
+    if(letrec_flag) return(acc);
 
     expr = pop_cps();
     SET_REC(expr, 0);
