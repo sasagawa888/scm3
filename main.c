@@ -1710,8 +1710,8 @@ int eval_cps(int addr)
 	    print(cp);
 	    printf("---cont---\n");
 	    print(exp);
-	    //printf(" in ");
-	    //print_env();
+	    printf(" in ");
+	    print_env();
 	    printf(" >> ");
 	    c = getc(stdin);
 	    if (c == 'q')
