@@ -1790,7 +1790,11 @@ int eval(int addr)
 	    || booleanp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
+        if(functionp(addr) || subrp(addr) || fsubrp(addr))
+        res = GET_BIND(addr);
+        else {
 	    res = findsym(addr);
+        }
 	    if (res == NO)
 		error(CANT_FIND_ERR, "eval", addr);
 	    else

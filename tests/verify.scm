@@ -2,7 +2,7 @@
 ;; Test Framework
 ;; ==============================
 (define (test expr expected)
-  (let ((result (eval expr)))
+  (let ((result (eval-cps expr)))
     (if (equal? result expected)
         (begin
           (display "OK: ") (display result) (newline))
@@ -44,8 +44,8 @@
 (test '(let ((x 2) (y 3)) (+ x y)) 5)
 (test '(let* ((x 2) (y (+ x 3))) y) 5)
 
-(test '((lambda (x) (+ x 1)) 4) 5)
-;(test '(apply + '(1 2 3 4)) 10)
+;(test '((lambda (x) (+ x 1)) 4) 5)
+(test '(apply + '(1 2 3 4)) 10)
 (test '(map (lambda (x) (* x x)) '(1 2 3)) '(1 4 9))
 
 (test '(letrec ((even? (lambda (n) (if (= n 0) #t (odd? (- n 1)))))
