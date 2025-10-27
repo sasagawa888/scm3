@@ -3505,15 +3505,17 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, vars, var, val, res, save;
+    int arg1, arg2, vars, var, val, res, save,save1;
     checkarg(LIST_TEST, "let", cdr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     vars = NIL;
 
+    save1 = pp;
     while (!nullp(arg1)) {
 	var = caar(arg1);
 	val = eval_cps(cadar(arg1));
+    push_protect(val);
 	arg1 = cdr(arg1);
 	vars = cons(cons(var, val), vars);
     }
@@ -3526,6 +3528,7 @@ int f_let(int arglist)
     }
     res = f_begin(arg2);
     ep = save;
+    pp = save1;
     return (res);
 }
 
