@@ -17,6 +17,97 @@ To exit, use (exit).
 
 ## Builtin Functions
 
+```
+*
++
+-
+/
+<
+<=
+=
+>=
+>
+append
+append!
+and
+analyze
+atom?
+begin
+bind
+boolean?
+cadddr
+caddr
+caar
+car
+call/cc
+cdr
+cond
+cons
+define
+display
+edwin
+eq?
+eqv?
+equal?
+exec-cont
+exit
+eval
+eval-cps
+for-each
+free-clos
+functionp
+gbc
+get
+hdmp
+if
+lambda
+let
+let*
+letrec
+length
+list
+list-ref
+list-tail
+load
+map
+member
+memq
+memv
+minus
+minus?
+not
+newline
+nil
+number?
+procedure?
+pop
+push
+quote
+rational?
+read
+readc
+remainder
+reverse
+set
+set!
+set-car!
+set-cdr!
+set-clos
+sin
+sqrt
+step
+symbol?
+tan
+trace
+transfer
+untrace
+unbind
+vector
+vector-length
+vector-ref
+    
+```
+
 ## Sample Codes
 
 ```
@@ -29,8 +120,8 @@ To exit, use (exit).
 edwin launches an editor. Please set your preferred editor in the EDITOR environment variable. If none is specified, it will call Edlis, which comes with Easy-ISLisp.
 
 ## Garbage Collection
-Using (gbc t) enables output during garbage collection.
-To disable it, use (gbc nil).
+Using (gbc #t) enables output during garbage collection.
+To disable it, use (gbc #f).
 The system implements the classical mark-and-sweep algorithm.
 You can force garbage collection by using (gbc 1).
 
