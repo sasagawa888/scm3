@@ -24,8 +24,6 @@ Exit the interpreter by typing:
 ```
 ![](start.png)
 
-## Functions
-
 
 ## Example
 
