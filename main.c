@@ -29,6 +29,7 @@ int step_flag = 0;
 int gennum = 1;
 int ctrl_c_flag;
 int letrec_flag = 0;
+int display_flag = 0;
 
 void signal_handler_c(int signo)
 {
@@ -1372,7 +1373,12 @@ void print(int addr)
 	    printf(".0");
 	break;
     case STR:
+    if(display_flag){
+    printf("%s", GET_NAME(addr));
+    }
+    else {
 	printf("\"%s\"", GET_NAME(addr));
+    }
 	break;
     case SYM:
 	printf("%s", GET_NAME(addr));
@@ -3111,7 +3117,9 @@ int f_readc(int arglist)
 int f_display(int arglist)
 {
     checkarg(LEN1_TEST, "display", arglist);
+    display_flag = 1;
     print(car(arglist));
+    display_flag = 0;
     return (TRUE);
 }
 
@@ -3666,6 +3674,7 @@ int f_set_clos(int arglist)
 	SET_REC(arg1, 1);
 	push_cps(ep);
 	push_cps(arg1);
+    if(GET_CDR(arg1) != NIL)
 	ep = GET_CDR(arg1);
     }
     return (TRUE);
