@@ -17,6 +17,7 @@ double version = 1.30;
 cell heap[HEAPSIZE];
 int stack[STACKSIZE];
 int argstk[STACKSIZE];
+int protect[STACKSIZE];
 token stok = { GO, OTHER };
 
 jmp_buf buf;
@@ -91,6 +92,7 @@ void initcell(void)
 
     sp = 0;
     ap = 0;
+    pp = 0;
 }
 
 int freshcell(void)
@@ -355,6 +357,11 @@ void gbcmark(void)
     // Mark the cells that are bound from the argstack.
     for (i = 0; i < ap; i++)
 	markcell(argstk[i]);
+
+    // Mark the cells that are protected.
+    for (i = 0; i < pp; i++)
+	markcell(protect[i]);
+
 
     // Mark the cells linked from the symbol hash table.
     for (i = 0; i < HASHTBSIZE; i++)
@@ -1025,6 +1032,17 @@ void argpush(int addr)
 void argpop(void)
 {
     --ap;
+}
+
+//------ protect data from GC
+void push_protect(int addr)
+{
+     protect[pp++] = addr;
+}
+
+void pop_protect(void)
+{
+    pp--;
 }
 
 //-------read()--------

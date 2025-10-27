@@ -107,6 +107,7 @@ int cp; //continuation pointer
 int cp1; //cp save;
 int acc; //register 
 int sp_cps; //stack pointer for CPS
+int pp;  //protect pointer 
 
 //-------read--------
 #define EOL		'\n'
@@ -230,6 +231,8 @@ void push(int pt);
 int pop(void);
 void argpush(int addr);
 void argpop(void);
+void push_protect(int addr);
+void pop_protect(void);
 void error(int errnum, char *fun, int arg);
 void checkarg(int test, char *fun, int arg);
 int isintlis(int arg);
