@@ -1931,6 +1931,12 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+    case ARG_VEC_ERR:{
+	    printf("%s require vector but got ", fun);
+	    print(arg);
+	    break;
+	}
+
     case ARG_NUM_ERR:{
 	    printf("%s require number but got ", fun);
 	    print(arg);
@@ -2020,6 +2026,11 @@ void checkarg(int test, char *fun, int arg)
 	    error(ARG_LIS_ERR, fun, arg);
     case BOOL_TEST:
 	if (booleanp(arg))
+	    return;
+	else
+	    error(ARG_BOOL_ERR, fun, arg);
+     case VECTOR_TEST:
+	if (vectorp(arg))
 	    return;
 	else
 	    error(ARG_BOOL_ERR, fun, arg);
@@ -2219,6 +2230,7 @@ void initsubr(void)
     defsubr("environment", f_environment);
     defsubr("analyze", f_analyze);
     defsubr("vector", f_vector);
+    defsubr("vector-length",f_vector_length);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3701,6 +3713,14 @@ int f_environment(int arglist)
 int f_vector(int arglist)
 {
     return(makevec(arglist));
+}
+
+int f_vector_length(int arglist)
+{
+    int arg1;
+    checkarg(VECTOR_TEST,"vector-length",car(arglist));
+    arg1 = car(arglist);
+    return(makeint(GET_CDR(arg1)));
 }
 
 
