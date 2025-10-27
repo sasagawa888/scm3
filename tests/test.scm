@@ -4,7 +4,7 @@
     (call/cc (lambda (c) (set! a c))) (bar))
 
 (define (bar)
-    (print 3))
+    (display 3))
 
 (define boo (lambda (x) x))
 
@@ -45,3 +45,4 @@
                           #f
                           (even? (- n 1))))))
     (even? x)))
+
