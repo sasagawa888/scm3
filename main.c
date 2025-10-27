@@ -2231,6 +2231,7 @@ void initsubr(void)
     defsubr("analyze", f_analyze);
     defsubr("vector", f_vector);
     defsubr("vector-length",f_vector_length);
+    defsubr("vector-ref", f_vector_ref);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3722,6 +3723,17 @@ int f_vector_length(int arglist)
     arg1 = car(arglist);
     return(makeint(GET_CDR(arg1)));
 }
+
+int f_vector_ref(int arglist)
+{
+    int arg1,arg2;
+    checkarg(VECTOR_TEST,"vector-ref",car(arglist));
+    checkarg(INTEGER_TEST,"vector-ref",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(GET_VEC_ELT(arg1,GET_INT(arg2)));
+}
+
 
 
 int list1(int x)
