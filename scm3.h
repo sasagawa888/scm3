@@ -19,7 +19,7 @@ written by kenichi sasagawa 2025/10~
 
 #define DEBUG longjmp(buf, 2);
 
-typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC} tag;
+typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC,PROM} tag;
 typedef enum flag {FRE,USE} flag;
 
 
@@ -87,6 +87,7 @@ typedef struct token {
 #define IS_FSUBR(addr)		heap[addr].tag == FSUBR
 #define IS_EXPR(addr)		heap[addr].tag == EXPR
 #define IS_CONT(addr)		heap[addr].tag == CONT
+#define IS_PROM(addr) 		heap[addr].tag == PROM
 #define IS_EMPTY(addr)		heap[addr].tag	== EMP
 #define HAS_NAME(addr,x)	strcmp(heap[addr].name,x) == 0
 #define SAME_NAME(addr1,addr2) strcmp(heap[addr1].name, heap[addr2].name) == 0
@@ -125,6 +126,7 @@ int pp;  //protect pointer
 #define ARG_LIS_ERR		4
 #define ARG_BOOL_ERR    15
 #define ARG_VEC_ERR		16
+#define ARG_PROM_ERR	17
 #define ARG_LEN0_ERR	5
 #define ARG_LEN1_ERR	6
 #define ARG_LEN2_ERR	7
@@ -153,6 +155,7 @@ int pp;  //protect pointer
 #define BOOL_TEST       15
 #define INTEGER_TEST 	16
 #define VECTOR_TEST		17
+#define PROMISE_TEST	18
 
 
 void initcell(void);
@@ -290,6 +293,7 @@ int f_set(int addr);
 int f_not(int addr);
 int f_functionp(int addr);
 int f_procedurep(int addr);
+int f_promisep(int addr);
 int f_quote(int addr);
 int f_setq(int addr);
 int f_define(int addr);

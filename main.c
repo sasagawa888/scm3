@@ -245,6 +245,9 @@ void cellprint(int addr)
     case CONT:
 	printf("CONT   ");
 	break;
+    case PROM:
+    printf("PROMISE");
+	break;
     }
     printf("%07d ", GET_CAR(addr));
     printf("%07d ", GET_CDR(addr));
@@ -631,6 +634,7 @@ int experp(int addr)
 }
 
 
+
 int lambdap(int addr)
 {
     if (listp(addr) && car(addr) == makesym("lambda"))
@@ -968,6 +972,17 @@ int makecont(void)
     SET_CDR(val, ep);
     return (val);
 }
+
+int makepromise(int addr)
+{
+    int val;
+
+    val = freshcell();
+    SET_TAG(val, PROM);
+    SET_BIND(val, addr);
+    return (val);
+}
+
 
 
 //-------for CPS--------------------
@@ -1418,6 +1433,9 @@ void print(int addr)
 	break;
     case CONT:
 	printf("<cont>");
+	break;
+    case PROM:
+	printf("<promise>");
 	break;
     case LIS:{
 	    printf("(");
@@ -1973,6 +1991,12 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+    case ARG_PROM_ERR:{
+	    printf("%s require promise but got ", fun);
+	    print(arg);
+	    break;
+	}
+
     case ARG_NUM_ERR:{
 	    printf("%s require number but got ", fun);
 	    print(arg);
@@ -2065,11 +2089,16 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_BOOL_ERR, fun, arg);
-     case VECTOR_TEST:
+    case VECTOR_TEST:
 	if (vectorp(arg))
 	    return;
 	else
-	    error(ARG_BOOL_ERR, fun, arg);
+	    error(ARG_VEC_ERR, fun, arg);
+    case PROMISE_TEST:
+	if ((arg > 0 || arg < HEAPSIZE) && IS_PROM(arg))
+	    return;
+	else
+	    error(ARG_PROM_ERR, fun, arg);
     case LEN0_TEST:
 	if (length(arg) == 0)
 	    return;
@@ -2254,6 +2283,7 @@ void initsubr(void)
     defsubr("edwin", f_edwin);
     defsubr("functionp", f_functionp);
     defsubr("procedure?", f_procedurep);
+    defsubr("promise?", f_promisep);
     defsubr("call/cc", f_call_cc);
     defsubr("push", f_push);
     defsubr("pop", f_pop);
@@ -3581,14 +3611,14 @@ int f_delay(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return(makefunc(list2(NIL,arg1)));
+    return(makepromise(arg1));
 }
 
 int f_force(int arglist)
 {
     int arg1,body;
     arg1 = car(arglist);
-    body = cadr(GET_BIND(arg1));
+    body = GET_BIND(arg1);
     return(eval_cps(body));
 }
 
@@ -3659,6 +3689,17 @@ int f_procedurep(int arglist)
 	return (FAIL);
 }
 
+int f_promisep(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "promise?", arglist);
+    arg1 = car(arglist);
+    if (arg1 >= 0 && arg1 < HEAPSIZE
+	&& IS_PROM(arg1))
+	return (TRUE);
+    else
+	return (FAIL);
+}
 
 
 int f_call_cc(int arglist)
