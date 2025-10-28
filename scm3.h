@@ -304,6 +304,7 @@ int f_or(int addr);
 int f_let(int addr);
 int f_let_star(int addr);
 int f_letrec(int addr);
+int f_do(int addr);
 int f_delay(int addr);
 int f_force(int addr);
 int f_load(int addr);

@@ -2310,6 +2310,7 @@ void initsubr(void)
     deffsubr("let", f_let);
     deffsubr("let*", f_let_star);
     deffsubr("letrec", f_letrec);
+    deffsubr("do", f_do);
     deffsubr("delay", f_delay);
     defsubr("force", f_force);
 
@@ -3594,6 +3595,43 @@ int f_letrec(int arglist)
     letrec_flag = 0;
     ep = save;
     return(res);
+}
+
+int f_do(int arglist)
+{
+    int arg1,arg2,arg3,var,init,update,temp,save,res;
+    checkarg(LIST_TEST,"do",car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = cddr(arglist);
+
+    save = ep;
+    loop:
+    //initialize var
+    temp = arg1;
+    while(!nullp(temp)){
+        var = caar(temp);
+        init = cadr(car(temp));
+        assocsym(var,init);
+        temp = cdr(temp);
+    }
+    //check test
+    if(eval(car(arg2)) != FAIL){
+        res = f_begin(cdr(arg2));
+        ep = save;
+        return(res);
+    }
+    //begin 
+    f_begin(arg3);
+    //update var
+    temp = arg1;
+    while(!nullp(temp)){
+        var = caar(temp);
+        update = caddr(car(temp));
+        bindsym(var,eval(update));
+        temp = cdr(temp);
+    }
+    goto loop;
 }
 
 int f_delay(int arglist)
