@@ -3611,7 +3611,7 @@ int f_do(int arglist)
     temp = arg1;
     while(!nullp(temp)){
         var = caar(temp);
-        init = cadr(car(temp));
+        init = eval(cadr(car(temp)));
         assocsym(var,init);
         temp = cdr(temp);
     }
