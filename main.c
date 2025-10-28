@@ -2281,6 +2281,8 @@ void initsubr(void)
     deffsubr("let", f_let);
     deffsubr("let*", f_let_star);
     deffsubr("letrec", f_letrec);
+    deffsubr("delay", f_delay);
+    defsubr("force", f_force);
 
 }
 
@@ -3271,14 +3273,7 @@ int f_apply_cps(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    /*
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval_cps(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "apply", arg1);
-    */
+   
     return (apply_cps(arg1, arg2));
 }
 
@@ -3290,14 +3285,7 @@ int f_apply(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    /*
-    if (functionp(arg1) || subrp(arg1) || fsubrp(arg1))
-	arg1 = GET_BIND(arg1);
-    else if (lambdap(arg1))
-	arg1 = eval(arg1);
-    else
-	error(ILLEGAL_OBJ_ERR, "apply", arg1);
-    */
+   
     return (apply(arg1, arg2));
 }
 
@@ -3587,6 +3575,23 @@ int f_letrec(int arglist)
     letrec_flag = 0;
     ep = save;
     return(res);
+}
+
+int f_delay(int arglist)
+{
+    int arg1,arg2;
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    SET_BIND(arg1,makefunc(list2(NIL,arg2)));
+    return(arg1);
+}
+
+int f_force(int arglist)
+{
+    int arg1,body;
+    arg1 = car(arglist);
+    body = cadr(GET_BIND(arg1));
+    return(eval_cps(body));
 }
 
 
