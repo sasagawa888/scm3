@@ -2206,7 +2206,6 @@ void initsubr(void)
 {
     defsubr("+", f_plus);
     defsubr("-", f_difference);
-    defsubr("minus", f_minus);
     defsubr("*", f_times);
     defsubr("/", f_quotient);
     defsubr("max", f_max);
@@ -2464,16 +2463,6 @@ int f_difference(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (difference(arg1, arg2));
-}
-
-int f_minus(int arglist)
-{
-    int arg1;
-
-    checkarg(NUMLIST_TEST, "minus", arglist);
-    checkarg(LEN1_TEST, "minus", arglist);
-    arg1 = car(arglist);
-    return (times(arg1, makeint(-1)));
 }
 
 int f_times(int arglist)

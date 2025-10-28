@@ -75,13 +75,13 @@ map
 member
 memq
 memv
-minus
 minus?
 not
 newline
 nil
 number?
 procedure?
+promise?
 pop
 push
 quote
