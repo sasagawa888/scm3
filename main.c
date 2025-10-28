@@ -3619,7 +3619,13 @@ int f_force(int arglist)
     int arg1,body;
     arg1 = car(arglist);
     body = GET_BIND(arg1);
-    return(eval_cps(body));
+    if(GET_CAR(arg1) == TRUE)
+    return(GET_CDR(arg1));
+    else { 
+    SET_CAR(arg1,TRUE);
+    SET_CDR(arg1,eval_cps(body));
+    return(GET_CDR(arg1));
+    }
 }
 
 
