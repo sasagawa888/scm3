@@ -1654,7 +1654,15 @@ int transfer(int addr)
 		      makesym("exec-cont"),
 		      list2(makesym("pop"), makeint(length(addr))));
 	    return (append(args, list1(body)));
-	}
+	} else if(lambdap(car(addr))){
+        func = car(addr);
+	    varlist = cadr(func);
+	    body = transfer_exprbody(cddr(func));
+	    args = transfer_exprargs(cdr(addr), varlist);
+	    return (append(args, append(body,
+					       list1
+						      (list2(makesym("unbind"),makeint(length(cdr(addr))))))));
+    }
     }
 
     error(ILLEGAL_OBJ_ERR, "transfer", addr);
