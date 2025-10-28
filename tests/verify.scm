@@ -44,7 +44,7 @@
 (test '(let ((x 2) (y 3)) (+ x y)) 5)
 (test '(let* ((x 2) (y (+ x 3))) y) 5)
 
-;(test '((lambda (x) (+ x 1)) 4) 5)
+(test '((lambda (x) (+ x 1)) 4) 5)
 (test '(apply + '(1 2 3 4)) 10)
 (test '(map (lambda (x) (* x x)) '(1 2 3)) '(1 4 9))
 
