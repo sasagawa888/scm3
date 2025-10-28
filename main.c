@@ -3525,7 +3525,7 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, vars, var, val, res, save,save1;
+    int arg1, arg2,vars, var, val, res, save,save1;
     checkarg(LIST_TEST, "let", cdr(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
