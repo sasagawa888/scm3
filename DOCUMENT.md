@@ -44,6 +44,7 @@ cdr
 cond
 cons
 define
+delay
 display
 edwin
 eq?
@@ -53,6 +54,7 @@ exec-cont
 exit
 eval
 eval-cps
+force
 for-each
 free-clos
 functionp
