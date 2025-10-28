@@ -3579,11 +3579,9 @@ int f_letrec(int arglist)
 
 int f_delay(int arglist)
 {
-    int arg1,arg2;
+    int arg1;
     arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    SET_BIND(arg1,makefunc(list2(NIL,arg2)));
-    return(arg1);
+    return(makefunc(list2(NIL,arg1)));
 }
 
 int f_force(int arglist)
