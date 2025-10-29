@@ -21,3 +21,11 @@
     (display to)
     (display ".")
     (newline))
+
+
+;(sublists '(a b c)) -> ((c) (b c) (a b c))
+(define (sublists list)
+     (let ((y '()))
+        (do ((x list (cdr x)))
+            ((null? x) y)
+            (set! y (cons x y)))))

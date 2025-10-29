@@ -55,8 +55,10 @@ int main(int argc, char *argv[])
 	    printf("> ");
 	    fflush(stdout);
 	    fflush(stdin);
+        ep = NIL;
 	    cp = NIL;
 	    cp1 = NIL;
+        sp = 0;
 	    sp_cps = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
@@ -1706,10 +1708,14 @@ int execute(int addr)
     else if (addr == T || addr == NIL)
 	return (addr);
     else if (symbolp(addr)) {
-	if (functionp(addr) || subrp(addr) || fsubrp(addr))
+    int res;
+    res = findsym(addr);
+    if(res != NO)
+        return(res);
+	else if (functionp(addr) || subrp(addr) || fsubrp(addr))
 	    return (GET_BIND(addr));
 	else
-	    return (findsym(addr));
+	    error(CANT_FIND_ERR,"execute",addr);
     } else if (listp(addr)) {
 	if (eqp(car(addr), makesym("quote")))
 	    return (cadr(addr));
@@ -1816,15 +1822,12 @@ int eval(int addr)
 	    || booleanp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
-        if(functionp(addr) || subrp(addr) || fsubrp(addr))
-        res = GET_BIND(addr);
-        else {
-	    res = findsym(addr);
-        }
-	    if (res == NO)
+        res = findsym(addr);
+        if(res != NO)
+        return(res);
+        else if(functionp(addr) || subrp(addr) || fsubrp(addr))
+        return(GET_BIND(addr));
 		error(CANT_FIND_ERR, "eval", addr);
-	    else
-		return (res);
 	}
     } else if (listp(addr)) {
 	if (numberp(car(addr)))
@@ -3531,6 +3534,7 @@ int f_let(int arglist)
     arg2 = cdr(arglist);
     vars = NIL;
 
+    save = ep;
     save1 = pp;
     while (!nullp(arg1)) {
 	var = caar(arg1);
@@ -3539,7 +3543,7 @@ int f_let(int arglist)
 	arg1 = cdr(arg1);
 	vars = cons(cons(var, val), vars);
     }
-    save = ep;
+    ep = save;
     while (!nullp(vars)) {
 	var = caar(vars);
 	val = cdar(vars);
@@ -3606,7 +3610,6 @@ int f_do(int arglist)
     arg3 = cddr(arglist);
 
     save = ep;
-    loop:
     //initialize var
     temp = arg1;
     while(!nullp(temp)){
@@ -3615,6 +3618,7 @@ int f_do(int arglist)
         assocsym(var,init);
         temp = cdr(temp);
     }
+    loop:
     //check test
     if(eval(car(arg2)) != FAIL){
         res = f_begin(cdr(arg2));
