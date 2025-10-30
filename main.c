@@ -3513,7 +3513,7 @@ int f_case(int arglist)
     checkarg(SYMBOL_TEST, "case", car(arglist));
     checkarg(LIST_TEST, "case", cadr(arglist));
     arg1 = eval(car(arglist));
-    arg2 = cadr(arglist);
+    arg2 = cdr(arglist);
     while(!nullp(arg2)){
         test = car(arg2);
         if (memv(arg1,car(test)))
