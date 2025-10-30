@@ -41,6 +41,7 @@ caar
 car
 call/cc
 cdr
+case
 cond
 cons
 define
