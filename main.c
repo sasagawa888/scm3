@@ -2267,7 +2267,8 @@ void initsubr(void)
     defsubr(">=", f_eqgreaterp);
     defsubr("<=", f_eqlessp);
     defsubr("zero?", f_zerop);
-    defsubr("minus?", f_minusp);
+    defsubr("positive?", f_positivep);
+    defsubr("negative?", f_negativep);
     defsubr("number?", f_numberp);
     defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
@@ -3058,12 +3059,28 @@ int f_zerop(int arglist)
 }
 
 
-int f_minusp(int arglist)
+
+int f_positivep(int arglist)
 {
     int arg1;
 
-    checkarg(LEN1_TEST, "minusp", arglist);
-    checkarg(NUMLIST_TEST, "minusp", arglist);
+    checkarg(LEN1_TEST, "positive?", arglist);
+    checkarg(NUMLIST_TEST, "positive?", arglist);
+    arg1 = car(arglist);
+
+    if (greaterp(arg1, makeint(0)))
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
+
+int f_negativep(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "negative?", arglist);
+    checkarg(NUMLIST_TEST, "negative?", arglist);
     arg1 = car(arglist);
 
     if (lessp(arg1, makeint(0)))
