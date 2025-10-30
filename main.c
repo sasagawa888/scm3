@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
 	    printf("> ");
 	    fflush(stdout);
 	    fflush(stdin);
-        ep = NIL;
 	    cp = NIL;
 	    cp1 = NIL;
         sp = 0;
@@ -1715,7 +1714,7 @@ int execute(int addr)
 	else if (functionp(addr) || subrp(addr) || fsubrp(addr))
 	    return (GET_BIND(addr));
 	else
-	    error(CANT_FIND_ERR,"execute",addr);
+	    error(CANT_FIND_ERR,"execute1",addr);
     } else if (listp(addr)) {
 	if (eqp(car(addr), makesym("quote")))
 	    return (cadr(addr));
