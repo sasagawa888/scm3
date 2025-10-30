@@ -170,6 +170,27 @@ nil---cont---
 
 ```
 
+## Idea for Continuation Implementation
+
+I am inspired by Prolog’s SLD. In Prolog, SLD is a method for proving Horn clauses.
+It transforms a predicate into its body.
+
+```
+P :- P1, P2, P3.
+Q :- Q1, Q2, Q3.
+
+P, Q  -> P1, P2, P3, Q  -> Q1, Q2, Q3.
+```
+The proof is completed when all predicates have been fully expanded.
+I considered applying a similar idea to continuations in Scheme.
+
+```
+(foo x)(bar x)
+```
+
+This is expanded until it reaches primitives. When all these computations are finished, the computation is complete.
+
+(if Test True Fail) is expanded each time it is evaluated.
 
 ## expanded function for CPS
 
