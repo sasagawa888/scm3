@@ -299,6 +299,7 @@ int f_define(int addr);
 int f_lambda(int addr);
 int f_if(int addr);
 int f_cond(int addr);
+int f_case(int addr);
 int f_and(int addr);
 int f_or(int addr);
 int f_let(int addr);

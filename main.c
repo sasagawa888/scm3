@@ -2309,6 +2309,7 @@ void initsubr(void)
     deffsubr("begin", f_begin);
     deffsubr("if", f_if);
     deffsubr("cond", f_cond);
+    deffsubr("case", f_case);
     deffsubr("and", f_and);
     deffsubr("or", f_or);
     deffsubr("let", f_let);
@@ -3504,6 +3505,26 @@ int f_cond(int arglist)
     else
 	return (f_cond(cdr(arglist)));
 }
+
+int f_case(int arglist)
+{
+    int arg1, arg2, test;
+
+    checkarg(SYMBOL_TEST, "case", car(arglist));
+    checkarg(LIST_TEST, "case", cadr(arglist));
+    arg1 = eval(car(arglist));
+    arg2 = cadr(arglist);
+    while(!nullp(arg2)){
+        test = car(arg2);
+        if (memv(arg1,car(test)))
+            return(f_begin(cdr(test)));
+        else if (eqp(car(test),makesym("else")))
+            return (f_begin(cdr(test)));
+        arg2 = cdr(arg2);
+    }
+    return(FAIL);
+}
+
 
 int f_begin(int arglist)
 {
