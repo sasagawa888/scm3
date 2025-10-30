@@ -50,13 +50,10 @@ edwin
 eq?
 eqv?
 equal?
-exec-cont
 exit
 eval
-eval-cps
 force
 for-each
-free-clos
 functionp
 gbc
 get
@@ -94,7 +91,6 @@ set
 set!
 set-car!
 set-cdr!
-set-clos
 sin
 sqrt
 step
