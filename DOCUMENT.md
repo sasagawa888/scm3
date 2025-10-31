@@ -178,6 +178,8 @@ nil---cont---
 
 ```
 
+- hdmp(N) display heap from N to N+10
+
 ## Idea for Continuation Implementation
 
 I am inspired by Prolog’s SLD. In Prolog, SLD is a method for proving Horn clauses.

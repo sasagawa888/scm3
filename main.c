@@ -2699,7 +2699,7 @@ int f_heapdump(int arglist)
     checkarg(LEN1_TEST, "hdmp", arglist);
     arg1 = GET_INT(car(arglist));
     heapdump(arg1, arg1 + 10);
-    return (T);
+    return (TRUE);
 }
 
 int f_car(int arglist)
