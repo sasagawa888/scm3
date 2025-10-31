@@ -127,6 +127,7 @@ int pp;  //protect pointer
 #define ARG_BOOL_ERR    15
 #define ARG_VEC_ERR		16
 #define ARG_PROM_ERR	17
+#define ARG_CHAR_ERR	18
 #define ARG_LEN0_ERR	5
 #define ARG_LEN1_ERR	6
 #define ARG_LEN2_ERR	7
@@ -156,6 +157,7 @@ int pp;  //protect pointer
 #define INTEGER_TEST 	16
 #define VECTOR_TEST		17
 #define PROMISE_TEST	18
+#define CHAR_TEST		19
 
 
 void initcell(void);
@@ -356,6 +358,12 @@ int f_vector_length(int addr);
 int f_vector_ref(int addr);
 int f_symbol_to_string(int addr);
 int f_string_to_symbol(int addr);
+int f_charp(int addr);
+int f_chareqp(int addr);
+int f_charlessp(int addr);
+int f_chargreaterp(int addr);
+int f_chareqlessp(int addr);
+int f_chareqgreaterp(int addr);
 
 int list1(int x);
 int list2(int x, int y);

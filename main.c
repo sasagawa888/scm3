@@ -2028,6 +2028,12 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+    case ARG_CHAR_ERR:{
+	    printf("%s require character but got ", fun);
+	    print(arg);
+	    break;
+	}
+
     case ARG_LIS_ERR:{
 	    printf("%s require list but got ", fun);
 	    print(arg);
@@ -2098,6 +2104,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_STR_ERR, fun, arg);
+    case CHAR_TEST:
+	if (stringp(arg))
+	    return;
+	else
+	    error(ARG_CHAR_ERR, fun, arg);
     case LIST_TEST:
 	if (listp(arg))
 	    return;
@@ -2319,6 +2330,12 @@ void initsubr(void)
     defsubr("vector-ref", f_vector_ref);
     defsubr("symbol->string", f_symbol_to_string);
     defsubr("string->symbol", f_string_to_symbol);
+    defsubr("char?", f_charp);
+    defsubr("char=?", f_chareqp);
+    defsubr("char<?", f_charlessp);
+    defsubr("char>?", f_chargreaterp);
+    defsubr("char<=?", f_chareqlessp);
+    defsubr("char>=?", f_chareqgreaterp);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3930,4 +3947,86 @@ int f_symbol_to_string(int arglist)
 
     arg1 = car(arglist);
     return(makestr(GET_NAME(arg1)));
+}
+
+
+int f_charp(int arglist)
+{
+    checkarg(LEN1_TEST,"char?",arglist);
+    return(characterp(car(arglist)));
+}
+
+int f_chareqp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char=?",arglist);
+    checkarg(CHAR_TEST,"char=?",car(arglist));
+    checkarg(CHAR_TEST,"char=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_charlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char<?",arglist);
+    checkarg(CHAR_TEST,"char<?",car(arglist));
+    checkarg(CHAR_TEST,"char<?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_chargreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char>?",arglist);
+    checkarg(CHAR_TEST,"char>?",car(arglist));
+    checkarg(CHAR_TEST,"char>?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_chareqlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char<=?",arglist);
+    checkarg(CHAR_TEST,"char<=?",car(arglist));
+    checkarg(CHAR_TEST,"char<=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_chareqgreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char>=?",arglist);
+    checkarg(CHAR_TEST,"char>=?",car(arglist));
+    checkarg(CHAR_TEST,"char>=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
