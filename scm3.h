@@ -371,6 +371,11 @@ int f_char_whitespace_p(int addr);
 int f_char_upper_case_p(int addr);
 int f_char_lower_case_p(int addr);
 int f_stringp(int addr);
+int f_streqp(int addr);
+int f_strlessp(int addr);
+int f_strgreaterp(int addr);
+int f_streqlessp(int addr);
+int f_streqgreaterp(int addr);
 
 int list1(int x);
 int list2(int x, int y);

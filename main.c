@@ -2344,6 +2344,12 @@ void initsubr(void)
     defsubr("char-upper-case?", f_char_upper_case_p);
     defsubr("char-lower-case?", f_char_lower_case_p);
     defsubr("string?", f_stringp);
+    defsubr("string=?", f_streqp);
+    defsubr("string<?", f_strlessp);
+    defsubr("string>?", f_strgreaterp);
+    defsubr("string<=?", f_streqlessp);
+    defsubr("string>=?", f_streqgreaterp);
+
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -4113,4 +4119,80 @@ int f_stringp(int arglist)
 {
     checkarg(LEN1_TEST,"string?",arglist);
     return(stringp(car(arglist)));
+}
+
+
+int f_streqp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string=?",arglist);
+    checkarg(CHAR_TEST,"string=?",car(arglist));
+    checkarg(CHAR_TEST,"string=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_strlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string<?",arglist);
+    checkarg(CHAR_TEST,"string<?",car(arglist));
+    checkarg(CHAR_TEST,"string<?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_strgreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string>?",arglist);
+    checkarg(CHAR_TEST,"string>?",car(arglist));
+    checkarg(CHAR_TEST,"string>?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_streqlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string<=?",arglist);
+    checkarg(CHAR_TEST,"string<=?",car(arglist));
+    checkarg(CHAR_TEST,"string<=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_streqgreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string>=?",arglist);
+    checkarg(CHAR_TEST,"string>=?",car(arglist));
+    checkarg(CHAR_TEST,"string>=?",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
