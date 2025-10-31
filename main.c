@@ -3781,7 +3781,7 @@ int f_edwin(int arglist)
     arg1 = car(arglist);
     char *ed;
     if ((ed = getenv("EDITOR")) == NULL) {
-	strcpy(str, "edlis");
+	strcpy(str, "edwin");
     } else
 	strcpy(str, ed);
 
