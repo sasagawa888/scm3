@@ -2339,7 +2339,9 @@ void initsubr(void)
     defsubr("char-alphabetic?", f_char_alphabetic_p);
     defsubr("char-numeric?", f_char_numeric_p);
     defsubr("char-whitespace?", f_char_whitespace_p);
-;
+    defsubr("char-upper-case?", f_char_upper_case_p);
+    defsubr("char-lower-case?", f_char_lower_case_p);
+
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
     deffsubr("define", f_define);
@@ -4069,3 +4071,30 @@ int f_char_whitespace_p(int arglist)
     else 
         return(FAIL);
 }
+
+
+
+int f_char_upper_case_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"char-upper-case?",arglist);
+    arg1 = car(arglist);
+    if(characterp(arg1) && isupper(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_char_lower_case_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"char-lower-case?",arglist);
+    arg1 = car(arglist);
+    if(characterp(arg1) && islower(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+

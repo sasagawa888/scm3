@@ -367,6 +367,8 @@ int f_chareqgreaterp(int addr);
 int f_char_alphabetic_p(int addr);
 int f_char_numeric_p(int addr);
 int f_char_whitespace_p(int addr);
+int f_char_upper_case_p(int addr);
+int f_char_lower_case_p(int addr);
 
 int list1(int x);
 int list2(int x, int y);
