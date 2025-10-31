@@ -2105,7 +2105,7 @@ void checkarg(int test, char *fun, int arg)
 	else
 	    error(ARG_STR_ERR, fun, arg);
     case CHAR_TEST:
-	if (stringp(arg))
+	if (characterp(arg))
 	    return;
 	else
 	    error(ARG_CHAR_ERR, fun, arg);
@@ -2351,6 +2351,7 @@ void initsubr(void)
     defsubr("string>=?", f_streqgreaterp);
     defsubr("string-length", f_string_length);
     defsubr("string-ref", f_string_ref);
+    defsubr("string-set!", f_string_set);
 
 
     deffsubr("quote", f_quote);
@@ -4219,4 +4220,19 @@ int f_string_ref(int arglist)
     str[0] = GET_NAME_ELT(arg1,GET_INT(arg2));
     str[1] = 0;
     return(makechar(str));
+}
+
+int f_string_set(int arglist)
+{
+    int arg1,arg2,arg3;
+    char str[SYMSIZE];
+    checkarg(STRING_TEST,"string-set!",car(arglist));
+    checkarg(INTEGER_TEST,"string-set!", cadr(arglist));
+    checkarg(CHAR_TEST,"string-set!", caddr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = caddr(arglist);
+    strcpy(str,GET_NAME(arg1));
+    str[GET_INT(arg2)] = GET_NAME_ELT(arg3,2);
+    return(makestr(str));
 }
