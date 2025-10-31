@@ -332,6 +332,7 @@ int f_apply(int addr);
 int f_read(int addr);
 int f_readc(int addr);
 int f_display(int addr);
+int f_write(int addr);
 int f_newline(int addr);
 int f_trace(int addr);
 int f_untrace(int addr);
@@ -369,6 +370,7 @@ int f_char_numeric_p(int addr);
 int f_char_whitespace_p(int addr);
 int f_char_upper_case_p(int addr);
 int f_char_lower_case_p(int addr);
+int f_stringp(int addr);
 
 int list1(int x);
 int list2(int x, int y);

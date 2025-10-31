@@ -106,6 +106,7 @@ set-cdr!
 sin
 sqrt
 step
+string?
 symbol?
 tan
 trace
@@ -115,6 +116,7 @@ unbind
 vector
 vector-length
 vector-ref
+write
     
 ```
 

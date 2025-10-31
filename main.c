@@ -2282,6 +2282,7 @@ void initsubr(void)
     defsubr("apply", f_apply);
     defsubr("apply-cps", f_apply_cps);
     defsubr("display", f_display);
+    defsubr("write", f_write);
     defsubr("newline", f_newline);
     deffsubr("trace", f_trace);
     deffsubr("untrace", f_untrace);
@@ -2342,6 +2343,7 @@ void initsubr(void)
     defsubr("char-whitespace?", f_char_whitespace_p);
     defsubr("char-upper-case?", f_char_upper_case_p);
     defsubr("char-lower-case?", f_char_lower_case_p);
+    defsubr("string?", f_stringp);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3238,6 +3240,14 @@ int f_display(int arglist)
 }
 
 
+int f_write(int arglist)
+{
+    checkarg(LEN1_TEST, "write", arglist);
+    print(car(arglist));
+    return (TRUE);
+}
+
+
 int f_newline(int arglist)
 {
     checkarg(LEN0_TEST, "newline", arglist);
@@ -4099,3 +4109,8 @@ int f_char_lower_case_p(int arglist)
         return(FAIL);
 }
 
+int f_stringp(int arglist)
+{
+    checkarg(LEN1_TEST,"string?",arglist);
+    return(stringp(car(arglist)));
+}
