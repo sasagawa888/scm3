@@ -2350,6 +2350,7 @@ void initsubr(void)
     defsubr("string<=?", f_streqlessp);
     defsubr("string>=?", f_streqgreaterp);
     defsubr("string-length", f_string_length);
+    defsubr("string-ref", f_string_ref);
 
 
     deffsubr("quote", f_quote);
@@ -4205,4 +4206,17 @@ int f_string_length(int arglist)
     arg1 = car(arglist);
     len = strlen(GET_NAME(arg1));
     return(makeint(len));
+}
+
+int f_string_ref(int arglist)
+{
+    int arg1,arg2;
+    char str[10];
+    checkarg(STRING_TEST,"string-ref",car(arglist));
+    checkarg(INTEGER_TEST,"string-ref",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    str[0] = GET_NAME_ELT(arg1,GET_INT(arg2));
+    str[1] = 0;
+    return(makechar(str));
 }

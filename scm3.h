@@ -58,6 +58,7 @@ typedef struct token {
 #define GET_INT(addr)		get_int(addr)
 #define GET_FLT(addr)		((addr < HEAPSIZE && addr >0) ? heap[addr].val.fltnum: NIL)
 #define GET_NAME(addr)		heap[addr].name
+#define GET_NAME_ELT(addr,i)	heap[addr].name[i]
 #define GET_TAG(addr)		heap[addr].tag
 #define GET_BIND(addr)		heap[addr].val.bind
 #define GET_SUBR(addr)		heap[addr].val.subr
@@ -70,7 +71,8 @@ typedef struct token {
 #define SET_TR(addr,x)		heap[addr].trace = x
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
-#define SET_NAME(addr,x)	heap[addr].name = (char *)malloc(SYMSIZE); strcpy(heap[addr].name,x);
+#define SET_NAME(addr,x)	heap[addr].name = malloc(SYMSIZE); strcpy(heap[addr].name,x);
+#define SET_NAME_ELT(addr,i,x)  heap[addr].name[i] = x
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
 #define SET_VEC(addr,x)		heap[addr].val.vector = x;
 #define SET_VEC_ELT(addr,i,x) heap[addr].val.vector[i] = x;
@@ -377,6 +379,7 @@ int f_strgreaterp(int addr);
 int f_streqlessp(int addr);
 int f_streqgreaterp(int addr);
 int f_string_length(int addr);
+int f_string_ref(int addr);
 
 int list1(int x);
 int list2(int x, int y);
