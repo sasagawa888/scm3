@@ -797,6 +797,23 @@ int list(int arglist)
 	return (cons(car(arglist), list(cdr(arglist))));
 }
 
+
+int list1(int x)
+{
+    return (cons(x, NIL));
+}
+
+int list2(int x, int y)
+{
+    return (cons(x, cons(y, NIL)));
+}
+
+int list3(int x, int y, int z)
+{
+    return (cons(x, cons(y, cons(z, NIL))));
+}
+
+
 int append(int x, int y)
 {
 
@@ -2300,6 +2317,8 @@ void initsubr(void)
     defsubr("vector", f_vector);
     defsubr("vector-length",f_vector_length);
     defsubr("vector-ref", f_vector_ref);
+    defsubr("symbol->string", f_symbol_to_string);
+    defsubr("string->symbol", f_string_to_symbol);
 
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
@@ -3894,19 +3913,21 @@ int f_vector_ref(int arglist)
     return(GET_VEC_ELT(arg1,GET_INT(arg2)));
 }
 
-
-
-int list1(int x)
+int f_string_to_symbol(int arglist)
 {
-    return (cons(x, NIL));
+    int arg1;
+    checkarg(STRING_TEST,"string->symbol",car(arglist));
+
+    arg1 = car(arglist);
+    return(makesym(GET_NAME(arg1)));
 }
 
-int list2(int x, int y)
-{
-    return (cons(x, cons(y, NIL)));
-}
 
-int list3(int x, int y, int z)
+int f_symbol_to_string(int arglist)
 {
-    return (cons(x, cons(y, cons(z, NIL))));
+    int arg1;
+    checkarg(SYMBOL_TEST,"symbol->string",car(arglist));
+
+    arg1 = car(arglist);
+    return(makestr(GET_NAME(arg1)));
 }

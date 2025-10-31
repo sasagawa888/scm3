@@ -354,6 +354,8 @@ int f_analyze(int addr);
 int f_vector(int addr);
 int f_vector_length(int addr);
 int f_vector_ref(int addr);
+int f_symbol_to_string(int addr);
+int f_string_to_symbol(int addr);
 
 int list1(int x);
 int list2(int x, int y);
