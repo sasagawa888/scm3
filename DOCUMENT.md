@@ -39,6 +39,7 @@ cadddr
 caddr
 caar
 car
+call-with-current-continuation
 call/cc
 cdr
 case

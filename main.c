@@ -2314,6 +2314,7 @@ void initsubr(void)
     defsubr("functionp", f_functionp);
     defsubr("procedure?", f_procedurep);
     defsubr("promise?", f_promisep);
+    defsubr("call-with-current-continuation", f_call_cc);
     defsubr("call/cc", f_call_cc);
     defsubr("push", f_push);
     defsubr("pop", f_pop);
