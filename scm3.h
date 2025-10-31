@@ -376,6 +376,7 @@ int f_strlessp(int addr);
 int f_strgreaterp(int addr);
 int f_streqlessp(int addr);
 int f_streqgreaterp(int addr);
+int f_string_length(int addr);
 
 int list1(int x);
 int list2(int x, int y);

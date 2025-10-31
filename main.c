@@ -2349,6 +2349,7 @@ void initsubr(void)
     defsubr("string>?", f_strgreaterp);
     defsubr("string<=?", f_streqlessp);
     defsubr("string>=?", f_streqgreaterp);
+    defsubr("string-length", f_string_length);
 
 
     deffsubr("quote", f_quote);
@@ -4195,4 +4196,13 @@ int f_streqgreaterp(int arglist)
         return(TRUE);
     else 
         return(FAIL);
+}
+
+int f_string_length(int arglist)
+{
+    int arg1,len;
+    checkarg(STRING_TEST,"string-length",car(arglist));
+    arg1 = car(arglist);
+    len = strlen(GET_NAME(arg1));
+    return(makeint(len));
 }
