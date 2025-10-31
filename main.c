@@ -2336,7 +2336,10 @@ void initsubr(void)
     defsubr("char>?", f_chargreaterp);
     defsubr("char<=?", f_chareqlessp);
     defsubr("char>=?", f_chareqgreaterp);
-
+    defsubr("char-alphabetic?", f_char_alphabetic_p);
+    defsubr("char-numeric?", f_char_numeric_p);
+    defsubr("char-whitespace?", f_char_whitespace_p);
+;
     deffsubr("quote", f_quote);
     deffsubr("set!", f_setq);
     deffsubr("define", f_define);
@@ -4026,6 +4029,42 @@ int f_chareqgreaterp(int arglist)
     arg2 = cadr(arglist);
 
     if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_char_alphabetic_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"char-alphabetic?",arglist);
+    arg1 = car(arglist);
+    if(characterp(arg1) && isalpha(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_char_numeric_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"char-numeric?",arglist);
+    arg1 = car(arglist);
+    if(characterp(arg1) && isdigit(GET_NAME(arg1)))
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_char_whitespace_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST,"char-whitespace?",arglist);
+    arg1 = car(arglist);
+    if(characterp(arg1) && strcmp(GET_NAME(arg1),"space"))
         return(TRUE);
     else 
         return(FAIL);
