@@ -33,7 +33,6 @@ and
 analyze
 atom?
 begin
-bind
 boolean?
 cadddr
 caddr
@@ -84,7 +83,6 @@ map
 member
 memq
 memv
-minus?
 not
 newline
 nil
