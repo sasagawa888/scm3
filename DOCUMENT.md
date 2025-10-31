@@ -42,6 +42,16 @@ car
 call/cc
 cdr
 case
+char?
+char=?
+char<?
+char>?
+char<=?
+char>=?
+char-alphabetic?
+char-numeric?
+char-whitespace?
+char-upper-case?
 cond
 cons
 define
