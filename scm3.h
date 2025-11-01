@@ -266,6 +266,8 @@ int f_tan(int addr);
 int f_asin(int addr);
 int f_acos(int addr);
 int f_atan(int addr);
+int f_gcd(int addr);
+int f_lcm(int addr);
 int f_exit(int addr);
 int f_heapdump(int addr);
 int f_car(int addr);

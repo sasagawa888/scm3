@@ -2315,6 +2315,8 @@ void initsubr(void)
     defsubr("asin", f_asin);
     defsubr("acos", f_acos);
     defsubr("atan", f_atan);
+    defsubr("gcd", f_gcd);
+    defsubr("lcm", f_lcm);
     defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -2829,6 +2831,54 @@ int f_atan(int arglist)
     }
     return(makeflt(res));
 }
+
+int gcd(int a, int b) {
+    a = abs(a);
+    b = abs(b);
+    while (b != 0) {
+        int t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+int lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
+    return abs(a * b) / gcd(a, b);
+}
+
+int f_gcd(int arglist)
+{
+
+    checkarg(INTLIST_TEST,"gcd",arglist);
+    if(nullp(cdr(arglist)))
+        return(car(arglist));
+    else {
+        int a,b,x;
+        a = GET_INT(car(arglist));
+        b = GET_INT(f_gcd(cdr(arglist)));
+        x = gcd(a,b);
+        return(makeint(x));
+    }
+
+}
+
+int f_lcm(int arglist)
+{
+    checkarg(INTLIST_TEST,"lcm",arglist);
+    if(nullp(cdr(arglist)))
+        return(car(arglist));
+    else {
+        int a,b,x;
+        a = GET_INT(car(arglist));
+        b = GET_INT(f_lcm(cdr(arglist)));
+        x = lcm(a,b);
+        return(makeint(x));
+    }
+
+}
+
 
 
 int f_exit(int arglist)
