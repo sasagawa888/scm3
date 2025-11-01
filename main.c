@@ -2597,11 +2597,18 @@ int f_plus(int arglist)
 int f_difference(int arglist)
 {
     int arg1, arg2;
+    if(length(arglist) == 2){
     checkarg(NUMLIST_TEST, "difference", arglist);
-    checkarg(LEN2_TEST, "difference", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (difference(arg1, arg2));
+    } else if(length(arglist) == 1){
+    checkarg(NUMLIST_TEST, "difference", arglist);
+    arg1 = car(arglist);
+    return(times(arg1,makeint(-1)));
+    }
+    //dummy
+    return(TRUE);
 }
 
 int f_times(int arglist)
@@ -2691,14 +2698,15 @@ int f_expt(int arglist)
     int arg1, arg2;
 
     checkarg(LEN2_TEST, "expt", arglist);
-    checkarg(INTLIST_TEST, "expt", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (GET_INT(arg2) == 0)
-	return (makeint(1));
-    else if (GET_INT(arg1) < 0)
-	error(ILLEGAL_OBJ_ERR, "expt", arglist);
-    return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
+    if(integerp(arg1) && integerp(arg2))
+        return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
+    else{
+        arg1 = exact_to_inexact(arg1);
+        arg2 = exact_to_inexact(arg2);
+        return(makeflt(pow(GET_FLT(arg1),GET_FLT(arg2))));
+    }
 }
 
 int f_sqrt(int arglist)
