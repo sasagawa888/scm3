@@ -113,3 +113,23 @@
 (test '(= (min 2 5 3) 2) #t)
 
 (test '(< (abs (- (sin (/ 3.141592653589793 2)) 1.0)) 1e-10) #t)
+
+
+(test '(eqv? 'a 'a) #t)
+(test '(eqv? 'a 'b) #f)
+(test '(eqv? 1 1) #t)
+(test '(eqv? 1 2) #f)
+(test '(eqv? 1.0 1.0) #t)
+(test '(eqv? 1 1.0) #t) 
+(test '(eqv? #\a #\a) #t)
+(test '(eqv? #\a #\b) #f)
+(test '(eqv? #t #t) #t)
+(test '(eqv? #f #f) #t)
+(test '(eqv? #t #f) #f)
+(test '(eqv? "abc" "abc") #f)
+(test '(eqv? '(1 2) '(1 2)) #f)
+(define x '(1 2))
+(define y x)
+(test '(eqv? x y) #t) 
+(test '(eqv? x '(1 2)) #f) 
+(test '(eqv? '() '()) #t)
