@@ -3698,7 +3698,8 @@ int f_for_each(int arglist)
     checkarg(LEN2_TEST, "for-each", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (for_each(arg2, arg1));
+    for_each(arg2, arg1);
+    return(arg2);
 }
 
 
@@ -3876,7 +3877,6 @@ int f_case(int arglist)
 {
     int arg1, arg2, test;
 
-    checkarg(SYMBOL_TEST, "case", car(arglist));
     checkarg(LIST_TEST, "case", cadr(arglist));
     arg1 = eval(car(arglist));
     arg2 = cdr(arglist);
