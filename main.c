@@ -3769,8 +3769,7 @@ int f_lambda(int arglist)
 int f_if(int arglist)
 {
     int arg1, arg2, arg3, res;
-
-    checkarg(LEN3_TEST, "if", arglist);
+    if(length(arglist) == 3){
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = car(cdr(cdr(arglist)));
@@ -3783,6 +3782,22 @@ int f_if(int arglist)
 	return (eval_cps(arg2));
     else
 	return (eval_cps(arg3));
+    } else if(length(arglist) == 2){
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = car(cdr(cdr(arglist)));
+
+    cp1 = cp;
+    cp = NIL;
+    res = eval_cps(arg1);
+    cp = cp1;
+    if (res != FAIL)
+	return (eval_cps(arg2));
+    else
+	return (UNDEF);    
+    }
+    error(ILLEGAL_OBJ_ERR,"if", arglist);
+    return(FAIL);
 }
 
 int f_cond(int arglist)
