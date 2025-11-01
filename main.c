@@ -2298,6 +2298,9 @@ void initsubr(void)
     defsubr("sin", f_sin);
     defsubr("cos", f_cos);
     defsubr("tan", f_tan);
+    defsubr("asin", f_asin);
+    defsubr("acos", f_acos);
+    defsubr("atan", f_atan);
     defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -2751,6 +2754,66 @@ int f_tan(int arglist)
     return (makeflt(res));
 }
 
+int f_asin(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "asin", arglist);
+    checkarg(NUMBER_TEST, "asin", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if (integerp(arg1))
+	res = asin((double) GET_INT(arg1));
+    else if (floatp(arg1))
+	res = asin(GET_FLT(arg1));
+
+    return (makeflt(res));
+}
+
+int f_acos(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "acos", arglist);
+    checkarg(NUMBER_TEST, "acos", car(arglist));
+    arg1 = car(arglist);
+    res = 0;
+    if (integerp(arg1))
+	res = acos((double) GET_INT(arg1));
+    else if (floatp(arg1))
+	res = acos(GET_FLT(arg1));
+
+    return (makeflt(res));
+}
+
+int exact_to_inexact(int x)
+{
+    if(integerp(x))
+        return(makeflt(GET_INT(x)));
+    else 
+        return(x);
+}
+
+int f_atan(int arglist)
+{
+    int arg1;
+    double res;
+    if(length(arglist) == 1){
+    checkarg(NUMBER_TEST, "atan", car(arglist));
+    arg1 = exact_to_inexact(car(arglist));
+	res = atan(GET_FLT(arg1));
+    } else if(length(arglist) == 2){
+    checkarg(NUMBER_TEST, "atan", car(arglist));
+    checkarg(NUMBER_TEST, "atan", cadr(arglist));
+    int arg2;
+    arg1 = exact_to_inexact(car(arglist));
+    arg2 = exact_to_inexact(cadr(arglist));
+	res = atan2(GET_FLT(arg2),GET_FLT(arg1));
+    } else{
+        error(ILLEGAL_OBJ_ERR,"atan",arglist);
+    }
+    return(makeflt(res));
+}
 
 
 int f_exit(int arglist)
