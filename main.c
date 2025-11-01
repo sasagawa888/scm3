@@ -886,7 +886,7 @@ int map(int lis, int fun)
     if (nullp(lis))
 	return (NIL);
     else
-	return (cons(apply(fun, list1(car(lis))), map(cdr(lis), fun)));
+	return (cons(apply_cps(fun, list1(car(lis))), map(cdr(lis), fun)));
 }
 
 int for_each(int lis, int fun)
@@ -894,7 +894,7 @@ int for_each(int lis, int fun)
     if (nullp(lis))
 	return (NIL);
     else
-	return (apply(fun, list1(car(lis))), for_each(cdr(lis), fun));
+	return (apply_cps(fun, list1(car(lis))), for_each(cdr(lis), fun));
 }
 
 
