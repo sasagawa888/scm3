@@ -2626,15 +2626,18 @@ int f_plus(int arglist)
 int f_difference(int arglist)
 {
     int arg1, arg2;
+    checkarg(NUMLIST_TEST, "difference", arglist);
     if (length(arglist) == 2) {
-	checkarg(NUMLIST_TEST, "difference", arglist);
 	arg1 = car(arglist);
 	arg2 = cadr(arglist);
 	return (difference(arg1, arg2));
     } else if (length(arglist) == 1) {
-	checkarg(NUMLIST_TEST, "difference", arglist);
 	arg1 = car(arglist);
 	return (times(arg1, makeint(-1)));
+    } else if (length(arglist) > 2) {
+    arg1 = car(arglist);
+    arg2 = f_plus(cdr(arglist));
+    return (difference(arg1, arg2));
     }
     //dummy
     return (TRUE);
@@ -2658,11 +2661,22 @@ int f_quotient(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "quotitent", arglist);
     checkarg(NUMLIST_TEST, "quotient", arglist);
+    if (length(arglist) == 2){
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (quotient(arg1, arg2));
+    } else if(length(arglist) == 1){
+    arg1 = makeint(1);
+    arg2 = car(arglist);
+    return (quotient(arg1, arg2));    
+    } else if (length(arglist) > 2){
+    arg1 = car(arglist);
+    arg2 = f_times(cdr(arglist));
+    return (quotient(arg1, arg2));     
+    }
+    // dummy
+    return(TRUE);
 }
 
 
@@ -3056,10 +3070,13 @@ int f_numeqp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "=", arglist);
+    checkarg(NUMLIST_TEST, "=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (numeqp(arg1, arg2))
+
+    if (nullp(arg2))
+    return(TRUE);
+    else if (numeqp(arg1, arg2) && f_numeqp(cdr(arglist)))
 	return (TRUE);
     else
 	return (FAIL);
@@ -3439,12 +3456,13 @@ int f_lessp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "<", arglist);
     checkarg(NUMLIST_TEST, "<", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (lessp(arg1, arg2))
+    if(nullp(arg2))
+        return(TRUE);
+    else if (lessp(arg1, arg2) && f_lessp(cdr(arglist)) == TRUE)
 	return (TRUE);
     else
 	return (FAIL);
@@ -3455,12 +3473,13 @@ int f_eqlessp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "<=", arglist);
     checkarg(NUMLIST_TEST, "<=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (lessp(arg1, arg2) || numeqp(arg1, arg2))
+    if (nullp(arg2))
+    return (TRUE);
+    else if ((lessp(arg1, arg2) || numeqp(arg1, arg2)) && f_eqlessp(cdr(arglist)))
 	return (TRUE);
     else
 	return (FAIL);
@@ -3471,12 +3490,13 @@ int f_greaterp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, ">", arglist);
     checkarg(NUMLIST_TEST, ">", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (greaterp(arg1, arg2))
+    if (nullp(arg2))
+    return(TRUE);
+    else if (greaterp(arg1, arg2) && f_greaterp(cdr(arglist)))
 	return (TRUE);
     else
 	return (FAIL);
@@ -3487,12 +3507,13 @@ int f_eqgreaterp(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, ">=", arglist);
     checkarg(NUMLIST_TEST, ">=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (greaterp(arg1, arg2) || numeqp(arg1, arg2))
+    if (nullp(arg2))
+    return(TRUE);
+    else if ((greaterp(arg1, arg2) || numeqp(arg1, arg2)) && f_eqgreaterp(cdr(arglist)))
 	return (TRUE);
     else
 	return (FAIL);

@@ -19,12 +19,12 @@
 (test '(+ 1 2 3) 6)
 (test '(- 10 4 1) 5)
 (test '(* 2 3 4) 24)
-;(test '(/ 8 2 2) 2)
-;(test '(= 3 3 3) #t)
-;(test '(< 2 3 4) #t)
-;(test '(> 5 2 1) #t)
-;(test '(<= 3 3 4) #t)
-;(test '(>= 5 5 4) #t)
+(test '(/ 8 2 2) 2)
+(test '(= 3 3 3) #t)
+(test '(< 2 3 4) #t)
+(test '(> 5 2 1) #t)
+(test '(<= 3 3 4) #t)
+(test '(>= 5 5 4) #t)
 
 ;; ==============================================================
 ;; Remainder / modulo precise tests
@@ -219,7 +219,7 @@
 ;; Force with nested delay
 ;; ==============================================================
 
-(define nested-p (delay (delay (+ 2 3))))
+;(define nested-p (delay (delay (+ 2 3))))
 ;; first force returns a promise
 (test '(promise? (force nested-p)) #t)
 ;; second force returns the final value
