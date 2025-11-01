@@ -1020,7 +1020,7 @@ int makepromise(int addr)
 }
 
 
-int ci_string(int addr)
+int ci_str(int addr)
 {
     char str[SYMSIZE];
     int i;
@@ -2400,11 +2400,16 @@ void initsubr(void)
     defsubr("char-upper-case?", f_char_upper_case_p);
     defsubr("char-lower-case?", f_char_lower_case_p);
     defsubr("string?", f_stringp);
-    defsubr("string=?", f_streqp);
-    defsubr("string<?", f_strlessp);
-    defsubr("string>?", f_strgreaterp);
-    defsubr("string<=?", f_streqlessp);
-    defsubr("string>=?", f_streqgreaterp);
+    defsubr("string=?", f_str_eqp);
+    defsubr("string<?", f_str_lessp);
+    defsubr("string>?", f_str_greaterp);
+    defsubr("string<=?", f_str_eqlessp);
+    defsubr("string>=?", f_str_eqgreaterp);
+    defsubr("string-ci=?", f_str_ci_eqp);
+    defsubr("string-ci<?", f_str_ci_lessp);
+    defsubr("string-ci>?", f_str_ci_greaterp);
+    defsubr("string-ci<=?", f_str_ci_eqlessp);
+    defsubr("string-ci>=?", f_str_ci_eqgreaterp);
     defsubr("string-length", f_string_length);
     defsubr("string-ref", f_string_ref);
     defsubr("string-set!", f_string_set);
@@ -4259,7 +4264,7 @@ int f_stringp(int arglist)
 }
 
 
-int f_streqp(int arglist)
+int f_str_eqp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string=?",arglist);
@@ -4274,7 +4279,23 @@ int f_streqp(int arglist)
         return(FAIL);
 }
 
-int f_strlessp(int arglist)
+int f_str_ci_eqp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci=?",arglist);
+    checkarg(STRING_TEST,"string-ci=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci=?",cadr(arglist));
+    arg1 = ci_str(car(arglist));
+    arg2 = ci_str(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_str_lessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string<?",arglist);
@@ -4289,7 +4310,23 @@ int f_strlessp(int arglist)
         return(FAIL);
 }
 
-int f_strgreaterp(int arglist)
+
+int f_str_ci_lessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci<?",arglist);
+    checkarg(STRING_TEST,"string-ci<?",car(arglist));
+    checkarg(STRING_TEST,"string-ci<?",cadr(arglist));
+    arg1 = ci_str(car(arglist));
+    arg2 = ci_str(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_str_greaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string>?",arglist);
@@ -4304,7 +4341,23 @@ int f_strgreaterp(int arglist)
         return(FAIL);
 }
 
-int f_streqlessp(int arglist)
+int f_str_ci_greaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci>?",arglist);
+    checkarg(STRING_TEST,"string-ci>?",car(arglist));
+    checkarg(STRING_TEST,"string-ci>?",cadr(arglist));
+    arg1 = ci_str(car(arglist));
+    arg2 = ci_str(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_str_eqlessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string<=?",arglist);
@@ -4319,7 +4372,23 @@ int f_streqlessp(int arglist)
         return(FAIL);
 }
 
-int f_streqgreaterp(int arglist)
+
+int f_str_ci_eqlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci<=?",arglist);
+    checkarg(STRING_TEST,"string-ci<=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci<=?",cadr(arglist));
+    arg1 = ci_str(car(arglist));
+    arg2 = ci_str(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_str_eqgreaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string>=?",arglist);
@@ -4333,6 +4402,23 @@ int f_streqgreaterp(int arglist)
     else 
         return(FAIL);
 }
+
+
+int f_str_ci_eqgreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci>=?",arglist);
+    checkarg(STRING_TEST,"string-ci>=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci>=?",cadr(arglist));
+    arg1 = ci_str(car(arglist));
+    arg2 = ci_str(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
 
 int f_string_length(int arglist)
 {
