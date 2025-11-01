@@ -129,7 +129,7 @@ write
 ## Edwin
 edwin launches an editor. Please set your preferred editor in the EDITOR environment variable. If none is specified, it will call Edwin, which comes with Easy-ISLisp.
 
-Edwin is an editor modified from Edlis for Scheme. To install it, enter sudo make install -f edwin.make. Edwin requires ncurses library. Please install ncurses.
+Edwin is an editor modified from Edlis for Scheme. To install it, in edwin folder, enter sudo make install. Edwin requires ncurses library. Please install ncurses.
 
 ```
 sudo apt install libncurses-dev
