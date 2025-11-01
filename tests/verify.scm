@@ -63,7 +63,7 @@
 (test '(char>? #\z #\y) #t)
 (test '(char<=? #\a #\a) #t)
 (test '(char>=? #\b #\a) #t)
-;(test '(char-ci=? #\A #\a) #t) ;; 大文字小文字無視
+(test '(char-ci=? #\A #\a) #t)
 ;(test '(char-ci<? #\A #\b) #t)
 
 

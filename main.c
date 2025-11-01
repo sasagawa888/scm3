@@ -884,6 +884,7 @@ int copy(int addr)
 	return (cons(copy(car(addr)), copy(cdr(addr))));
 }
 
+
 //----------------------------------------
 int get_int(int addr)
 {
@@ -1018,6 +1019,39 @@ int makepromise(int addr)
     return (val);
 }
 
+
+int ci_string(int addr)
+{
+    char str[SYMSIZE];
+    int i;
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(addr));
+    i = 0;
+    while(str[i] != 0){
+        if(islower(str[i]))
+            str[i] = str[i] - 32;
+        
+        i++;
+    }
+    return(makestr(str));
+}
+
+
+int ci_char(int addr)
+{
+    char str[SYMSIZE];
+    int i;
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(addr));
+    i = 0;
+    while(str[i] != 0){
+        if(islower(str[i]))
+            str[i] = str[i] - 32;
+        
+        i++;
+    }
+    return(makechar(str));
+}
 
 
 //-------for CPS--------------------
@@ -2350,11 +2384,16 @@ void initsubr(void)
     defsubr("symbol->string", f_symbol_to_string);
     defsubr("string->symbol", f_string_to_symbol);
     defsubr("char?", f_charp);
-    defsubr("char=?", f_chareqp);
-    defsubr("char<?", f_charlessp);
-    defsubr("char>?", f_chargreaterp);
-    defsubr("char<=?", f_chareqlessp);
-    defsubr("char>=?", f_chareqgreaterp);
+    defsubr("char=?", f_char_eqp);
+    defsubr("char<?", f_char_lessp);
+    defsubr("char>?", f_char_greaterp);
+    defsubr("char<=?", f_char_eqlessp);
+    defsubr("char>=?", f_char_eqgreaterp);
+    defsubr("char-ci=?", f_char_ci_eqp);
+    defsubr("char-ci<?", f_char_ci_lessp);
+    defsubr("char-ci>?", f_char_ci_greaterp);
+    defsubr("char-ci<=?", f_char_ci_eqlessp);
+    defsubr("char-ci>=?", f_char_ci_eqgreaterp);
     defsubr("char-alphabetic?", f_char_alphabetic_p);
     defsubr("char-numeric?", f_char_numeric_p);
     defsubr("char-whitespace?", f_char_whitespace_p);
@@ -3998,7 +4037,7 @@ int f_charp(int arglist)
     return(characterp(car(arglist)));
 }
 
-int f_chareqp(int arglist)
+int f_char_eqp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"char=?",arglist);
@@ -4013,7 +4052,22 @@ int f_chareqp(int arglist)
         return(FAIL);
 }
 
-int f_charlessp(int arglist)
+int f_char_ci_eqp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci=?",arglist);
+    checkarg(CHAR_TEST,"char-ci=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci=?",cadr(arglist));
+    arg1 = ci_char(car(arglist));
+    arg2 = ci_char(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_char_lessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"char<?",arglist);
@@ -4028,7 +4082,23 @@ int f_charlessp(int arglist)
         return(FAIL);
 }
 
-int f_chargreaterp(int arglist)
+int f_char_ci_lessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci<?",arglist);
+    checkarg(CHAR_TEST,"char-ci<?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci<?",cadr(arglist));
+    arg1 = ci_char(car(arglist));
+    arg2 = ci_char(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_char_greaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"char>?",arglist);
@@ -4043,7 +4113,23 @@ int f_chargreaterp(int arglist)
         return(FAIL);
 }
 
-int f_chareqlessp(int arglist)
+int f_char_ci_greaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci>?",arglist);
+    checkarg(CHAR_TEST,"char-ci>?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci>?",cadr(arglist));
+    arg1 = ci_char(car(arglist));
+    arg2 = ci_char(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_char_eqlessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"char<=?",arglist);
@@ -4058,7 +4144,23 @@ int f_chareqlessp(int arglist)
         return(FAIL);
 }
 
-int f_chareqgreaterp(int arglist)
+
+int f_char_ci_eqlessp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci<=?",arglist);
+    checkarg(CHAR_TEST,"char-ci<=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci<=?",cadr(arglist));
+    arg1 = ci_char(car(arglist));
+    arg2 = ci_char(cadr(arglist));
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_char_eqgreaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"char>=?",arglist);
@@ -4066,6 +4168,21 @@ int f_chareqgreaterp(int arglist)
     checkarg(CHAR_TEST,"char>=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
+
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_char_ci_eqgreaterp(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci>=?",arglist);
+    checkarg(CHAR_TEST,"char-ci>=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci>=?",cadr(arglist));
+    arg1 = ci_char(car(arglist));
+    arg2 = ci_char(cadr(arglist));
 
     if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
         return(TRUE);
