@@ -79,3 +79,38 @@
 (test '(string-ref "abc" 2) #\c)
 (test '(string-length "hello") 5)
 (test '(string-append "ab" "cd") "abcd")
+
+(test '(= (sin 0) 0.0) #t)
+(test '(= (cos 0) 1.0) #t)
+;(test '(< (abs (- (tan (/ 3.141592653589793 4)) 1.0)) 1e-10) #t)
+
+(test '(= (asin 0.0) 0.0) #t)
+(test '(= (acos 1.0) 0.0) #t)
+;(test '(< (abs (- (atan 1.0) (/ 3.141592653589793 4))) 1e-10) #t)
+
+;(test '(< (abs (- (atan 1.0 1.0) (/ 3.141592653589793 4))) 1e-10) #t)
+(test '(= (atan 0.0 1.0) 0.0) #t)
+(test '(= (atan 0.0 -1.0) 3.141592653589793) #t)
+(test '(= (atan 1.0 0.0) (/ 3.141592653589793 2)) #t)
+;(test '(= (atan -1.0 0.0) (- (/ 3.141592653589793 2))) #t)
+
+(test '(= (exp 0.0) 1.0) #t)
+(test '(= (log 1.0) 0.0) #t)
+;(test '(< (abs (- (log (exp 2.0)) 2.0)) 1e-10) #t)
+
+(test '(= (sqrt 4.0) 2.0) #t)
+(test '(= (sqrt 0.0) 0.0) #t)
+
+(test '(= (abs -5.0) 5.0) #t)
+(test '(= (abs 5.0) 5.0) #t)
+
+
+(test '(= (expt 2 3) 8.0) #t)
+;(test '(= (expt 9 0.5) 3.0) #t)
+
+
+(test '(= (max 2 5 3) 5) #t)
+(test '(= (min 2 5 3) 2) #t)
+
+;; --- 浮動小数の等価性テスト例 ---
+;(test '(< (abs (- (sin (/ 3.141592653589793 2)) 1.0)) 1e-10) #t)
