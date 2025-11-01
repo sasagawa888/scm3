@@ -2413,6 +2413,7 @@ void initsubr(void)
     defsubr("string-length", f_string_length);
     defsubr("string-ref", f_string_ref);
     defsubr("string-set!", f_string_set);
+    defsubr("string-append", f_string_append);
 
 
     deffsubr("quote", f_quote);
@@ -4456,5 +4457,19 @@ int f_string_set(int arglist)
     arg3 = caddr(arglist);
     strcpy(str,GET_NAME(arg1));
     str[GET_INT(arg2)] = GET_NAME_ELT(arg3,2);
+    return(makestr(str));
+}
+
+int f_string_append(int arglist)
+{
+    char str[SYMSIZE];
+    checkarg(STRING_TEST,"string-append",car(arglist));
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(car(arglist)));
+    arglist = cdr(arglist);
+    while(!nullp(arglist)){
+        strcat(str,GET_NAME(car(arglist)));
+        arglist = cdr(arglist);
+    }
     return(makestr(str));
 }

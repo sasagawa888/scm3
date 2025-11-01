@@ -64,7 +64,7 @@
 (test '(char<=? #\a #\a) #t)
 (test '(char>=? #\b #\a) #t)
 (test '(char-ci=? #\A #\a) #t)
-;(test '(char-ci<? #\A #\b) #t)
+(test '(char-ci<? #\A #\b) #t)
 
 
 (test '(string=? "abc" "abc") #t)
@@ -73,8 +73,8 @@
 (test '(string>? "abc" "abb") #t)
 (test '(string<=? "abc" "abc") #t)
 (test '(string>=? "abc" "abb") #t)
-;(test '(string-ci=? "AbC" "aBc") #t)
-;(test '(string-ci<? "AbC" "aBd") #t)
+(test '(string-ci=? "AbC" "aBc") #t)
+(test '(string-ci<? "AbC" "aBd") #t)
 
 (test '(string-ref "abc" 0) #\a)
 (test '(string-ref "abc" 2) #\c)
