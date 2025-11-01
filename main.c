@@ -3276,7 +3276,7 @@ int f_rplaca(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     SET_CAR(arg1, arg2);
-    return (arg1);
+    return (UNDEF);
 }
 
 int f_rplacd(int arglist)
@@ -3288,7 +3288,7 @@ int f_rplacd(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     SET_CDR(arg1, arg2);
-    return (arg1);
+    return (UNDEF);
 }
 
 
