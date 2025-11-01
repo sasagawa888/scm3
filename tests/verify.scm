@@ -182,7 +182,7 @@
 (test '(memq 'a '(a b c)) '(a b c))
 (test '(memq 'b '(a b c)) '(b c))
 (test '(memq 'd '(a b c)) #f)
-(test '(memq 1 '(1 2 3)) #f) 
+(test '(memq 1 '(1 2 3)) '(1 2 3)) 
 
 ;; memv tests (uses eqv?)
 (test '(memv 1 '(1 2 3)) '(1 2 3))
@@ -240,7 +240,7 @@
 ;; Force with nested delay
 ;; ==============================================================
 
-;(define nested-p (delay (delay (+ 2 3))))
+(define nested-p (delay (delay (+ 2 3))))
 ;; first force returns a promise
 (test '(promise? (force nested-p)) #t)
 ;; second force returns the final value

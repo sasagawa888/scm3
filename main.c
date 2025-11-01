@@ -3906,7 +3906,7 @@ int f_case(int arglist)
     arg2 = cdr(arglist);
     while (!nullp(arg2)) {
 	test = car(arg2);
-	if (memv(arg1, car(test)))
+	if (memv(arg1, car(test)) != FAIL)
 	    return (f_begin(cdr(test)));
 	else if (eqp(car(test), makesym("else")))
 	    return (f_begin(cdr(test)));
