@@ -2414,6 +2414,8 @@ void initsubr(void)
     defsubr("string-ref", f_string_ref);
     defsubr("string-set!", f_string_set);
     defsubr("string-append", f_string_append);
+    defsubr("string->list", f_string_to_list);
+    defsubr("list->string", f_list_to_string);
 
 
     deffsubr("quote", f_quote);
@@ -4470,6 +4472,41 @@ int f_string_append(int arglist)
     while(!nullp(arglist)){
         strcat(str,GET_NAME(car(arglist)));
         arglist = cdr(arglist);
+    }
+    return(makestr(str));
+}
+
+int f_string_to_list(int arglist)
+{
+    int arg1,i,res;
+    char str[10];
+    checkarg(STRING_TEST,"string->list",car(arglist));
+    arg1 = car(arglist);
+    i = strlen(GET_NAME(arg1))-1;
+    res = NIL;
+    str[0] = '#';
+    str[1] = '\\';
+    str[3] = 0;
+    while(i>=0){
+        str[2] = GET_NAME_ELT(arg1,i);
+        res = cons(makechar(str),res);
+        i--;
+    }
+    return(res);
+}
+
+int f_list_to_string(int arglist)
+{
+    int arg1,i;
+    char str[SYMSIZE];
+    checkarg(LIST_TEST,"list->string",car(arglist));
+    arg1 = car(arglist);
+    memset(str,0,SYMSIZE);
+    i = 0;
+    while(!nullp(arg1)){
+        str[i] = GET_NAME_ELT(car(arg1),2);
+        i++;
+        arg1 = cdr(arg1);
     }
     return(makestr(str));
 }

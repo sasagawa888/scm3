@@ -392,6 +392,8 @@ int f_string_length(int addr);
 int f_string_ref(int addr);
 int f_string_set(int addr);
 int f_string_append(int addr);
+int f_string_to_list(int addr);
+int f_list_to_string(int addr);
 
 int list1(int x);
 int list2(int x, int y);
