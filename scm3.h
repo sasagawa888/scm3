@@ -258,6 +258,8 @@ int f_abs(int addr);
 int f_remainder(int addr);
 int f_expt(int addr);
 int f_sqrt(int addr);
+int f_exp(int addr);
+int f_log(int addr);
 int f_sin(int addr);
 int f_cos(int addr);
 int f_tan(int addr);

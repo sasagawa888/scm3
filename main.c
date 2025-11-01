@@ -885,6 +885,7 @@ int copy(int addr)
 }
 
 
+
 //----------------------------------------
 int get_int(int addr)
 {
@@ -1051,6 +1052,15 @@ int ci_char(int addr)
         i++;
     }
     return(makechar(str));
+}
+
+
+int exact_to_inexact(int x)
+{
+    if(integerp(x))
+        return(makeflt(GET_INT(x)));
+    else 
+        return(x);
 }
 
 
@@ -2295,6 +2305,8 @@ void initsubr(void)
     defsubr("remainder", f_remainder);
     defsubr("expt", f_expt);
     defsubr("sqrt", f_sqrt);
+    defsubr("exp", f_exp);
+    defsubr("log", f_log);
     defsubr("sin", f_sin);
     defsubr("cos", f_cos);
     defsubr("tan", f_tan);
@@ -2704,19 +2716,40 @@ int f_sqrt(int arglist)
 }
 
 
+
+int f_exp(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "exp", arglist);
+    checkarg(NUMBER_TEST, "exp", car(arglist));
+    arg1 = exact_to_inexact(car(arglist));
+	res = exp(GET_FLT(arg1));
+    return (makeflt(res));
+}
+
+
+
+int f_log(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(LEN1_TEST, "log", arglist);
+    checkarg(NUMBER_TEST, "log", car(arglist));
+    arg1 = exact_to_inexact(car(arglist));
+	res = log(GET_FLT(arg1));
+    return (makeflt(res));
+}
+
+
 int f_sin(int arglist)
 {
     int arg1;
     double res;
     checkarg(LEN1_TEST, "sin", arglist);
     checkarg(NUMBER_TEST, "sin", car(arglist));
-    arg1 = car(arglist);
-    res = 0;
-    if (integerp(arg1))
-	res = sin((double) GET_INT(arg1));
-    else if (floatp(arg1))
+    arg1 = exact_to_inexact(car(arglist));
 	res = sin(GET_FLT(arg1));
-
     return (makeflt(res));
 }
 
@@ -2727,13 +2760,8 @@ int f_cos(int arglist)
     double res;
     checkarg(LEN1_TEST, "cos", arglist);
     checkarg(NUMBER_TEST, "cos", car(arglist));
-    arg1 = car(arglist);
-    res = 0;
-    if (integerp(arg1))
-	res = cos((double) GET_INT(arg1));
-    else if (floatp(arg1))
+    arg1 = exact_to_inexact(car(arglist));
 	res = cos(GET_FLT(arg1));
-
     return (makeflt(res));
 }
 
@@ -2744,13 +2772,8 @@ int f_tan(int arglist)
     double res;
     checkarg(LEN1_TEST, "tan", arglist);
     checkarg(NUMBER_TEST, "tan", car(arglist));
-    arg1 = car(arglist);
-    res = 0;
-    if (integerp(arg1))
-	res = tan((double) GET_INT(arg1));
-    else if (floatp(arg1))
+    arg1 = exact_to_inexact(car(arglist));
 	res = tan(GET_FLT(arg1));
-
     return (makeflt(res));
 }
 
@@ -2760,13 +2783,8 @@ int f_asin(int arglist)
     double res;
     checkarg(LEN1_TEST, "asin", arglist);
     checkarg(NUMBER_TEST, "asin", car(arglist));
-    arg1 = car(arglist);
-    res = 0;
-    if (integerp(arg1))
-	res = asin((double) GET_INT(arg1));
-    else if (floatp(arg1))
+    arg1 = exact_to_inexact(car(arglist));
 	res = asin(GET_FLT(arg1));
-
     return (makeflt(res));
 }
 
@@ -2776,22 +2794,9 @@ int f_acos(int arglist)
     double res;
     checkarg(LEN1_TEST, "acos", arglist);
     checkarg(NUMBER_TEST, "acos", car(arglist));
-    arg1 = car(arglist);
-    res = 0;
-    if (integerp(arg1))
-	res = acos((double) GET_INT(arg1));
-    else if (floatp(arg1))
+	arg1 = exact_to_inexact(car(arglist));
 	res = acos(GET_FLT(arg1));
-
     return (makeflt(res));
-}
-
-int exact_to_inexact(int x)
-{
-    if(integerp(x))
-        return(makeflt(GET_INT(x)));
-    else 
-        return(x);
 }
 
 int f_atan(int arglist)
