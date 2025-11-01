@@ -214,12 +214,12 @@
 ;; ==============================================================
 
 ;; Simple continuation example
-;(define result
-;  (call/cc
-;    (lambda (k)
-;      (k 42)
-;      0)))
-;(test 'result 42)
+(define result
+  (call/cc
+    (lambda (k)
+      (k 42)
+      0)))
+(test 'result 42)
 
 ;; ==============================================================
 ;; More complex call/cc example

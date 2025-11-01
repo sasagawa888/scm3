@@ -31,6 +31,8 @@ int gennum = 1;
 int ctrl_c_flag;
 int letrec_flag = 0;
 int display_flag = 0;
+int continuation_variable;
+int continutation_entity;
 
 void signal_handler_c(int signo)
 {
@@ -1770,6 +1772,18 @@ int transfer(int addr)
 								 ("free-clos"))))))));
 	    }
 	} else if (symbolp(car(addr)) && IS_CONT(findsym(car(addr)))) {
+        //e.g. (lambda (c) (set! f c) 0)
+	    args = transfer_subrargs(addr);
+	    body =
+		list3(makesym("apply-cps"),
+		      makesym("exec-cont"),
+		      list2(makesym("pop"), makeint(length(addr))));
+	    return (append(args, list1(body)));
+	} else if (symbolp(car(addr)) && car(addr) == continuation_variable) {
+        // e.g. (lambda (c) (c 42) 0)
+        addr = cons(continutation_entity,cdr(addr));
+        continuation_variable = NIL;
+        continutation_entity = NIL;
 	    args = transfer_subrargs(addr);
 	    body =
 		list3(makesym("apply-cps"),
@@ -1886,6 +1900,10 @@ int apply_cps(int func, int args)
     case EXPR:
 	//(lambda (x) ...)
 	varlist = car(GET_BIND(func));
+    if(continuationp(car(args))){
+    continuation_variable = car(varlist);
+    continutation_entity = car(args);
+    }
 	body = transfer_exprbody(cdr(GET_BIND(func)));
 	arglist = transfer_exprargs(args, varlist);
 	cp = append(arglist,
