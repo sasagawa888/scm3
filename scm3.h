@@ -414,3 +414,4 @@ int list3(int x, int y, int z);
 int transfer(int addr);
 int execute(int addr);
 int eval_cps(int addr);
+int exact_to_inexact(int addr);

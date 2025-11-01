@@ -7,6 +7,7 @@
         (begin
           (display "OK: ") (display result) (newline))
         (begin
+          (display expr)
           (display "ERROR: expected ") (display expected)
           (display ", but got ") (display result) (newline)))))
 

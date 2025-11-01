@@ -567,6 +567,8 @@ int nullp(int addr)
 	return (0);
 }
 
+
+
 int numeqp(int addr1, int addr2)
 {
     if (integerp(addr1) && integerp(addr2) && addr1 == addr2)
@@ -574,6 +576,18 @@ int numeqp(int addr1, int addr2)
     else if (floatp(addr1) && floatp(addr2)
 	     && GET_FLT(addr1) - GET_FLT(addr2) < DBL_MIN)
 	return (1);
+    else if (integerp(addr1) && floatp(addr2)){
+        if ((double)GET_INT(addr1) - GET_FLT(addr2) < DBL_MIN)
+            return(1);
+        else 
+            return(0);
+    }
+     else if (integerp(addr2) && floatp(addr1)){
+        if ((double)GET_INT(addr2) - GET_FLT(addr1) < DBL_MIN)
+            return(1);
+        else 
+            return(0);
+    }
     else
 	return (0);
 }
@@ -612,20 +626,22 @@ int chareqp(int addr1, int addr2)
 
 int eqvp(int addr1, int addr2)
 {
-    if (eqp(addr1, addr2) || numeqp(addr1, addr2) ||
-	stringeqp(addr1, addr2) || chareqp(addr1, addr2))
+    if (eqp(addr1, addr2) || numeqp(addr1, addr2) || chareqp(addr1, addr2))
 	return (1);
+    else if (stringp(addr1) && stringp(addr2) && eqp(addr1,addr2))
+    return (1);
     else
 	return (0);
 }
 
 int equalp(int x, int y)
 {
-    if (atomp(x) && atomp(y))
+    if (stringp(x) && stringp(y) && stringeqp(x,y))
+    return (1);
+    else if (atomp(x) && atomp(y))
 	return (eqvp(x, y));
     else if (eqvp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
 	return (1);
-
     return (0);
 }
 
@@ -3948,6 +3964,8 @@ int f_let(int arglist)
 	// case of let loop syntax
 	// not implemented
     }
+    //dummy
+    return(TRUE);
 }
 
 int f_let_star(int arglist)
