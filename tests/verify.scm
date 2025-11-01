@@ -54,3 +54,29 @@
 (test '(letrec ((even? (lambda (n) (if (= n 0) #t (odd? (- n 1)))))
                 (odd? (lambda (n) (if (= n 0) #f (even? (- n 1))))))
           (odd? 5)) #t)
+
+
+;; ==== 文字テスト ====
+(test '(char=? #\a #\a) #t)
+(test '(char=? #\a #\b) #f)
+(test '(char<? #\a #\b) #t)
+(test '(char>? #\z #\y) #t)
+(test '(char<=? #\a #\a) #t)
+(test '(char>=? #\b #\a) #t)
+;(test '(char-ci=? #\A #\a) #t) ;; 大文字小文字無視
+;(test '(char-ci<? #\A #\b) #t)
+
+
+(test '(string=? "abc" "abc") #t)
+(test '(string=? "abc" "abd") #f)
+(test '(string<? "abc" "abd") #t)
+(test '(string>? "abc" "abb") #t)
+(test '(string<=? "abc" "abc") #t)
+(test '(string>=? "abc" "abb") #t)
+;(test '(string-ci=? "AbC" "aBc") #t)
+;(test '(string-ci<? "AbC" "aBd") #t)
+
+(test '(string-ref "abc" 0) #\a)
+(test '(string-ref "abc" 2) #\c)
+(test '(string-length "hello") 5)
+;(test '(string-append "ab" "cd") "abcd")

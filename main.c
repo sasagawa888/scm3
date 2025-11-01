@@ -591,9 +591,26 @@ int eqp(int addr1, int addr2)
 	return (0);
 }
 
+int stringeqp(int addr1, int addr2)
+{
+    if(stringp(addr1) && stringp(addr2) && strcmp(GET_NAME(addr1),GET_NAME(addr2)) == 0)
+        return(1);
+    else 
+        return(0);
+}
+
+int chareqp(int addr1, int addr2)
+{
+    if(characterp(addr1) && characterp(addr2) && strcmp(GET_NAME(addr1),GET_NAME(addr2)) == 0)
+        return(1);
+    else 
+        return(0);
+}
+
 int eqvp(int addr1, int addr2)
 {
-    if(eqp(addr1,addr2) || numeqp(addr1,addr2))
+    if(eqp(addr1,addr2) || numeqp(addr1,addr2) ||
+       stringeqp(addr1,addr2) || chareqp(addr1,addr2))
         return(1);
     else 
         return(0);
@@ -602,8 +619,8 @@ int eqvp(int addr1, int addr2)
 int equalp(int x, int y)
 {
     if (atomp(x) && atomp(y))
-	return (eqp(x, y));
-    else if (eqp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
+	return (eqvp(x, y));
+    else if (eqvp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
 	return (1);
 
     return (0);
@@ -4129,8 +4146,8 @@ int f_streqp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string=?",arglist);
-    checkarg(CHAR_TEST,"string=?",car(arglist));
-    checkarg(CHAR_TEST,"string=?",cadr(arglist));
+    checkarg(STRING_TEST,"string=?",car(arglist));
+    checkarg(STRING_TEST,"string=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
@@ -4144,8 +4161,8 @@ int f_strlessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string<?",arglist);
-    checkarg(CHAR_TEST,"string<?",car(arglist));
-    checkarg(CHAR_TEST,"string<?",cadr(arglist));
+    checkarg(STRING_TEST,"string<?",car(arglist));
+    checkarg(STRING_TEST,"string<?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
@@ -4159,8 +4176,8 @@ int f_strgreaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string>?",arglist);
-    checkarg(CHAR_TEST,"string>?",car(arglist));
-    checkarg(CHAR_TEST,"string>?",cadr(arglist));
+    checkarg(STRING_TEST,"string>?",car(arglist));
+    checkarg(STRING_TEST,"string>?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
@@ -4174,8 +4191,8 @@ int f_streqlessp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string<=?",arglist);
-    checkarg(CHAR_TEST,"string<=?",car(arglist));
-    checkarg(CHAR_TEST,"string<=?",cadr(arglist));
+    checkarg(STRING_TEST,"string<=?",car(arglist));
+    checkarg(STRING_TEST,"string<=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
@@ -4189,8 +4206,8 @@ int f_streqgreaterp(int arglist)
 {
     int arg1,arg2;
     checkarg(LEN2_TEST,"string>=?",arglist);
-    checkarg(CHAR_TEST,"string>=?",car(arglist));
-    checkarg(CHAR_TEST,"string>=?",cadr(arglist));
+    checkarg(STRING_TEST,"string>=?",car(arglist));
+    checkarg(STRING_TEST,"string>=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
@@ -4217,8 +4234,10 @@ int f_string_ref(int arglist)
     checkarg(INTEGER_TEST,"string-ref",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    str[0] = GET_NAME_ELT(arg1,GET_INT(arg2));
-    str[1] = 0;
+    str[0] = '#';
+    str[1] = '\\';
+    str[2] = GET_NAME_ELT(arg1,GET_INT(arg2));
+    str[3] = 0;
     return(makechar(str));
 }
 
