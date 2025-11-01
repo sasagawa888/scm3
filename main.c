@@ -4175,7 +4175,7 @@ int f_call_cc(int arglist)
 {
     int arg1, cont;
     checkarg(LEN1_TEST, "call/cc", arglist);
-    arg1 = car(arglist);
+    arg1 = car(arglist); //lambda 
     cont = makecont();
     // (lambda (cont) continuation)
     return (apply_cps(arg1, list1(cont)));
