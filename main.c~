@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	    fflush(stdin);
 	    cp = NIL;
 	    cp1 = NIL;
-	    sp = 0;
+        sp = 0;
 	    sp_cps = NIL;
 	    print(eval_cps(read()));
 	    printf("\n");
@@ -247,7 +247,7 @@ void cellprint(int addr)
 	printf("CONT   ");
 	break;
     case PROM:
-	printf("PROMISE");
+    printf("PROMISE");
 	break;
     }
     printf("%07d ", GET_CAR(addr));
@@ -418,9 +418,8 @@ int atomp(int addr)
     if (integerp(addr))
 	return (1);
     if (IS_FLT(addr) || IS_STR(addr) || IS_SYMBOL(addr) || IS_BOOL(addr)
-	|| IS_CHAR(addr) || IS_VECTOR(addr) || IS_SUBR(addr)
-	|| IS_FSUBR(addr)
-	|| IS_EXPR(addr))
+	|| IS_CHAR(addr) || IS_VECTOR(addr) || IS_SUBR(addr) || IS_FSUBR(addr)
+    || IS_EXPR(addr))
 	return (1);
     else
 	return (0);
@@ -553,10 +552,10 @@ int vectorp(int addr)
 
 int pairp(int addr)
 {
-    if (listp(addr) && addr != NIL)
-	return (1);
-    else
-	return (0);
+    if(listp(addr) && addr != NIL)
+        return(1);
+    else 
+        return(0);
 }
 
 int nullp(int addr)
@@ -594,29 +593,27 @@ int eqp(int addr1, int addr2)
 
 int stringeqp(int addr1, int addr2)
 {
-    if (stringp(addr1) && stringp(addr2)
-	&& strcmp(GET_NAME(addr1), GET_NAME(addr2)) == 0)
-	return (1);
-    else
-	return (0);
+    if(stringp(addr1) && stringp(addr2) && strcmp(GET_NAME(addr1),GET_NAME(addr2)) == 0)
+        return(1);
+    else 
+        return(0);
 }
 
 int chareqp(int addr1, int addr2)
 {
-    if (characterp(addr1) && characterp(addr2)
-	&& strcmp(GET_NAME(addr1), GET_NAME(addr2)) == 0)
-	return (1);
-    else
-	return (0);
+    if(characterp(addr1) && characterp(addr2) && strcmp(GET_NAME(addr1),GET_NAME(addr2)) == 0)
+        return(1);
+    else 
+        return(0);
 }
 
 int eqvp(int addr1, int addr2)
 {
-    if (eqp(addr1, addr2) || numeqp(addr1, addr2) ||
-	stringeqp(addr1, addr2) || chareqp(addr1, addr2))
-	return (1);
-    else
-	return (0);
+    if(eqp(addr1,addr2) || numeqp(addr1,addr2) ||
+       stringeqp(addr1,addr2) || chareqp(addr1,addr2))
+        return(1);
+    else 
+        return(0);
 }
 
 int equalp(int x, int y)
@@ -791,10 +788,10 @@ int reverse(int addr)
 
 int list_tail(int x, int k)
 {
-    if (k == 0)
-	return (x);
-    else
-	return (list_tail(cdr(x), k - 1));
+    if(k==0)
+        return(x);
+    else 
+        return(list_tail(cdr(x),k-1));
 }
 
 
@@ -926,7 +923,6 @@ int makestr(char *name)
     SET_NAME(addr, name);
     return (addr);
 }
-
 int res, i, *vec;
 
 
@@ -952,19 +948,19 @@ int makechar(char *name)
 
 
 int makevec(int addr)
-{
+{   
     int n, i, *vec;
     n = length(addr);
     res = freshcell();
     vec = (int *) malloc(sizeof(int) * n);
     SET_TAG(res, VEC);
     SET_VEC(res, vec);
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < n; i++){
 	SET_VEC_ELT(res, i, car(addr));
-	addr = cdr(addr);
+    addr = cdr(addr);
     }
     SET_CDR(res, n);
-    return (res);
+    return(res);
 }
 
 
@@ -1029,16 +1025,16 @@ int ci_str(int addr)
 {
     char str[SYMSIZE];
     int i;
-    memset(str, 0, SYMSIZE);
-    strcpy(str, GET_NAME(addr));
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(addr));
     i = 0;
-    while (str[i] != 0) {
-	if (islower(str[i]))
-	    str[i] = str[i] - 32;
-
-	i++;
+    while(str[i] != 0){
+        if(islower(str[i]))
+            str[i] = str[i] - 32;
+        
+        i++;
     }
-    return (makestr(str));
+    return(makestr(str));
 }
 
 
@@ -1046,25 +1042,25 @@ int ci_char(int addr)
 {
     char str[SYMSIZE];
     int i;
-    memset(str, 0, SYMSIZE);
-    strcpy(str, GET_NAME(addr));
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(addr));
     i = 0;
-    while (str[i] != 0) {
-	if (islower(str[i]))
-	    str[i] = str[i] - 32;
-
-	i++;
+    while(str[i] != 0){
+        if(islower(str[i]))
+            str[i] = str[i] - 32;
+        
+        i++;
     }
-    return (makechar(str));
+    return(makechar(str));
 }
 
 
 int exact_to_inexact(int x)
 {
-    if (integerp(x))
-	return (makeflt(GET_INT(x)));
-    else
-	return (x);
+    if(integerp(x))
+        return(makeflt(GET_INT(x)));
+    else 
+        return(x);
 }
 
 
@@ -1135,7 +1131,7 @@ void argpop(void)
 //------ protect data from GC
 void push_protect(int addr)
 {
-    protect[pp++] = addr;
+     protect[pp++] = addr;
 }
 
 void pop_protect(void)
@@ -1364,7 +1360,7 @@ int flttoken(char buf[])
   exp:
     i++;
     if (buf[i] == '+' || buf[i] == '-')
-	i++;
+        i++;
     while ((c = buf[i]) != NUL) {
 	if (isdigit(c))
 	    i++;
@@ -1491,11 +1487,12 @@ void print(int addr)
 	    printf(".0");
 	break;
     case STR:
-	if (display_flag) {
-	    printf("%s", GET_NAME(addr));
-	} else {
-	    printf("\"%s\"", GET_NAME(addr));
-	}
+    if(display_flag){
+    printf("%s", GET_NAME(addr));
+    }
+    else {
+	printf("\"%s\"", GET_NAME(addr));
+    }
 	break;
     case SYM:
 	printf("%s", GET_NAME(addr));
@@ -1527,11 +1524,11 @@ void print(int addr)
 	    break;
 	}
     case VEC:{
-	    printf("#(");
-	    printvec(addr);
-	    printf(")");
-	    break;
-	}
+        printf("#(");
+        printvec(addr);
+        printf(")");
+        break;
+    }
     default:
 	printf("<undef>");
 	break;
@@ -1558,12 +1555,12 @@ void printlist(int addr)
 
 void printvec(int addr)
 {
-    int n, i;
+    int n,i;
     n = GET_CDR(addr);
-    for (i = 0; i < n; i++) {
-	print(GET_VEC_ELT(addr, i));
-	if (i < n - 1)
-	    printf(" ");
+    for(i=0;i<n;i++){
+        print(GET_VEC_ELT(addr,i));
+        if(i < n-1)
+            printf(" ");
     }
 }
 
@@ -1679,8 +1676,7 @@ int transfer(int addr)
 {
     int func, varlist, args, body;
     if (numberp(addr) || stringp(addr) || symbolp(addr)
-	|| continuationp(addr) || booleanp(addr) || characterp(addr)
-	|| vectorp(addr))
+	|| continuationp(addr) || booleanp(addr) || characterp(addr) || vectorp(addr))
 	return (list1(addr));
     else if (listp(addr)) {
 	if (numberp(car(addr)))
@@ -1757,17 +1753,15 @@ int transfer(int addr)
 		      makesym("exec-cont"),
 		      list2(makesym("pop"), makeint(length(addr))));
 	    return (append(args, list1(body)));
-	} else if (lambdap(car(addr))) {
-	    func = car(addr);
+	} else if(lambdap(car(addr))){
+        func = car(addr);
 	    varlist = cadr(func);
 	    body = transfer_exprbody(cddr(func));
 	    args = transfer_exprargs(cdr(addr), varlist);
 	    return (append(args, append(body,
-					list1
-					(list2
-					 (makesym("unbind"),
-					  makeint(length(cdr(addr))))))));
-	}
+					       list1
+						      (list2(makesym("unbind"),makeint(length(cdr(addr))))))));
+    }
     }
 
     error(ILLEGAL_OBJ_ERR, "transfer", addr);
@@ -1793,14 +1787,14 @@ int execute(int addr)
     else if (addr == T || addr == NIL)
 	return (addr);
     else if (symbolp(addr)) {
-	int res;
-	res = findsym(addr);
-	if (res != NO)
-	    return (res);
+    int res;
+    res = findsym(addr);
+    if(res != NO)
+        return(res);
 	else if (functionp(addr) || subrp(addr) || fsubrp(addr))
 	    return (GET_BIND(addr));
 	else
-	    error(CANT_FIND_ERR, "execute1", addr);
+	    error(CANT_FIND_ERR,"execute1",addr);
     } else if (listp(addr)) {
 	if (eqp(car(addr), makesym("quote")))
 	    return (cadr(addr));
@@ -1907,12 +1901,12 @@ int eval(int addr)
 	    || booleanp(addr))
 	    return (addr);
 	if (symbolp(addr)) {
-	    res = findsym(addr);
-	    if (res != NO)
-		return (res);
-	    else if (functionp(addr) || subrp(addr) || fsubrp(addr))
-		return (GET_BIND(addr));
-	    error(CANT_FIND_ERR, "eval", addr);
+        res = findsym(addr);
+        if(res != NO)
+        return(res);
+        else if(functionp(addr) || subrp(addr) || fsubrp(addr))
+        return(GET_BIND(addr));
+		error(CANT_FIND_ERR, "eval", addr);
 	}
     } else if (listp(addr)) {
 	if (numberp(car(addr)))
@@ -2409,7 +2403,7 @@ void initsubr(void)
     defsubr("environment", f_environment);
     defsubr("analyze", f_analyze);
     defsubr("vector", f_vector);
-    defsubr("vector-length", f_vector_length);
+    defsubr("vector-length",f_vector_length);
     defsubr("vector-ref", f_vector_ref);
     defsubr("symbol->string", f_symbol_to_string);
     defsubr("string->symbol", f_string_to_symbol);
@@ -2529,10 +2523,10 @@ int quotient(int x, int y)
 	if (integerp(y))
 	    return (makeint(GET_INT(x) / GET_INT(y)));
 	if (floatp(y))
-	    return (makeflt((double) GET_INT(x) / GET_FLT(y)));
+	    return (makeflt((double)GET_INT(x) / GET_FLT(y)));
     } else if (floatp(x)) {
 	if (integerp(y))
-	    return (makeflt(GET_FLT(x) / (double) GET_INT(y)));
+	    return (makeflt(GET_FLT(x) / (double)GET_INT(y)));
 	else if (floatp(y))
 	    return (makeflt(GET_FLT(x) / GET_FLT(y)));
 
@@ -2610,18 +2604,18 @@ int f_plus(int arglist)
 int f_difference(int arglist)
 {
     int arg1, arg2;
-    if (length(arglist) == 2) {
-	checkarg(NUMLIST_TEST, "difference", arglist);
-	arg1 = car(arglist);
-	arg2 = cadr(arglist);
-	return (difference(arg1, arg2));
-    } else if (length(arglist) == 1) {
-	checkarg(NUMLIST_TEST, "difference", arglist);
-	arg1 = car(arglist);
-	return (times(arg1, makeint(-1)));
+    if(length(arglist) == 2){
+    checkarg(NUMLIST_TEST, "difference", arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return (difference(arg1, arg2));
+    } else if(length(arglist) == 1){
+    checkarg(NUMLIST_TEST, "difference", arglist);
+    arg1 = car(arglist);
+    return(times(arg1,makeint(-1)));
     }
     //dummy
-    return (TRUE);
+    return(TRUE);
 }
 
 int f_times(int arglist)
@@ -2706,23 +2700,22 @@ int f_remainder(int arglist)
     return (makeint(GET_INT(arg1) % GET_INT(arg2)));
 }
 
-int modulo(int x, int y)
-{
-    int r = x % y;
+int modulo(int x, int y) {
+    int r = x % y; 
     if ((r > 0 && y < 0) || (r < 0 && y > 0)) {
-	r += y;
+        r += y;
     }
     return r;
 }
 
 int f_modulo(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "modulo", arglist);
-    checkarg(INTLIST_TEST, "modulo", arglist);
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"modulo",arglist);
+    checkarg(INTLIST_TEST,"modulo",arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (makeint(modulo(GET_INT(arg1), GET_INT(arg2))));
+    return(makeint(modulo(GET_INT(arg1),GET_INT(arg2))));
 }
 
 int f_expt(int arglist)
@@ -2732,12 +2725,12 @@ int f_expt(int arglist)
     checkarg(LEN2_TEST, "expt", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    if (integerp(arg1) && integerp(arg2))
-	return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
-    else {
-	arg1 = exact_to_inexact(arg1);
-	arg2 = exact_to_inexact(arg2);
-	return (makeflt(pow(GET_FLT(arg1), GET_FLT(arg2))));
+    if(integerp(arg1) && integerp(arg2))
+        return (makeint(power(GET_INT(arg1), GET_INT(arg2))));
+    else{
+        arg1 = exact_to_inexact(arg1);
+        arg2 = exact_to_inexact(arg2);
+        return(makeflt(pow(GET_FLT(arg1),GET_FLT(arg2))));
     }
 }
 
@@ -2766,7 +2759,7 @@ int f_exp(int arglist)
     checkarg(LEN1_TEST, "exp", arglist);
     checkarg(NUMBER_TEST, "exp", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = exp(GET_FLT(arg1));
+	res = exp(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2779,7 +2772,7 @@ int f_log(int arglist)
     checkarg(LEN1_TEST, "log", arglist);
     checkarg(NUMBER_TEST, "log", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = log(GET_FLT(arg1));
+	res = log(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2791,7 +2784,7 @@ int f_sin(int arglist)
     checkarg(LEN1_TEST, "sin", arglist);
     checkarg(NUMBER_TEST, "sin", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = sin(GET_FLT(arg1));
+	res = sin(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2803,7 +2796,7 @@ int f_cos(int arglist)
     checkarg(LEN1_TEST, "cos", arglist);
     checkarg(NUMBER_TEST, "cos", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = cos(GET_FLT(arg1));
+	res = cos(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2815,7 +2808,7 @@ int f_tan(int arglist)
     checkarg(LEN1_TEST, "tan", arglist);
     checkarg(NUMBER_TEST, "tan", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = tan(GET_FLT(arg1));
+	res = tan(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2826,7 +2819,7 @@ int f_asin(int arglist)
     checkarg(LEN1_TEST, "asin", arglist);
     checkarg(NUMBER_TEST, "asin", car(arglist));
     arg1 = exact_to_inexact(car(arglist));
-    res = asin(GET_FLT(arg1));
+	res = asin(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2836,8 +2829,8 @@ int f_acos(int arglist)
     double res;
     checkarg(LEN1_TEST, "acos", arglist);
     checkarg(NUMBER_TEST, "acos", car(arglist));
-    arg1 = exact_to_inexact(car(arglist));
-    res = acos(GET_FLT(arg1));
+	arg1 = exact_to_inexact(car(arglist));
+	res = acos(GET_FLT(arg1));
     return (makeflt(res));
 }
 
@@ -2845,69 +2838,66 @@ int f_atan(int arglist)
 {
     int arg1;
     double res;
-    if (length(arglist) == 1) {
-	checkarg(NUMBER_TEST, "atan", car(arglist));
-	arg1 = exact_to_inexact(car(arglist));
+    if(length(arglist) == 1){
+    checkarg(NUMBER_TEST, "atan", car(arglist));
+    arg1 = exact_to_inexact(car(arglist));
 	res = atan(GET_FLT(arg1));
-    } else if (length(arglist) == 2) {
-	checkarg(NUMBER_TEST, "atan", car(arglist));
-	checkarg(NUMBER_TEST, "atan", cadr(arglist));
-	int arg2;
-	arg1 = exact_to_inexact(car(arglist));
-	arg2 = exact_to_inexact(cadr(arglist));
-	res = atan2(GET_FLT(arg1), GET_FLT(arg2));
-    } else {
-	error(ILLEGAL_OBJ_ERR, "atan", arglist);
+    } else if(length(arglist) == 2){
+    checkarg(NUMBER_TEST, "atan", car(arglist));
+    checkarg(NUMBER_TEST, "atan", cadr(arglist));
+    int arg2;
+    arg1 = exact_to_inexact(car(arglist));
+    arg2 = exact_to_inexact(cadr(arglist));
+	res = atan2(GET_FLT(arg1),GET_FLT(arg2));
+    } else{
+        error(ILLEGAL_OBJ_ERR,"atan",arglist);
     }
-    return (makeflt(res));
+    return(makeflt(res));
 }
 
-int gcd(int a, int b)
-{
+int gcd(int a, int b) {
     a = abs(a);
     b = abs(b);
     while (b != 0) {
-	int t = b;
-	b = a % b;
-	a = t;
+        int t = b;
+        b = a % b;
+        a = t;
     }
     return a;
 }
 
-int lcm(int a, int b)
-{
-    if (a == 0 || b == 0)
-	return 0;
+int lcm(int a, int b) {
+    if (a == 0 || b == 0) return 0;
     return abs(a * b) / gcd(a, b);
 }
 
 int f_gcd(int arglist)
 {
 
-    checkarg(INTLIST_TEST, "gcd", arglist);
-    if (nullp(cdr(arglist)))
-	return (car(arglist));
+    checkarg(INTLIST_TEST,"gcd",arglist);
+    if(nullp(cdr(arglist)))
+        return(car(arglist));
     else {
-	int a, b, x;
-	a = GET_INT(car(arglist));
-	b = GET_INT(f_gcd(cdr(arglist)));
-	x = gcd(a, b);
-	return (makeint(x));
+        int a,b,x;
+        a = GET_INT(car(arglist));
+        b = GET_INT(f_gcd(cdr(arglist)));
+        x = gcd(a,b);
+        return(makeint(x));
     }
 
 }
 
 int f_lcm(int arglist)
 {
-    checkarg(INTLIST_TEST, "lcm", arglist);
-    if (nullp(cdr(arglist)))
-	return (car(arglist));
+    checkarg(INTLIST_TEST,"lcm",arglist);
+    if(nullp(cdr(arglist)))
+        return(car(arglist));
     else {
-	int a, b, x;
-	a = GET_INT(car(arglist));
-	b = GET_INT(f_lcm(cdr(arglist)));
-	x = lcm(a, b);
-	return (makeint(x));
+        int a,b,x;
+        a = GET_INT(car(arglist));
+        b = GET_INT(f_lcm(cdr(arglist)));
+        x = lcm(a,b);
+        return(makeint(x));
     }
 
 }
@@ -3144,26 +3134,26 @@ int f_reverse(int arglist)
 
 int f_list_tail(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(LEN2_TEST, "list-tail", arglist);
     checkarg(LIST_TEST, "list-tail", car(arglist));
     checkarg(INTEGER_TEST, "list-tail", cadr(arglist));
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (list_tail(arg1, GET_INT(arg2)));
+    return (list_tail(arg1,GET_INT(arg2)));
 }
 
 int f_list_ref(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     checkarg(LEN2_TEST, "list-ref", arglist);
     checkarg(LIST_TEST, "list-ref", car(arglist));
     checkarg(INTEGER_TEST, "list-ref", cadr(arglist));
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (car(list_tail(arg1, GET_INT(arg2))));
+    return (car(list_tail(arg1,GET_INT(arg2))));
 }
 
 
@@ -3400,22 +3390,22 @@ int f_evenp(int arglist)
 
 int f_exactp(int arglist)
 {
-    checkarg(LEN1_TEST, "exact?", arglist);
-    checkarg(NUMBER_TEST, "exact?", car(arglist));
-    if (integerp(car(arglist)))
-	return (TRUE);
-    else
-	return (FAIL);
+    checkarg(LEN1_TEST,"exact?",arglist);
+    checkarg(NUMBER_TEST,"exact?",car(arglist));
+    if(integerp(car(arglist)))
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_inexactp(int arglist)
 {
-    checkarg(LEN1_TEST, "inexact?", arglist);
-    checkarg(NUMBER_TEST, "inexact?", car(arglist));
-    if (integerp(car(arglist)))
-	return (FAIL);
-    else
-	return (TRUE);
+    checkarg(LEN1_TEST,"inexact?",arglist);
+    checkarg(NUMBER_TEST,"inexact?",car(arglist));
+    if(integerp(car(arglist)))
+        return(FAIL);
+    else 
+        return(TRUE);
 }
 
 
@@ -3649,7 +3639,7 @@ int f_apply_cps(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-
+   
     return (apply_cps(arg1, arg2));
 }
 
@@ -3661,7 +3651,7 @@ int f_apply(int arglist)
 
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-
+   
     return (apply(arg1, arg2));
 }
 
@@ -3798,35 +3788,35 @@ int f_lambda(int arglist)
 int f_if(int arglist)
 {
     int arg1, arg2, arg3, res;
-    if (length(arglist) == 3) {
-	arg1 = car(arglist);
-	arg2 = cadr(arglist);
-	arg3 = car(cdr(cdr(arglist)));
+    if(length(arglist) == 3){
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = car(cdr(cdr(arglist)));
 
-	cp1 = cp;
-	cp = NIL;
-	res = eval_cps(arg1);
-	cp = cp1;
-	if (res != FAIL)
-	    return (eval_cps(arg2));
-	else
-	    return (eval_cps(arg3));
-    } else if (length(arglist) == 2) {
-	arg1 = car(arglist);
-	arg2 = cadr(arglist);
-	arg3 = car(cdr(cdr(arglist)));
+    cp1 = cp;
+    cp = NIL;
+    res = eval_cps(arg1);
+    cp = cp1;
+    if (res != FAIL)
+	return (eval_cps(arg2));
+    else
+	return (eval_cps(arg3));
+    } else if(length(arglist) == 2){
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = car(cdr(cdr(arglist)));
 
-	cp1 = cp;
-	cp = NIL;
-	res = eval_cps(arg1);
-	cp = cp1;
-	if (res != FAIL)
-	    return (eval_cps(arg2));
-	else
-	    return (UNDEF);
+    cp1 = cp;
+    cp = NIL;
+    res = eval_cps(arg1);
+    cp = cp1;
+    if (res != FAIL)
+	return (eval_cps(arg2));
+    else
+	return (UNDEF);    
     }
-    error(ILLEGAL_OBJ_ERR, "if", arglist);
-    return (FAIL);
+    error(ILLEGAL_OBJ_ERR,"if", arglist);
+    return(FAIL);
 }
 
 int f_cond(int arglist)
@@ -3864,15 +3854,15 @@ int f_case(int arglist)
     checkarg(LIST_TEST, "case", cadr(arglist));
     arg1 = eval(car(arglist));
     arg2 = cdr(arglist);
-    while (!nullp(arg2)) {
-	test = car(arg2);
-	if (memv(arg1, car(test)))
-	    return (f_begin(cdr(test)));
-	else if (eqp(car(test), makesym("else")))
-	    return (f_begin(cdr(test)));
-	arg2 = cdr(arg2);
+    while(!nullp(arg2)){
+        test = car(arg2);
+        if (memv(arg1,car(test)))
+            return(f_begin(cdr(test)));
+        else if (eqp(car(test),makesym("else")))
+            return (f_begin(cdr(test)));
+        arg2 = cdr(arg2);
     }
-    return (FAIL);
+    return(FAIL);
 }
 
 
@@ -3916,37 +3906,37 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, vars, var, val, res, save, save1;
-    if (!eqp(car(arglist), makesym("loop"))) {
-	//normal let syntax
-	checkarg(LIST_TEST, "let", cdr(arglist));
-	arg1 = car(arglist);
-	arg2 = cdr(arglist);
-	vars = NIL;
+    int arg1, arg2,vars, var, val, res, save,save1;
+    if(!eqp(car(arglist),makesym("loop"))){
+    //normal let syntax
+    checkarg(LIST_TEST, "let", cdr(arglist));
+    arg1 = car(arglist);
+    arg2 = cdr(arglist);
+    vars = NIL;
 
-	save = ep;
-	save1 = pp;
-	while (!nullp(arg1)) {
-	    var = caar(arg1);
-	    val = eval_cps(cadar(arg1));
-	    push_protect(val);
-	    arg1 = cdr(arg1);
-	    vars = cons(cons(var, val), vars);
-	}
-	ep = save;
-	while (!nullp(vars)) {
-	    var = caar(vars);
-	    val = cdar(vars);
-	    vars = cdr(vars);
-	    assocsym(var, val);
-	}
-	res = f_begin(arg2);
-	ep = save;
-	pp = save1;
-	return (res);
+    save = ep;
+    save1 = pp;
+    while (!nullp(arg1)) {
+	var = caar(arg1);
+	val = eval_cps(cadar(arg1));
+    push_protect(val);
+	arg1 = cdr(arg1);
+	vars = cons(cons(var, val), vars);
+    }
+    ep = save;
+    while (!nullp(vars)) {
+	var = caar(vars);
+	val = cdar(vars);
+	vars = cdr(vars);
+	assocsym(var, val);
+    }
+    res = f_begin(arg2);
+    ep = save;
+    pp = save1;
+    return (res);
     } else {
-	// case of let loop syntax
-	// not implemented
+    // case of let loop syntax
+    // not implemented
     }
 }
 
@@ -3971,34 +3961,34 @@ int f_let_star(int arglist)
 
 int f_letrec(int arglist)
 {
-    int arg1, arg2, fun, lam, lams, res, save;
+    int arg1,arg2,fun,lam,lams,res,save;
     checkarg(LIST_TEST, "letrec", car(arglist));
     arg1 = car(arglist);
     arg2 = cdr(arglist);
     save = ep;
     lams = NIL;
-    while (!nullp(arg1)) {
-	fun = caar(arg1);
-	lam = eval(cadar(arg1));
-	lams = cons(lam, lams);
-	arg1 = cdr(arg1);
-	assocsym(fun, lam);
+    while (!nullp(arg1)){
+        fun = caar(arg1);
+        lam = eval(cadar(arg1));
+        lams = cons(lam,lams);
+        arg1 = cdr(arg1);
+        assocsym(fun,lam);
     }
     /* In the case of mutual recursion, each closure needs to share a common environment.
-     * Therefore, set-clos and free-clos are disabled 
-     * while the body of letrec is being executed.
-     */
+    * Therefore, set-clos and free-clos are disabled 
+    * while the body of letrec is being executed.
+    */
     letrec_flag = 1;
     res = f_begin(arg2);
     letrec_flag = 0;
     ep = save;
-    return (res);
+    return(res);
 }
 
 int f_do(int arglist)
 {
-    int arg1, arg2, arg3, var, init, update, temp, save, res;
-    checkarg(LIST_TEST, "do", car(arglist));
+    int arg1,arg2,arg3,var,init,update,temp,save,res;
+    checkarg(LIST_TEST,"do",car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = cddr(arglist);
@@ -4006,28 +3996,28 @@ int f_do(int arglist)
     save = ep;
     //initialize var
     temp = arg1;
-    while (!nullp(temp)) {
-	var = caar(temp);
-	init = eval(cadr(car(temp)));
-	assocsym(var, init);
-	temp = cdr(temp);
+    while(!nullp(temp)){
+        var = caar(temp);
+        init = eval(cadr(car(temp)));
+        assocsym(var,init);
+        temp = cdr(temp);
     }
-  loop:
+    loop:
     //check test
-    if (eval(car(arg2)) != FAIL) {
-	res = f_begin(cdr(arg2));
-	ep = save;
-	return (res);
+    if(eval(car(arg2)) != FAIL){
+        res = f_begin(cdr(arg2));
+        ep = save;
+        return(res);
     }
     //begin 
     f_begin(arg3);
     //update var
     temp = arg1;
-    while (!nullp(temp)) {
-	var = caar(temp);
-	update = caddr(car(temp));
-	bindsym(var, eval(update));
-	temp = cdr(temp);
+    while(!nullp(temp)){
+        var = caar(temp);
+        update = caddr(car(temp));
+        bindsym(var,eval(update));
+        temp = cdr(temp);
     }
     goto loop;
 }
@@ -4036,20 +4026,20 @@ int f_delay(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
-    return (makepromise(arg1));
+    return(makepromise(arg1));
 }
 
 int f_force(int arglist)
 {
-    int arg1, body;
+    int arg1,body;
     arg1 = car(arglist);
     body = GET_BIND(arg1);
-    if (GET_CAR(arg1) == TRUE)
-	return (GET_CDR(arg1));
-    else {
-	SET_CAR(arg1, TRUE);
-	SET_CDR(arg1, eval_cps(body));
-	return (GET_CDR(arg1));
+    if(GET_CAR(arg1) == TRUE)
+    return(GET_CDR(arg1));
+    else { 
+    SET_CAR(arg1,TRUE);
+    SET_CDR(arg1,eval_cps(body));
+    return(GET_CDR(arg1));
     }
 }
 
@@ -4125,7 +4115,8 @@ int f_promisep(int arglist)
     int arg1;
     checkarg(LEN1_TEST, "promise?", arglist);
     arg1 = car(arglist);
-    if (arg1 >= 0 && arg1 < HEAPSIZE && IS_PROM(arg1))
+    if (arg1 >= 0 && arg1 < HEAPSIZE
+	&& IS_PROM(arg1))
 	return (TRUE);
     else
 	return (FAIL);
@@ -4174,16 +4165,15 @@ int f_unbind(int arglist)
 int f_set_clos(int arglist)
 {
     int arg1;
-    if (letrec_flag)
-	return (TRUE);
+    if(letrec_flag) return(TRUE);
 
     arg1 = car(arglist);
     if (GET_REC(arg1) == 0) {
 	SET_REC(arg1, 1);
 	push_cps(ep);
 	push_cps(arg1);
-	if (GET_CDR(arg1) != NIL)
-	    ep = GET_CDR(arg1);
+    if(GET_CDR(arg1) != NIL)
+	ep = GET_CDR(arg1);
     }
     return (TRUE);
 }
@@ -4191,8 +4181,7 @@ int f_set_clos(int arglist)
 int f_free_clos(int arglist)
 {
     int expr;
-    if (letrec_flag)
-	return (acc);
+    if(letrec_flag) return(acc);
 
     expr = pop_cps();
     SET_REC(expr, 0);
@@ -4231,241 +4220,240 @@ int f_environment(int arglist)
 
 int f_vector(int arglist)
 {
-    return (makevec(arglist));
+    return(makevec(arglist));
 }
 
 int f_vector_length(int arglist)
 {
     int arg1;
-    checkarg(VECTOR_TEST, "vector-length", car(arglist));
+    checkarg(VECTOR_TEST,"vector-length",car(arglist));
     arg1 = car(arglist);
-    return (makeint(GET_CDR(arg1)));
+    return(makeint(GET_CDR(arg1)));
 }
 
 int f_vector_ref(int arglist)
 {
-    int arg1, arg2;
-    checkarg(VECTOR_TEST, "vector-ref", car(arglist));
-    checkarg(INTEGER_TEST, "vector-ref", cadr(arglist));
+    int arg1,arg2;
+    checkarg(VECTOR_TEST,"vector-ref",car(arglist));
+    checkarg(INTEGER_TEST,"vector-ref",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    return (GET_VEC_ELT(arg1, GET_INT(arg2)));
+    return(GET_VEC_ELT(arg1,GET_INT(arg2)));
 }
 
 int f_string_to_symbol(int arglist)
 {
     int arg1;
-    checkarg(STRING_TEST, "string->symbol", car(arglist));
+    checkarg(STRING_TEST,"string->symbol",car(arglist));
 
     arg1 = car(arglist);
-    return (makesym(GET_NAME(arg1)));
+    return(makesym(GET_NAME(arg1)));
 }
 
 
 int f_symbol_to_string(int arglist)
 {
     int arg1;
-    checkarg(SYMBOL_TEST, "symbol->string", car(arglist));
+    checkarg(SYMBOL_TEST,"symbol->string",car(arglist));
 
     arg1 = car(arglist);
-    return (makestr(GET_NAME(arg1)));
+    return(makestr(GET_NAME(arg1)));
 }
 
 
 int f_charp(int arglist)
 {
-    checkarg(LEN1_TEST, "char?", arglist);
-    return (characterp(car(arglist)));
+    checkarg(LEN1_TEST,"char?",arglist);
+    return(characterp(car(arglist)));
 }
 
 int f_char_eqp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char=?", arglist);
-    checkarg(CHAR_TEST, "char=?", car(arglist));
-    checkarg(CHAR_TEST, "char=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char=?",arglist);
+    checkarg(CHAR_TEST,"char=?",car(arglist));
+    checkarg(CHAR_TEST,"char=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) == 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_ci_eqp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char-ci=?", arglist);
-    checkarg(CHAR_TEST, "char-ci=?", car(arglist));
-    checkarg(CHAR_TEST, "char-ci=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci=?",arglist);
+    checkarg(CHAR_TEST,"char-ci=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci=?",cadr(arglist));
     arg1 = ci_char(car(arglist));
     arg2 = ci_char(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) == 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_lessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char<?", arglist);
-    checkarg(CHAR_TEST, "char<?", car(arglist));
-    checkarg(CHAR_TEST, "char<?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char<?",arglist);
+    checkarg(CHAR_TEST,"char<?",car(arglist));
+    checkarg(CHAR_TEST,"char<?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) < 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_ci_lessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char-ci<?", arglist);
-    checkarg(CHAR_TEST, "char-ci<?", car(arglist));
-    checkarg(CHAR_TEST, "char-ci<?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci<?",arglist);
+    checkarg(CHAR_TEST,"char-ci<?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci<?",cadr(arglist));
     arg1 = ci_char(car(arglist));
     arg2 = ci_char(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) < 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_char_greaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char>?", arglist);
-    checkarg(CHAR_TEST, "char>?", car(arglist));
-    checkarg(CHAR_TEST, "char>?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char>?",arglist);
+    checkarg(CHAR_TEST,"char>?",car(arglist));
+    checkarg(CHAR_TEST,"char>?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) > 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_ci_greaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char-ci>?", arglist);
-    checkarg(CHAR_TEST, "char-ci>?", car(arglist));
-    checkarg(CHAR_TEST, "char-ci>?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci>?",arglist);
+    checkarg(CHAR_TEST,"char-ci>?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci>?",cadr(arglist));
     arg1 = ci_char(car(arglist));
     arg2 = ci_char(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) > 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_char_eqlessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char<=?", arglist);
-    checkarg(CHAR_TEST, "char<=?", car(arglist));
-    checkarg(CHAR_TEST, "char<=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char<=?",arglist);
+    checkarg(CHAR_TEST,"char<=?",car(arglist));
+    checkarg(CHAR_TEST,"char<=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) <= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_char_ci_eqlessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char-ci<=?", arglist);
-    checkarg(CHAR_TEST, "char-ci<=?", car(arglist));
-    checkarg(CHAR_TEST, "char-ci<=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci<=?",arglist);
+    checkarg(CHAR_TEST,"char-ci<=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci<=?",cadr(arglist));
     arg1 = ci_char(car(arglist));
     arg2 = ci_char(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) <= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_eqgreaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char>=?", arglist);
-    checkarg(CHAR_TEST, "char>=?", car(arglist));
-    checkarg(CHAR_TEST, "char>=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char>=?",arglist);
+    checkarg(CHAR_TEST,"char>=?",car(arglist));
+    checkarg(CHAR_TEST,"char>=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) >= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_ci_eqgreaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "char-ci>=?", arglist);
-    checkarg(CHAR_TEST, "char-ci>=?", car(arglist));
-    checkarg(CHAR_TEST, "char-ci>=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"char-ci>=?",arglist);
+    checkarg(CHAR_TEST,"char-ci>=?",car(arglist));
+    checkarg(CHAR_TEST,"char-ci>=?",cadr(arglist));
     arg1 = ci_char(car(arglist));
     arg2 = ci_char(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) >= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_alphabetic_p(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "char-alphabetic?", arglist);
+    checkarg(LEN1_TEST,"char-alphabetic?",arglist);
     arg1 = car(arglist);
-    if (characterp(arg1) && isalpha(GET_NAME(arg1)) &&
-	strcmp(GET_NAME(arg1), "space") != 0
-	&& strcmp(GET_NAME(arg1), "newline") != 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(characterp(arg1) && isalpha(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_char_numeric_p(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "char-numeric?", arglist);
+    checkarg(LEN1_TEST,"char-numeric?",arglist);
     arg1 = car(arglist);
-    if (characterp(arg1) && isdigit(GET_NAME(arg1)))
-	return (TRUE);
-    else
-	return (FAIL);
+    if(characterp(arg1) && isdigit(GET_NAME(arg1)))
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_char_whitespace_p(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "char-whitespace?", arglist);
+    checkarg(LEN1_TEST,"char-whitespace?",arglist);
     arg1 = car(arglist);
-    if (characterp(arg1) && strcmp(GET_NAME(arg1), "space"))
-	return (TRUE);
-    else
-	return (FAIL);
+    if(characterp(arg1) && strcmp(GET_NAME(arg1),"space"))
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
@@ -4473,276 +4461,274 @@ int f_char_whitespace_p(int arglist)
 int f_char_upper_case_p(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "char-upper-case?", arglist);
+    checkarg(LEN1_TEST,"char-upper-case?",arglist);
     arg1 = car(arglist);
-    if (characterp(arg1) && isupper(GET_NAME(arg1)) &&
-	strcmp(GET_NAME(arg1), "space") != 0
-	&& strcmp(GET_NAME(arg1), "newline") != 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(characterp(arg1) && isupper(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_char_lower_case_p(int arglist)
 {
     int arg1;
-    checkarg(LEN1_TEST, "char-lower-case?", arglist);
+    checkarg(LEN1_TEST,"char-lower-case?",arglist);
     arg1 = car(arglist);
-    if (characterp(arg1) && islower(GET_NAME(arg1)) &&
-	strcmp(GET_NAME(arg1), "space") != 0
-	&& strcmp(GET_NAME(arg1), "newline") != 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(characterp(arg1) && islower(GET_NAME(arg1)) && 
+       strcmp(GET_NAME(arg1),"space") != 0 && strcmp(GET_NAME(arg1),"newline") != 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_stringp(int arglist)
 {
-    checkarg(LEN1_TEST, "string?", arglist);
-    return (stringp(car(arglist)));
+    checkarg(LEN1_TEST,"string?",arglist);
+    return(stringp(car(arglist)));
 }
 
 
 int f_str_eqp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string=?", arglist);
-    checkarg(STRING_TEST, "string=?", car(arglist));
-    checkarg(STRING_TEST, "string=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string=?",arglist);
+    checkarg(STRING_TEST,"string=?",car(arglist));
+    checkarg(STRING_TEST,"string=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) == 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_str_ci_eqp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string-ci=?", arglist);
-    checkarg(STRING_TEST, "string-ci=?", car(arglist));
-    checkarg(STRING_TEST, "string-ci=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci=?",arglist);
+    checkarg(STRING_TEST,"string-ci=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci=?",cadr(arglist));
     arg1 = ci_str(car(arglist));
     arg2 = ci_str(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) == 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) == 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_str_lessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string<?", arglist);
-    checkarg(STRING_TEST, "string<?", car(arglist));
-    checkarg(STRING_TEST, "string<?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string<?",arglist);
+    checkarg(STRING_TEST,"string<?",car(arglist));
+    checkarg(STRING_TEST,"string<?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) < 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_str_ci_lessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string-ci<?", arglist);
-    checkarg(STRING_TEST, "string-ci<?", car(arglist));
-    checkarg(STRING_TEST, "string-ci<?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci<?",arglist);
+    checkarg(STRING_TEST,"string-ci<?",car(arglist));
+    checkarg(STRING_TEST,"string-ci<?",cadr(arglist));
     arg1 = ci_str(car(arglist));
     arg2 = ci_str(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) < 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) < 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_str_greaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string>?", arglist);
-    checkarg(STRING_TEST, "string>?", car(arglist));
-    checkarg(STRING_TEST, "string>?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string>?",arglist);
+    checkarg(STRING_TEST,"string>?",car(arglist));
+    checkarg(STRING_TEST,"string>?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) > 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_str_ci_greaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string-ci>?", arglist);
-    checkarg(STRING_TEST, "string-ci>?", car(arglist));
-    checkarg(STRING_TEST, "string-ci>?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci>?",arglist);
+    checkarg(STRING_TEST,"string-ci>?",car(arglist));
+    checkarg(STRING_TEST,"string-ci>?",cadr(arglist));
     arg1 = ci_str(car(arglist));
     arg2 = ci_str(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) > 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) > 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_str_eqlessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string<=?", arglist);
-    checkarg(STRING_TEST, "string<=?", car(arglist));
-    checkarg(STRING_TEST, "string<=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string<=?",arglist);
+    checkarg(STRING_TEST,"string<=?",car(arglist));
+    checkarg(STRING_TEST,"string<=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) <= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_str_ci_eqlessp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string-ci<=?", arglist);
-    checkarg(STRING_TEST, "string-ci<=?", car(arglist));
-    checkarg(STRING_TEST, "string-ci<=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci<=?",arglist);
+    checkarg(STRING_TEST,"string-ci<=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci<=?",cadr(arglist));
     arg1 = ci_str(car(arglist));
     arg2 = ci_str(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) <= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) <= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 int f_str_eqgreaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string>=?", arglist);
-    checkarg(STRING_TEST, "string>=?", car(arglist));
-    checkarg(STRING_TEST, "string>=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string>=?",arglist);
+    checkarg(STRING_TEST,"string>=?",car(arglist));
+    checkarg(STRING_TEST,"string>=?",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) >= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_str_ci_eqgreaterp(int arglist)
 {
-    int arg1, arg2;
-    checkarg(LEN2_TEST, "string-ci>=?", arglist);
-    checkarg(STRING_TEST, "string-ci>=?", car(arglist));
-    checkarg(STRING_TEST, "string-ci>=?", cadr(arglist));
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"string-ci>=?",arglist);
+    checkarg(STRING_TEST,"string-ci>=?",car(arglist));
+    checkarg(STRING_TEST,"string-ci>=?",cadr(arglist));
     arg1 = ci_str(car(arglist));
     arg2 = ci_str(cadr(arglist));
 
-    if (strcmp(GET_NAME(arg1), GET_NAME(arg2)) >= 0)
-	return (TRUE);
-    else
-	return (FAIL);
+    if(strcmp(GET_NAME(arg1),GET_NAME(arg2)) >= 0)
+        return(TRUE);
+    else 
+        return(FAIL);
 }
 
 
 int f_string_length(int arglist)
 {
-    int arg1, len;
-    checkarg(STRING_TEST, "string-length", car(arglist));
+    int arg1,len;
+    checkarg(STRING_TEST,"string-length",car(arglist));
     arg1 = car(arglist);
     len = strlen(GET_NAME(arg1));
-    return (makeint(len));
+    return(makeint(len));
 }
 
 int f_string_ref(int arglist)
 {
-    int arg1, arg2;
+    int arg1,arg2;
     char str[10];
-    checkarg(STRING_TEST, "string-ref", car(arglist));
-    checkarg(INTEGER_TEST, "string-ref", cadr(arglist));
+    checkarg(STRING_TEST,"string-ref",car(arglist));
+    checkarg(INTEGER_TEST,"string-ref",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     str[0] = '#';
     str[1] = '\\';
-    str[2] = GET_NAME_ELT(arg1, GET_INT(arg2));
+    str[2] = GET_NAME_ELT(arg1,GET_INT(arg2));
     str[3] = 0;
-    return (makechar(str));
+    return(makechar(str));
 }
 
 int f_string_set(int arglist)
 {
-    int arg1, arg2, arg3;
+    int arg1,arg2,arg3;
     char str[SYMSIZE];
-    checkarg(STRING_TEST, "string-set!", car(arglist));
-    checkarg(INTEGER_TEST, "string-set!", cadr(arglist));
-    checkarg(CHAR_TEST, "string-set!", caddr(arglist));
+    checkarg(STRING_TEST,"string-set!",car(arglist));
+    checkarg(INTEGER_TEST,"string-set!", cadr(arglist));
+    checkarg(CHAR_TEST,"string-set!", caddr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     arg3 = caddr(arglist);
-    strcpy(str, GET_NAME(arg1));
-    str[GET_INT(arg2)] = GET_NAME_ELT(arg3, 2);
-    return (makestr(str));
+    strcpy(str,GET_NAME(arg1));
+    str[GET_INT(arg2)] = GET_NAME_ELT(arg3,2);
+    return(makestr(str));
 }
 
 int f_string_append(int arglist)
 {
     char str[SYMSIZE];
-    checkarg(STRING_TEST, "string-append", car(arglist));
-    memset(str, 0, SYMSIZE);
-    strcpy(str, GET_NAME(car(arglist)));
+    checkarg(STRING_TEST,"string-append",car(arglist));
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(car(arglist)));
     arglist = cdr(arglist);
-    while (!nullp(arglist)) {
-	strcat(str, GET_NAME(car(arglist)));
-	arglist = cdr(arglist);
+    while(!nullp(arglist)){
+        strcat(str,GET_NAME(car(arglist)));
+        arglist = cdr(arglist);
     }
-    return (makestr(str));
+    return(makestr(str));
 }
 
 int f_string_to_list(int arglist)
 {
-    int arg1, i, res;
+    int arg1,i,res;
     char str[10];
-    checkarg(STRING_TEST, "string->list", car(arglist));
+    checkarg(STRING_TEST,"string->list",car(arglist));
     arg1 = car(arglist);
-    i = strlen(GET_NAME(arg1)) - 1;
+    i = strlen(GET_NAME(arg1))-1;
     res = NIL;
     str[0] = '#';
     str[1] = '\\';
     str[3] = 0;
-    while (i >= 0) {
-	str[2] = GET_NAME_ELT(arg1, i);
-	res = cons(makechar(str), res);
-	i--;
+    while(i>=0){
+        str[2] = GET_NAME_ELT(arg1,i);
+        res = cons(makechar(str),res);
+        i--;
     }
-    return (res);
+    return(res);
 }
 
 int f_list_to_string(int arglist)
 {
-    int arg1, i;
+    int arg1,i;
     char str[SYMSIZE];
-    checkarg(LIST_TEST, "list->string", car(arglist));
+    checkarg(LIST_TEST,"list->string",car(arglist));
     arg1 = car(arglist);
-    memset(str, 0, SYMSIZE);
+    memset(str,0,SYMSIZE);
     i = 0;
-    while (!nullp(arg1)) {
-	str[i] = GET_NAME_ELT(car(arg1), 2);
-	i++;
-	arg1 = cdr(arg1);
+    while(!nullp(arg1)){
+        str[i] = GET_NAME_ELT(car(arg1),2);
+        i++;
+        arg1 = cdr(arg1);
     }
-    return (makestr(str));
+    return(makestr(str));
 }
