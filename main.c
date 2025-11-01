@@ -636,11 +636,14 @@ int eqvp(int addr1, int addr2)
 
 int equalp(int x, int y)
 {
-    if (stringp(x) && stringp(y) && stringeqp(x,y))
+
+    if (nullp(x) && nullp(y))
+    return (1);
+    else if (stringp(x) && stringp(y) && stringeqp(x,y))
     return (1);
     else if (atomp(x) && atomp(y))
 	return (eqvp(x, y));
-    else if (eqvp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
+    else if (equalp(car(x), car(y)) && equalp(cdr(x), cdr(y)))
 	return (1);
     return (0);
 }
