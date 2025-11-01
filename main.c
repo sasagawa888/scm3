@@ -2367,6 +2367,10 @@ void initsubr(void)
     defsubr("zero?", f_zerop);
     defsubr("positive?", f_positivep);
     defsubr("negative?", f_negativep);
+    defsubr("odd?", f_oddp);
+    defsubr("even?", f_evenp);
+    defsubr("exact?", f_exactp);
+    defsubr("inexact", f_inexactp);
     defsubr("number?", f_numberp);
     defsubr("rational?", f_rationalp);
     defsubr("symbol?", f_symbolp);
@@ -3334,6 +3338,56 @@ int f_negativep(int arglist)
 	return (FAIL);
 }
 
+
+int f_oddp(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "odd?", arglist);
+    checkarg(NUMLIST_TEST, "odd?", arglist);
+    arg1 = car(arglist);
+
+    if (integerp(arg1) && GET_INT(arg1) % 2 == 1)
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
+
+int f_evenp(int arglist)
+{
+    int arg1;
+
+    checkarg(LEN1_TEST, "even?", arglist);
+    checkarg(NUMLIST_TEST, "even?", arglist);
+    arg1 = car(arglist);
+
+    if (integerp(arg1) && GET_INT(arg1) % 2 == 0)
+	return (TRUE);
+    else
+	return (FAIL);
+}
+
+
+int f_exactp(int arglist)
+{
+    checkarg(LEN1_TEST,"exact?",arglist);
+    checkarg(NUMBER_TEST,"exact?",car(arglist));
+    if(integerp(car(arglist)))
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_inexactp(int arglist)
+{
+    checkarg(LEN1_TEST,"inexact?",arglist);
+    checkarg(NUMBER_TEST,"inexact?",car(arglist));
+    if(integerp(car(arglist)))
+        return(FAIL);
+    else 
+        return(TRUE);
+}
 
 
 int f_lessp(int arglist)
