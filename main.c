@@ -2516,10 +2516,10 @@ int quotient(int x, int y)
 	if (integerp(y))
 	    return (makeint(GET_INT(x) / GET_INT(y)));
 	if (floatp(y))
-	    return (makeflt(GET_INT(x) / GET_FLT(y)));
+	    return (makeflt((double)GET_INT(x) / GET_FLT(y)));
     } else if (floatp(x)) {
 	if (integerp(y))
-	    return (makeflt(GET_INT(x) / GET_FLT(y)));
+	    return (makeflt(GET_FLT(x) / (double)GET_INT(y)));
 	else if (floatp(y))
 	    return (makeflt(GET_FLT(x) / GET_FLT(y)));
 
