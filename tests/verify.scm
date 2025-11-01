@@ -178,6 +178,27 @@
 (test '(vector-ref v 0) 1)
 (test '(vector-ref v 2) 3)
 
+;; memq tests (uses eq?)
+(test '(memq 'a '(a b c)) '(a b c))
+(test '(memq 'b '(a b c)) '(b c))
+(test '(memq 'd '(a b c)) #f)
+(test '(memq 1 '(1 2 3)) #f) 
+
+;; memv tests (uses eqv?)
+(test '(memv 1 '(1 2 3)) '(1 2 3))
+(test '(memv 2 '(1 2 3)) '(2 3))
+(test '(memv 3 '(1 2 3)) '(3))
+(test '(memv 4 '(1 2 3)) #f)
+(test '(memv 'a '(a b c)) '(a b c))
+
+;; member tests (uses equal?)
+(test '(member 1 '(1 2 3)) '(1 2 3))
+(test '(member 2 '(1 2 3)) '(2 3))
+(test '(member 3 '(1 2 3)) '(3))
+(test '(member 4 '(1 2 3)) #f)
+(test '(member '(1 2) '((0 1) (1 2) (2 3))) '((1 2) (2 3))) ;; サブリストも比較
+(test '(member '(2 3) '((0 1) (1 2) (2 3))) '((2 3)))
+
 ;; ==============================================================
 ;; Promise / delay / force tests
 ;; ==============================================================

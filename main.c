@@ -765,9 +765,9 @@ int assoc(int sym, int lis)
 int member(int x, int lis)
 {
     if (nullp(lis))
-	return (NIL);
+	return (FAIL);
     else if (equalp(x, car(lis)))
-	return (T);
+	return (lis);
     else
 	return (member(x, cdr(lis)));
 }
@@ -775,9 +775,9 @@ int member(int x, int lis)
 int memq(int x, int lis)
 {
     if (nullp(lis))
-	return (NIL);
+	return (FAIL);
     else if (eqp(x, car(lis)))
-	return (T);
+	return (lis);
     else
 	return (memq(x, cdr(lis)));
 }
@@ -786,9 +786,9 @@ int memq(int x, int lis)
 int memv(int x, int lis)
 {
     if (nullp(lis))
-	return (NIL);
+	return (FAIL);
     else if (eqvp(x, car(lis)))
-	return (T);
+	return (lis);
     else
 	return (memv(x, cdr(lis)));
 }
