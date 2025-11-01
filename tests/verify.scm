@@ -114,7 +114,6 @@
 
 (test '(< (abs (- (sin (/ 3.141592653589793 2)) 1.0)) 1e-10) #t)
 
-
 (test '(eqv? 'a 'a) #t)
 (test '(eqv? 'a 'b) #f)
 (test '(eqv? 1 1) #t)
@@ -133,3 +132,27 @@
 (test '(eqv? x y) #t) 
 (test '(eqv? x '(1 2)) #f) 
 (test '(eqv? '() '()) #t)
+
+;; remainder
+(test '(remainder 5 3) 2)
+(test '(remainder -5 3) -2)
+(test '(remainder 5 -3) 2)
+(test '(remainder -5 -3) -2)
+(test '(remainder 0 3) 0)
+(test '(remainder 3 1) 0)
+(test '(remainder 1 3) 1)
+(test '(remainder -1 3) -1)
+(test '(remainder 1 -3) 1)
+(test '(remainder -1 -3) -1)
+
+;; modulo
+(test '(modulo 5 3) 2)
+(test '(modulo -5 3) 1)
+(test '(modulo 5 -3) -1)
+(test '(modulo -5 -3) -2)
+(test '(modulo 0 3) 0)
+(test '(modulo 3 1) 0)
+(test '(modulo 1 3) 1)
+(test '(modulo -1 3) 2)
+(test '(modulo 1 -3) -2)
+(test '(modulo -1 -3) -1)
