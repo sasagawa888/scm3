@@ -56,7 +56,6 @@
           (odd? 5)) #t)
 
 
-;; ==== 文字テスト ====
 (test '(char=? #\a #\a) #t)
 (test '(char=? #\a #\b) #f)
 (test '(char<? #\a #\b) #t)
@@ -79,4 +78,4 @@
 (test '(string-ref "abc" 0) #\a)
 (test '(string-ref "abc" 2) #\c)
 (test '(string-length "hello") 5)
-;(test '(string-append "ab" "cd") "abcd")
+(test '(string-append "ab" "cd") "abcd")
