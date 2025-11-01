@@ -2823,7 +2823,7 @@ int f_atan(int arglist)
     int arg2;
     arg1 = exact_to_inexact(car(arglist));
     arg2 = exact_to_inexact(cadr(arglist));
-	res = atan2(GET_FLT(arg2),GET_FLT(arg1));
+	res = atan2(GET_FLT(arg1),GET_FLT(arg2));
     } else{
         error(ILLEGAL_OBJ_ERR,"atan",arglist);
     }

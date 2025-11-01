@@ -105,8 +105,8 @@
 (test '(= (abs 5.0) 5.0) #t)
 
 
-(test '(= (expt 2 3) 8.0) #t)
-;(test '(= (expt 9 0.5) 3.0) #t)
+(test '(= (expt 2 3) 8) #t)
+(test '(= (expt 9 0.5) 3.0) #t)
 
 
 (test '(= (max 2 5 3) 5) #t)
