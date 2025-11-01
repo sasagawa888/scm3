@@ -1359,6 +1359,8 @@ int flttoken(char buf[])
 
   exp:
     i++;
+    if (buf[i] == '+' || buf[i] == '-')
+        i++;
     while ((c = buf[i]) != NUL) {
 	if (isdigit(c))
 	    i++;
