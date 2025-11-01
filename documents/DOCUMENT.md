@@ -126,6 +126,13 @@ write
 
 ```
 
+## rlwrap
+"scm3 is intended to have a very simple structure. Therefore, the REPL does not have any editing features. Using rlwrap makes input easier. Please run it from the terminal like this: rlwrap scm3."
+
+```
+sudo apt install rlwrap
+```
+
 ## Edwin
 edwin launches an editor. Please set your preferred editor in the EDITOR environment variable. If none is specified, it will call Edwin, which comes with Easy-ISLisp.
 
