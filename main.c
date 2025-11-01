@@ -2305,6 +2305,7 @@ void initsubr(void)
     defsubr("min", f_min);
     defsubr("abs", f_abs);
     defsubr("remainder", f_remainder);
+    defsubr("modulo", f_modulo);
     defsubr("expt", f_expt);
     defsubr("sqrt", f_sqrt);
     defsubr("exp", f_exp);
@@ -2697,6 +2698,24 @@ int f_remainder(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (makeint(GET_INT(arg1) % GET_INT(arg2)));
+}
+
+int modulo(int x, int y) {
+    int r = x % y; 
+    if ((r > 0 && y < 0) || (r < 0 && y > 0)) {
+        r += y;
+    }
+    return r;
+}
+
+int f_modulo(int arglist)
+{
+    int arg1,arg2;
+    checkarg(LEN2_TEST,"modulo",arglist);
+    checkarg(INTLIST_TEST,"modulo",arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(makeint(modulo(GET_INT(arg1),GET_INT(arg2))));
 }
 
 int f_expt(int arglist)
