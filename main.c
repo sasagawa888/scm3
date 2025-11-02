@@ -2471,6 +2471,14 @@ void initsubr(void)
     defsubr("string-append", f_string_append);
     defsubr("string->list", f_string_to_list);
     defsubr("list->string", f_list_to_string);
+    defsubr("input-port?", f_input_port_p);
+    defsubr("output-port?", f_output_port_p);
+    defsubr("current-input-port", f_current_input_port);
+    defsubr("current-output-port", f_current_output_port);
+    defsubr("open-input-file", f_open_input_file);
+    defsubr("open-output-file", f_open_output_file);
+    defsubr("close-input-port", f_close_input_port);
+    defsubr("close-output-port", f_close_output_port);
 
 
     deffsubr("quote", f_quote);
@@ -4143,6 +4151,41 @@ int f_close_output_port(int arglist)
     arg1 = car(arglist);
     fclose(GET_STM(arg1));
     return(TRUE);
+}
+
+int f_input_port_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "input-port?", arglist);
+    arg1 = car(arglist);
+    if(arg1 >= 0 && arg1 < HEAPSIZE && IS_STM(arg1) && GET_CDR(arg1) == INPUT)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+
+int f_output_port_p(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "output-port?", arglist);
+    arg1 = car(arglist);
+    if(arg1 >= 0 && arg1 < HEAPSIZE && IS_STM(arg1) && GET_CDR(arg1) == OUTPUT)
+        return(TRUE);
+    else 
+        return(FAIL);
+}
+
+int f_current_input_port(int arglist)
+{
+    checkarg(LEN0_TEST, "current-input-prt", arglist);
+    return(input_stream);
+}
+
+int f_current_output_port(int arglist)
+{
+    checkarg(LEN0_TEST, "current-output-prt", arglist);
+    return(output_stream);
 }
 
 

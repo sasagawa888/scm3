@@ -96,6 +96,7 @@ typedef struct token {
 #define IS_EXPR(addr)		heap[addr].tag == EXPR
 #define IS_CONT(addr)		heap[addr].tag == CONT
 #define IS_PROM(addr) 		heap[addr].tag == PROM
+#define IS_STM(addr)		heap[addr].tag == STM
 #define IS_EMPTY(addr)		heap[addr].tag	== EMP
 #define HAS_NAME(addr,x)	strcmp(heap[addr].name,x) == 0
 #define SAME_NAME(addr1,addr2) strcmp(heap[addr1].name, heap[addr2].name) == 0
@@ -417,6 +418,15 @@ int f_string_set(int addr);
 int f_string_append(int addr);
 int f_string_to_list(int addr);
 int f_list_to_string(int addr);
+int f_input_port_p(int addr);
+int f_output_port_p(int addr);
+int f_current_input_port(int addr);
+int f_current_output_port(int addr);
+int f_open_input_file(int addr);
+int f_open_output_file(int addr);
+int f_close_input_port(int addr);
+int f_close_output_port(int addr);
+
 
 int list1(int x);
 int list2(int x, int y);
