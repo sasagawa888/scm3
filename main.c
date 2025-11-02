@@ -1131,6 +1131,15 @@ int exact_to_inexact(int x)
 	return (x);
 }
 
+int inexact_to_exact(int x)
+{
+    if (floatp(x))
+	return (makeint((double)GET_FLT(x)));
+    else
+	return (x);
+}
+
+
 
 //-------for CPS--------------------
 void push_cps(int addr)
@@ -2488,6 +2497,8 @@ void initsubr(void)
     defsubr("open-output-file", f_open_output_file);
     defsubr("close-input-port", f_close_input_port);
     defsubr("close-output-port", f_close_output_port);
+    defsubr("exact->inexact", f_exact_to_inexact);
+    defsubr("inexact->exact", f_inexact_to_exact);
 
 
     deffsubr("quote", f_quote);
@@ -4955,4 +4966,17 @@ int f_list_to_string(int arglist)
 	arg1 = cdr(arg1);
     }
     return (makestr(str));
+}
+
+int f_exact_to_inexact(int arglist)
+{
+    checkarg(NUMBER_TEST,"exact->inexact",car(arglist));
+    return(exact_to_inexact(car(arglist)));
+}
+
+
+int f_inexact_to_exact(int arglist)
+{
+    checkarg(NUMBER_TEST,"inexact->exact",car(arglist));
+    return(inexact_to_exact(car(arglist)));
 }

@@ -421,6 +421,8 @@ int f_open_input_file(int addr);
 int f_open_output_file(int addr);
 int f_close_input_port(int addr);
 int f_close_output_port(int addr);
+int f_exact_to_inexact(int addr);
+int f_inexact_to_exact(int addr);
 
 
 int list1(int x);
