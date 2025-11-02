@@ -1,7 +1,6 @@
 (define a 1)
 
-(define (foo)
-    (call/cc (lambda (c) (set! a c))) (bar))
+(define (foo x) (+ x 1))
 
 (define (bar)
     (display 3))
@@ -45,4 +44,5 @@
                           #f
                           (even? (- n 1))))))
     (even? x)))
+
 

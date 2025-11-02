@@ -234,3 +234,21 @@ This is expanded until it reaches primitives. When all these computations are fi
 (set-clos Sym)  Set the closure. Specifically, save the current local variable pointer onto the stack, mark the closure as being in the process of expansion, and then save the closure itself onto the stack as well.
 
 (free-clos) Release the closure after its use has finished. Specifically, restore the local variables that were saved on the stack, then remove the saved closure from the stack and clear the mark indicating that it was in the process of expansion.
+
+## example of CPS
+
+- function
+```
+(define (foo x) (+ x 1))
+
+(transfer '(foo 10))
+((set-clos foo) 10 (bind (quote x)) x (push) 1 (push) (apply-cps + (pop 2)) (unbind 1) (free-clos))
+
+```
+
+- procedure
+```
+(transfer '(/ 2 3))
+(2 (push) 3 (push) (apply-cps / (pop 2)))
+> 
+```
