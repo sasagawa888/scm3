@@ -13,7 +13,7 @@ written by kenichi sasagawa
 #include <signal.h>
 #include "scm3.h"
 
-double version = 1.40;
+double version = 1.50;
 cell heap[HEAPSIZE];
 int stack[STACKSIZE];
 int argstk[STACKSIZE];
