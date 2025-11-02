@@ -2477,6 +2477,7 @@ void initsubr(void)
     defsubr("char-upper-case?", f_char_upper_case_p);
     defsubr("char-lower-case?", f_char_lower_case_p);
     defsubr("string?", f_stringp);
+    defsubr("make-string", f_make_string);
     defsubr("string=?", f_str_eqp);
     defsubr("string<?", f_str_lessp);
     defsubr("string>?", f_str_greaterp);
@@ -4788,6 +4789,29 @@ int f_stringp(int arglist)
 {
     checkarg(LEN1_TEST, "string?", arglist);
     return (stringp(car(arglist)));
+}
+
+int f_make_string(int arglist)
+{
+    int arg1,arg2,n,i;
+    char str[SYMSIZE],c;
+    memset(str,0,SYMSIZE);
+    if(length(arglist) == 1){
+    arg1 = car(arglist);
+    n = GET_INT(arg1);
+    for(i=0;i<n;i++)
+        str[i] = ' ';
+    } else if(length(arglist) == 2){
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    n = GET_INT(arg1);
+    c = GET_NAME(arg2)[3];
+    for(i=0;i<n;i++)
+    str[i] = c;
+    } else 
+        error(ILLEGAL_OBJ_ERR,"make-string",arglist);
+    
+    return(makestr(str));
 }
 
 

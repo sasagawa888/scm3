@@ -401,6 +401,7 @@ int f_char_whitespace_p(int addr);
 int f_char_upper_case_p(int addr);
 int f_char_lower_case_p(int addr);
 int f_stringp(int addr);
+int f_make_string(int addr);
 int f_str_eqp(int addr);
 int f_str_lessp(int addr);
 int f_str_greaterp(int addr);
