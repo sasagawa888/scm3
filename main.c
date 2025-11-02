@@ -1716,6 +1716,7 @@ int transfer(int addr)
 	if (numberp(car(addr)))
 	    error(ILLEGAL_OBJ_ERR, "transfer", addr);
 	else if (subrp(car(addr))) {
+        // procedure
 	    args = transfer_subrargs(cdr(addr));
 	    body =
 		list3(makesym("apply-cps"),
@@ -1723,6 +1724,7 @@ int transfer(int addr)
 		      list2(makesym("pop"), makeint(length(cdr(addr)))));
 	    return (append(args, list1(body)));
 	} else if (fsubrp(car(addr))) {
+        //syntax e.g. if cond
 	    args = transfer_fsubrargs(cdr(addr));
 	    body =
 		list3(makesym("apply-cps"),
@@ -1730,6 +1732,7 @@ int transfer(int addr)
 		      list2(makesym("pop"), makeint(length(cdr(addr)))));
 	    return (append(args, list1(body)));
 	} else if (experp(car(addr))) {
+        // function binded in environment
 	    func = findsym(car(addr));
 	    varlist = car(GET_BIND(func));
 	    body = transfer_exprbody(cdr(GET_BIND(func)));
@@ -1746,12 +1749,14 @@ int transfer(int addr)
 							    (makesym
 							     ("free-clos"))))))));
 	} else if (functionp(car(addr))) {
+        // functions binded to symbol
 	    if (maltiple_recur_p(car(addr), cdr(addr))) {
 		return (list1
 			(list2
 			 (makesym("eval"),
 			  list2(makesym("quote"), addr))));
 	    } else if (in_recur_p(car(addr))) {
+        // in recursion not generate set-clos free-clos
 		func = car(addr);
 		varlist = car(GET_BIND(GET_BIND(func)));
 		body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
@@ -1763,6 +1768,7 @@ int transfer(int addr)
 							   (cdr
 							    (addr))))))));
 	    } else {
+        // normal closure
 		func = car(addr);
 		varlist = car(GET_BIND(GET_BIND(func)));
 		body = transfer_exprbody(cdr(GET_BIND(GET_BIND(func))));
@@ -1790,6 +1796,7 @@ int transfer(int addr)
 	    return (append(args, list1(body)));
 	} else if (symbolp(car(addr)) && car(addr) == continuation_variable) {
         // e.g. (lambda (c) (c 42) 0)
+        // execute continuation by exec-cont
         addr = cons(continutation_entity,cdr(addr));
         continuation_variable = NIL;
         continutation_entity = NIL;
@@ -1800,6 +1807,7 @@ int transfer(int addr)
 		      list2(makesym("pop"), makeint(length(addr))));
 	    return (append(args, list1(body)));
 	} else if (lambdap(car(addr))) {
+        // lambda expression
 	    func = car(addr);
 	    varlist = cadr(func);
 	    body = transfer_exprbody(cddr(func));
@@ -1810,6 +1818,7 @@ int transfer(int addr)
 					 (makesym("unbind"),
 					  makeint(length(cdr(addr))))))));
 	} else if (let_loop_p(car(addr))) {
+        // named let e.g. (loop (+ n 1))
         varlist = car(GET_CAR(car(addr)));
         body = cdr(GET_CAR(car(addr)));
         args = transfer_loopargs(varlist,cdr(addr));
