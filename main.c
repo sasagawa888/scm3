@@ -257,9 +257,6 @@ void cellprint(int addr)
     case STM:
 	printf("STREAM ");
 	break;
-    case LOOP:
-	printf("LOOP   ");
-	break;
     }
     printf("%07d ", GET_CAR(addr));
     printf("%07d ", GET_CDR(addr));
@@ -549,7 +546,7 @@ int let_loop_p(int addr)
 {
     if (addr >= HEAPSIZE || addr < 0)
 	return (0);
-    else if (IS_LOOP(addr))
+    else if (GET_CAR(addr) != NIL)
 	return (1);
     else
 	return (0);
@@ -4085,12 +4082,11 @@ int f_let(int arglist)
 	return (res);
     } else {
 	// case of let named letlsyntax
-	checkarg(LIST_TEST, "let", cadr(arglist));
+	checkarg(LIST_TEST, "let loop", cadr(arglist));
     arg1 = car(arglist);  //name symbol
 	arg2 = cadr(arglist); //var list
 	arg3 = cddr(arglist); //body
     vars = NIL;
-    SET_TAG(arg1,LOOP); // name symbol is loop object
     SET_CAR(arg1,arg3); // save body to name symbol
     save = ep;
 	save1 = pp;
