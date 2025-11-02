@@ -63,6 +63,7 @@ typedef struct token {
 #define GET_NAME_ELT(addr,i)	heap[addr].name[i]
 #define GET_TAG(addr)		heap[addr].tag
 #define GET_BIND(addr)		heap[addr].val.bind
+#define GET_STM(addr)		heap[addr].val.stream
 #define GET_SUBR(addr)		heap[addr].val.subr
 #define GET_VEC_ELT(addr,i) heap[addr].val.vector[i]
 #define GET_FLAG(addr)		heap[addr].flag
@@ -163,6 +164,10 @@ int pp;  //protect pointer
 #define VECTOR_TEST		17
 #define PROMISE_TEST	18
 #define CHAR_TEST		19
+
+//----------------------------
+#define INPUT	1
+#define OUTPUT	2
 
 
 void initcell(void);

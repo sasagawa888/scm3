@@ -24,6 +24,7 @@ jmp_buf buf;
 int cell_hash_table[HASHTBSIZE];
 
 FILE *input_stream;
+FILE *output_stream;
 int gbc_flag = 0;
 int return_flag = 0;
 int step_flag = 0;
@@ -44,11 +45,11 @@ int main(int argc, char *argv[])
 
     printf("Scheme R3RS ver %.2f\n", version);
     input_stream = stdin;
+    output_stream = stdout;
     initcell();
     initsubr();
     signal(SIGINT, signal_handler_c);
 
-    input_stream = stdin;
     int ret = setjmp(buf);
 
   repl:
@@ -1057,13 +1058,14 @@ int makepromise(int addr)
     return (val);
 }
 
-int makestm(FILE *stream)
+int makestm(FILE *stream, int prop)
 {
     int val;
 
     val = freshcell();
     SET_TAG(val, STM);
     SET_STM(val, stream);
+    SET_CDR(val,prop);
     return (val);
 }
 
@@ -1524,62 +1526,62 @@ int readlist(void)
 void print(int addr)
 {
     if (integerp(addr)) {
-	printf("%d", GET_INT(addr));
+	fprintf(output_stream,"%d", GET_INT(addr));
 	return;
     }
     switch (GET_TAG(addr)) {
     case FLTN:
-	printf("%g", GET_FLT(addr));
+	fprintf(output_stream,"%g", GET_FLT(addr));
 	if (GET_FLT(addr) - (int) GET_FLT(addr) == 0.0)
 	    printf(".0");
 	break;
     case STR:
 	if (display_flag) {
-	    printf("%s", GET_NAME(addr));
+	    fprintf(output_stream,"%s", GET_NAME(addr));
 	} else {
-	    printf("\"%s\"", GET_NAME(addr));
+	    fprintf(output_stream,"\"%s\"", GET_NAME(addr));
 	}
 	break;
     case SYM:
-	printf("%s", GET_NAME(addr));
+	fprintf(output_stream,"%s", GET_NAME(addr));
 	break;
     case BOOL:
-	printf("%s", GET_NAME(addr));
+	fprintf(output_stream,"%s", GET_NAME(addr));
 	break;
     case CHAR:
-	printf("%s", GET_NAME(addr));
+	fprintf(output_stream,"%s", GET_NAME(addr));
 	break;
     case SUBR:
-	printf("<subr>");
+	fprintf(output_stream,"<subr>");
 	break;
     case FSUBR:
-	printf("<fsubr>");
+	fprintf(output_stream,"<fsubr>");
 	break;
     case EXPR:
-	printf("<expr>");
+	fprintf(output_stream,"<expr>");
 	break;
     case CONT:
-	printf("<cont>");
+	fprintf(output_stream,"<cont>");
 	break;
     case PROM:
-	printf("<promise>");
+	fprintf(output_stream,"<promise>");
 	break;
     case STM:
-	printf("<stream>");
+	fprintf(output_stream,"<stream>");
 	break;
     case LIS:{
-	    printf("(");
+	    fprintf(output_stream,"(");
 	    printlist(addr);
 	    break;
 	}
     case VEC:{
-	    printf("#(");
+	    fprintf(output_stream,"#(");
 	    printvec(addr);
-	    printf(")");
+	    fprintf(output_stream,")");
 	    break;
 	}
     default:
-	printf("<undef>");
+	fprintf(output_stream,"<undef>");
 	break;
     }
 }
@@ -1588,16 +1590,16 @@ void print(int addr)
 void printlist(int addr)
 {
     if (IS_NIL(addr))
-	printf(")");
+	fprintf(output_stream,")");
     else if ((!(listp(cdr(addr)))) && (!(nullp(cdr(addr))))) {
 	print(car(addr));
 	printf(" . ");
 	print(cdr(addr));
-	printf(")");
+	fprintf(output_stream,")");
     } else {
 	print(GET_CAR(addr));
 	if (!(IS_NIL(GET_CDR(addr))))
-	    printf(" ");
+	    fprintf(output_stream," ");
 	printlist(GET_CDR(addr));
     }
 }
@@ -1609,55 +1611,7 @@ void printvec(int addr)
     for (i = 0; i < n; i++) {
 	print(GET_VEC_ELT(addr, i));
 	if (i < n - 1)
-	    printf(" ");
-    }
-}
-
-void princ(int addr)
-{
-    char c, str[SYMSIZE];
-    int pos;
-    if (integerp(addr)) {
-	printf("%d", GET_INT(addr));
-	return;
-    }
-    switch (GET_TAG(addr)) {
-    case FLTN:
-	printf("%g", GET_FLT(addr));
-	if (GET_FLT(addr) - (int) GET_FLT(addr) == 0.0)
-	    printf(".0");
-	break;
-    case STR:
-	printf("%s", GET_NAME(addr));
-	break;
-    case SYM:
-	memset(str, 0, SYMSIZE);
-	pos = 0;
-	strcpy(str, GET_NAME(addr));
-	c = str[pos++];
-	while (c != 0) {
-	    if (c != '|')
-		printf("%c", c);
-	    c = str[pos++];
-	}
-	break;
-    case SUBR:
-	printf("<subr>");
-	break;
-    case FSUBR:
-	printf("<fsubr>");
-	break;
-    case EXPR:
-	printf("<expr>");
-	break;
-    case LIS:{
-	    printf("(");
-	    printlist(addr);
-	    break;
-	}
-    default:
-	printf("<undef>");
-	break;
+	    fprintf(output_stream," ");
     }
 }
 
@@ -4139,6 +4093,47 @@ int f_force(int arglist)
 	SET_CDR(arg1, eval_cps(body));
 	return (GET_CDR(arg1));
     }
+}
+
+int f_open_input_file(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "open-input-file", arglist);
+    checkarg(STRING_TEST, "open-input-file", car(arglist));
+    arg1 = car(arglist);
+
+    return(makestm(fopen(GET_NAME(arg1), "r"),INPUT));
+}
+
+
+int f_open_output_file(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "open-output-file", arglist);
+    checkarg(STRING_TEST, "open-output-file", car(arglist));
+    arg1 = car(arglist);
+
+    return(makestm(fopen(GET_NAME(arg1), "w"),OUTPUT));
+}
+
+int f_close_input_port(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "close-input-port", arglist);
+    checkarg(STRING_TEST, "close-input-port", car(arglist));
+    arg1 = car(arglist);
+    fclose(GET_STM(arg1));
+    return(TRUE);
+}
+
+int f_close_output_port(int arglist)
+{
+    int arg1;
+    checkarg(LEN1_TEST, "close-output-port", arglist);
+    checkarg(STRING_TEST, "close-output-port", car(arglist));
+    arg1 = car(arglist);
+    fclose(GET_STM(arg1));
+    return(TRUE);
 }
 
 
