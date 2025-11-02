@@ -545,6 +545,17 @@ int continuationp(int addr)
 	return (0);
 }
 
+int let_loop_p(int addr)
+{
+    if (addr >= HEAPSIZE || addr < 0)
+	return (0);
+    else if (IS_LOOP(addr))
+	return (1);
+    else
+	return (0);
+}
+
+
 
 int listp(int addr)
 {
@@ -1674,6 +1685,17 @@ int transfer_fsubrargs(int args)
     }
 }
 
+int transfer_loopargs(int args)
+{
+    if (nullp(args))
+	return (NIL);
+    else {
+	return (append(transfer(car(args)),
+			    transfer_loopargs(cdr(args))));
+    }
+
+}
+
 
 int maltiple_recur_p(int func, int arg)
 {
@@ -1790,6 +1812,10 @@ int transfer(int addr)
 					(list2
 					 (makesym("unbind"),
 					  makeint(length(cdr(addr))))))));
+	} else if (let_loop_p(car(addr))) {
+         args = transfer_loopargs(cdr(addr));
+	     body = transfer(GET_CAR(addr));
+	    return (append(args, list1(body)));
 	}
     }
 
