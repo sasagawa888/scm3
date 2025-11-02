@@ -1682,13 +1682,13 @@ int transfer_fsubrargs(int args)
     }
 }
 
-int transfer_loopargs(int args)
+int transfer_loopargs(int args,int update)
 {
     if (nullp(args))
 	return (NIL);
     else {
-	return (append(transfer(car(args)),
-			    transfer_loopargs(cdr(args))));
+	return (append(transfer(list3(makesym("set!"),car(args),car(update))),
+			    transfer_loopargs(cdr(args),cdr(update))));
     }
 
 }
@@ -1707,7 +1707,7 @@ int maltiple_recur_p(int func, int arg)
 
 int transfer(int addr)
 {
-    int func, varlist, args, body;
+    int func, varlist, args, body, loop;
     if (numberp(addr) || stringp(addr) || symbolp(addr)
 	|| continuationp(addr) || booleanp(addr) || characterp(addr)
 	|| vectorp(addr))
@@ -1810,12 +1810,11 @@ int transfer(int addr)
 					 (makesym("unbind"),
 					  makeint(length(cdr(addr))))))));
 	} else if (let_loop_p(car(addr))) {
-        print(addr);
-        printf("\n");
-        print(GET_CAR(car(addr)));
-        printf("\n");
-        f_exit(NIL);
-	    return (append(args, list1(body)));
+        varlist = car(GET_CAR(car(addr)));
+        body = cdr(GET_CAR(car(addr)));
+        args = transfer_loopargs(varlist,cdr(addr));
+        loop = transfer_exprbody(body);
+	    return (append(args, loop));
 	}
     }
 
