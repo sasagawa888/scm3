@@ -23,8 +23,8 @@ token stok = { GO, OTHER };
 jmp_buf buf;
 int cell_hash_table[HASHTBSIZE];
 
-FILE *input_stream;
-FILE *output_stream;
+int input_stream;
+int output_stream;
 int gbc_flag = 0;
 int return_flag = 0;
 int step_flag = 0;
@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
 {
 
     printf("Scheme R3RS ver %.2f\n", version);
-    input_stream = stdin;
-    output_stream = stdout;
+    input_stream = STDIN;
+    output_stream = STDOUT;
     initcell();
     initsubr();
     signal(SIGINT, signal_handler_c);
@@ -1221,13 +1221,13 @@ void gettoken(void)
     }
 
   skip:
-    c = fgetc(input_stream);
+    c = fgetc(GET_STM(input_stream));
     while ((c == SPACE) || (c == EOL) || (c == TAB))
-	c = fgetc(input_stream);
+	c = fgetc(GET_STM(input_stream));
 
     if (c == ';') {
 	while (c != EOL && c != EOF) {
-	    c = fgetc(input_stream);
+	    c = fgetc(GET_STM(input_stream));
 	}
 	if (c == EOF) {
 	    stok.type = FILEEND;
@@ -1251,7 +1251,7 @@ void gettoken(void)
 	break;
     case '"':
 	pos = 0;
-	while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
+	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
 	       (c != '"'))
 	    stok.buf[pos++] = c;
 
@@ -1260,18 +1260,18 @@ void gettoken(void)
 	return;
     case '#':
 	c1 = c;
-	c = getc(input_stream);
+	c = getc(GET_STM(input_stream));
 	if (c == '(') {
 	    stok.type = VECTOR;
 	    return;
 	}
-	ungetc(c, input_stream);
+	ungetc(c, GET_STM(input_stream));
 	c = c1;
 	goto etc;
     case '|':
 	pos = 0;
 	stok.buf[pos++] = c;
-	while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
+	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
 	       (c != '|'))
 	    stok.buf[pos++] = c;
 
@@ -1295,7 +1295,7 @@ void gettoken(void)
 	  etc:
 	    pos = 0;
 	    stok.buf[pos++] = c;
-	    while (((c = fgetc(input_stream)) != EOL) && (pos < BUFSIZE) &&
+	    while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
 		   (c != SPACE) && (c != '(') && (c != ')') &&
 		   (c != '`') && (c != ',') && (c != '@'))
 		stok.buf[pos++] = c;
@@ -1534,62 +1534,62 @@ int readlist(void)
 void print(int addr)
 {
     if (integerp(addr)) {
-	fprintf(output_stream,"%d", GET_INT(addr));
+	fprintf(GET_STM(output_stream),"%d", GET_INT(addr));
 	return;
     }
     switch (GET_TAG(addr)) {
     case FLTN:
-	fprintf(output_stream,"%g", GET_FLT(addr));
+	fprintf(GET_STM(output_stream),"%g", GET_FLT(addr));
 	if (GET_FLT(addr) - (int) GET_FLT(addr) == 0.0)
 	    printf(".0");
 	break;
     case STR:
 	if (display_flag) {
-	    fprintf(output_stream,"%s", GET_NAME(addr));
+	    fprintf(GET_STM(output_stream),"%s", GET_NAME(addr));
 	} else {
-	    fprintf(output_stream,"\"%s\"", GET_NAME(addr));
+	    fprintf(GET_STM(output_stream),"\"%s\"", GET_NAME(addr));
 	}
 	break;
     case SYM:
-	fprintf(output_stream,"%s", GET_NAME(addr));
+	fprintf(GET_STM(output_stream),"%s", GET_NAME(addr));
 	break;
     case BOOL:
-	fprintf(output_stream,"%s", GET_NAME(addr));
+	fprintf(GET_STM(output_stream),"%s", GET_NAME(addr));
 	break;
     case CHAR:
-	fprintf(output_stream,"%s", GET_NAME(addr));
+	fprintf(GET_STM(output_stream),"%s", GET_NAME(addr));
 	break;
     case SUBR:
-	fprintf(output_stream,"<subr>");
+	fprintf(GET_STM(output_stream),"<subr>");
 	break;
     case FSUBR:
-	fprintf(output_stream,"<fsubr>");
+	fprintf(GET_STM(output_stream),"<fsubr>");
 	break;
     case EXPR:
-	fprintf(output_stream,"<expr>");
+	fprintf(GET_STM(output_stream),"<expr>");
 	break;
     case CONT:
-	fprintf(output_stream,"<cont>");
+	fprintf(GET_STM(output_stream),"<cont>");
 	break;
     case PROM:
-	fprintf(output_stream,"<promise>");
+	fprintf(GET_STM(output_stream),"<promise>");
 	break;
     case STM:
-	fprintf(output_stream,"<stream> %s",GET_NAME(addr));
+	fprintf(GET_STM(output_stream),"<stream> %s",GET_NAME(addr));
 	break;
     case LIS:{
-	    fprintf(output_stream,"(");
+	    fprintf(GET_STM(output_stream),"(");
 	    printlist(addr);
 	    break;
 	}
     case VEC:{
-	    fprintf(output_stream,"#(");
+	    fprintf(GET_STM(output_stream),"#(");
 	    printvec(addr);
-	    fprintf(output_stream,")");
+	    fprintf(GET_STM(output_stream),")");
 	    break;
 	}
     default:
-	fprintf(output_stream,"<undef>");
+	fprintf(GET_STM(output_stream),"<undef>");
 	break;
     }
 }
@@ -1598,16 +1598,16 @@ void print(int addr)
 void printlist(int addr)
 {
     if (IS_NIL(addr))
-	fprintf(output_stream,")");
+	fprintf(GET_STM(output_stream),")");
     else if ((!(listp(cdr(addr)))) && (!(nullp(cdr(addr))))) {
 	print(car(addr));
-	fprintf(output_stream," . ");
+	fprintf(GET_STM(output_stream)," . ");
 	print(cdr(addr));
-	fprintf(output_stream,")");
+	fprintf(GET_STM(output_stream),")");
     } else {
 	print(GET_CAR(addr));
 	if (!(IS_NIL(GET_CDR(addr))))
-	    fprintf(output_stream," ");
+	    fprintf(GET_STM(output_stream)," ");
 	printlist(GET_CDR(addr));
     }
 }
@@ -1619,7 +1619,7 @@ void printvec(int addr)
     for (i = 0; i < n; i++) {
 	print(GET_VEC_ELT(addr, i));
 	if (i < n - 1)
-	    fprintf(output_stream," ");
+	    fprintf(GET_STM(output_stream)," ");
     }
 }
 
@@ -2160,7 +2160,8 @@ void error(int errnum, char *fun, int arg)
 	}
     }
     printf("\n");
-    input_stream = stdin;
+    input_stream = STDIN;
+    output_stream = STDOUT;
     longjmp(buf, 1);
 }
 
@@ -3554,7 +3555,7 @@ int f_readc(int arglist)
     char c, str[5];
     checkarg(LEN0_TEST, "readc", arglist);
     memset(str, 0, 5);
-    c = fgetc(input_stream);
+    c = fgetc(GET_STM(input_stream));
     str[0] = c;
     return (makesym(str));
 }
@@ -4152,8 +4153,8 @@ int f_load(int arglist)
     checkarg(STRING_TEST, "load", car(arglist));
     arg1 = car(arglist);
 
-    input_stream = fopen(GET_NAME(arg1), "r");
-    if (!input_stream)
+    input_stream = makestm(fopen(GET_NAME(arg1), "r"),INPUT,GET_NAME(arg1));
+    if (!GET_STM(input_stream))
 	error(CANT_OPEN_ERR, "load", arg1);
 
 
@@ -4164,8 +4165,8 @@ int f_load(int arglist)
 	    break;
 	eval_cps(exp);
     }
-    fclose(input_stream);
-    input_stream = stdin;
+    fclose(GET_STM(input_stream));
+    input_stream = STDIN;
     return (TRUE);
 }
 
