@@ -22,7 +22,7 @@ written by kenichi sasagawa 2025/10~
 
 #define DEBUG longjmp(buf, 2);
 
-typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC,PROM,STM} tag;
+typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC,PROM,STM,LOOP} tag;
 typedef enum flag {FRE,USE} flag;
 
 
@@ -97,6 +97,7 @@ typedef struct token {
 #define IS_CONT(addr)		heap[addr].tag == CONT
 #define IS_PROM(addr) 		heap[addr].tag == PROM
 #define IS_STM(addr)		heap[addr].tag == STM
+#define IS_LOOP(addr)		heap[addr].tag = LOOP
 #define IS_EMPTY(addr)		heap[addr].tag	== EMP
 #define HAS_NAME(addr,x)	strcmp(heap[addr].name,x) == 0
 #define SAME_NAME(addr1,addr2) strcmp(heap[addr1].name, heap[addr2].name) == 0

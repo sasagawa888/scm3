@@ -257,6 +257,9 @@ void cellprint(int addr)
     case STM:
 	printf("STREAM ");
 	break;
+    case LOOP:
+	printf("LOOP   ");
+	break;
     }
     printf("%07d ", GET_CAR(addr));
     printf("%07d ", GET_CDR(addr));
@@ -4026,12 +4029,12 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, vars, var, val, res, save, save1;
-    if (!eqp(car(arglist), makesym("loop"))) {
+    int arg1, arg2, arg3, vars, var, val, res, save, save1;
+    if (!symbolp(car(arglist))) {
 	//normal let syntax
-	checkarg(LIST_TEST, "let", cdr(arglist));
-	arg1 = car(arglist);
-	arg2 = cdr(arglist);
+	checkarg(LIST_TEST, "let", car(arglist));
+	arg1 = car(arglist); //var list
+	arg2 = cdr(arglist); //body
 	vars = NIL;
 
 	save = ep;
@@ -4055,8 +4058,34 @@ int f_let(int arglist)
 	pp = save1;
 	return (res);
     } else {
-	// case of let loop syntax
-	// not implemented
+	// case of let named letlsyntax
+	checkarg(LIST_TEST, "let", cadr(arglist));
+    arg1 = car(arglist);  //name symbol
+	arg2 = cadr(arglist); //var list
+	arg3 = cddr(arglist); //body
+    vars = NIL;
+    SET_TAG(arg1,LOOP); // name symbol is loop object
+    SET_CAR(arg1,arg3); // save body to name symbol
+    save = ep;
+	save1 = pp;
+	while (!nullp(arg2)) {
+	    var = caar(arg2);
+	    val = eval_cps(cadar(arg2));
+	    push_protect(val);
+	    arg2 = cdr(arg2);
+	    vars = cons(cons(var, val), vars);
+	}
+	ep = save;
+	while (!nullp(vars)) {
+	    var = caar(vars);
+	    val = cdar(vars);
+	    vars = cdr(vars);
+	    assocsym(var, val);
+	}
+    res = f_begin(arg2);
+	ep = save;
+	pp = save1;
+	return (res);
     }
     //dummy
     return(TRUE);
