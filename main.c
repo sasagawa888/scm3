@@ -1810,8 +1810,11 @@ int transfer(int addr)
 					 (makesym("unbind"),
 					  makeint(length(cdr(addr))))))));
 	} else if (let_loop_p(car(addr))) {
-         args = transfer_loopargs(cdr(addr));
-	     body = transfer(GET_CAR(addr));
+        print(addr);
+        printf("\n");
+        print(GET_CAR(car(addr)));
+        printf("\n");
+        f_exit(NIL);
 	    return (append(args, list1(body)));
 	}
     }
@@ -4052,7 +4055,7 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, arg3, vars, var, val, res, save, save1;
+    int arg1, arg2, arg3, vars, args, var, val, res, save, save1;
     if (!symbolp(car(arglist))) {
 	//normal let syntax
 	checkarg(LIST_TEST, "let", car(arglist));
@@ -4067,7 +4070,7 @@ int f_let(int arglist)
 	    val = eval_cps(cadar(arg1));
 	    push_protect(val);
 	    arg1 = cdr(arg1);
-	    vars = cons(cons(var, val), vars);
+        vars = cons(cons(var, val), vars);
 	}
 	ep = save;
 	while (!nullp(vars)) {
@@ -4082,12 +4085,12 @@ int f_let(int arglist)
 	return (res);
     } else {
 	// case of let named letlsyntax
-	checkarg(LIST_TEST, "let loop", cadr(arglist));
+	checkarg(LIST_TEST, "let", cadr(arglist));
     arg1 = car(arglist);  //name symbol
 	arg2 = cadr(arglist); //var list
 	arg3 = cddr(arglist); //body
     vars = NIL;
-    SET_CAR(arg1,arg3); // save body to name symbol
+    args = NIL;
     save = ep;
 	save1 = pp;
 	while (!nullp(arg2)) {
@@ -4096,7 +4099,9 @@ int f_let(int arglist)
 	    push_protect(val);
 	    arg2 = cdr(arg2);
 	    vars = cons(cons(var, val), vars);
+        args = cons(var,args);
 	}
+    SET_CAR(arg1,cons(args,arg3)); // save body to name symbol
 	ep = save;
 	while (!nullp(vars)) {
 	    var = caar(vars);
@@ -4104,7 +4109,7 @@ int f_let(int arglist)
 	    vars = cdr(vars);
 	    assocsym(var, val);
 	}
-    res = f_begin(arg2);
+    res = f_begin(arg3);
 	ep = save;
 	pp = save1;
 	return (res);

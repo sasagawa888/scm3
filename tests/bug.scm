@@ -1,6 +1,6 @@
 
 (define (foo) 
-    (let loop ((n 0))
+    (let loop ((n 5))
           (display n)
           (if (= n 10)
               #t
