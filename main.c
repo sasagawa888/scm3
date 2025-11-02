@@ -1058,7 +1058,7 @@ int makepromise(int addr)
     return (val);
 }
 
-int makestm(FILE *stream, int prop)
+int makestm(FILE *stream, int prop, char *name)
 {
     int val;
 
@@ -1066,6 +1066,7 @@ int makestm(FILE *stream, int prop)
     SET_TAG(val, STM);
     SET_STM(val, stream);
     SET_CDR(val,prop);
+    SET_NAME(val,name)
     return (val);
 }
 
@@ -1567,7 +1568,7 @@ void print(int addr)
 	fprintf(output_stream,"<promise>");
 	break;
     case STM:
-	fprintf(output_stream,"<stream>");
+	fprintf(output_stream,"<stream> %s",GET_NAME(addr));
 	break;
     case LIS:{
 	    fprintf(output_stream,"(");
@@ -1593,7 +1594,7 @@ void printlist(int addr)
 	fprintf(output_stream,")");
     else if ((!(listp(cdr(addr)))) && (!(nullp(cdr(addr))))) {
 	print(car(addr));
-	printf(" . ");
+	fprintf(output_stream," . ");
 	print(cdr(addr));
 	fprintf(output_stream,")");
     } else {
@@ -4102,7 +4103,7 @@ int f_open_input_file(int arglist)
     checkarg(STRING_TEST, "open-input-file", car(arglist));
     arg1 = car(arglist);
 
-    return(makestm(fopen(GET_NAME(arg1), "r"),INPUT));
+    return(makestm(fopen(GET_NAME(arg1), "r"),INPUT,GET_NAME(arg1)));
 }
 
 
@@ -4113,7 +4114,7 @@ int f_open_output_file(int arglist)
     checkarg(STRING_TEST, "open-output-file", car(arglist));
     arg1 = car(arglist);
 
-    return(makestm(fopen(GET_NAME(arg1), "w"),OUTPUT));
+    return(makestm(fopen(GET_NAME(arg1), "w"),OUTPUT,GET_NAME(arg1)));
 }
 
 int f_close_input_port(int arglist)
