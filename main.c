@@ -3574,16 +3574,19 @@ int f_read_char(int arglist)
     int save;
     char c, str[5];
     memset(str, 0, 5);
+    str[0] = '#';
+    str[1] = '\\';
+    str[3] = 0;
     if(length(arglist) == 0){
     c = fgetc(GET_STM(input_stream));
-    str[0] = c;
-    return (makesym(str));
+    str[2] = c;
+    return (makechar(str));
     } else if(length(arglist) == 1){
         save = input_stream;
         input_stream = car(arglist);
         c = fgetc(GET_STM(input_stream));
-        str[0] = c;
-        res = makesym(str);
+        str[2] = c;
+        res = makechar(str);
         input_stream = save;
         return(res);
     } else 
