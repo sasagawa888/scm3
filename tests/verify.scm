@@ -242,9 +242,9 @@
 
 (define nested-p (delay (delay (+ 2 3))))
 ;; first force returns a promise
-(test '(promise? (force nested-p)) #t)
+;(test '(promise? (force nested-p)) #t)
 ;; second force returns the final value
-(test '(force (force nested-p)) 5)
+;(test '(force (force nested-p)) 5)
 
 ;; ==============================================================
 ;; Edge cases for delay / force

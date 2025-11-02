@@ -675,6 +675,13 @@ int experp(int addr)
 	return (0);
 }
 
+int promisep(int addr)
+{
+    if (addr >= 0 && addr < HEAPSIZE && IS_PROM(addr))
+    return(1);
+    else 
+    return(0);
+}
 
 
 int lambdap(int addr)
@@ -1042,6 +1049,8 @@ int makepromise(int addr)
     val = freshcell();
     SET_TAG(val, PROM);
     SET_BIND(val, addr);
+    SET_CAR(val,NIL);
+    SET_CDR(val,NIL);
     return (val);
 }
 
@@ -4096,6 +4105,8 @@ int f_delay(int arglist)
 {
     int arg1;
     arg1 = car(arglist);
+    if(eqp(car(arg1),makesym("delay")))
+        arg1 = f_delay(cdr(arg1));
     return (makepromise(arg1));
 }
 
@@ -4104,6 +4115,7 @@ int f_force(int arglist)
     int arg1, body;
     arg1 = car(arglist);
     body = GET_BIND(arg1);
+    //already forced return evaluated value
     if (GET_CAR(arg1) == TRUE)
 	return (GET_CDR(arg1));
     else {
