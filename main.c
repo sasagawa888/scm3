@@ -2490,6 +2490,7 @@ void initsubr(void)
     defsubr("string->list", f_string_to_list);
     defsubr("list->string", f_list_to_string);
     defsubr("string-copy", f_string_copy);
+    defsubr("substring", f_substring);
     defsubr("input-port?", f_input_port_p);
     defsubr("output-port?", f_output_port_p);
     defsubr("current-input-port", f_current_input_port);
@@ -4969,6 +4970,29 @@ int f_list_to_string(int arglist)
 	arg1 = cdr(arg1);
     }
     return (makestr(str));
+}
+
+int f_substring(int arglist)
+{
+    int arg1,arg2,arg3,i,j, start,end;
+    char str1[SYMSIZE],str2[SYMSIZE];
+    checkarg(STRING_TEST,"substring",car(arglist));
+    checkarg(INTEGER_TEST,"substring",cadr(arglist));
+    checkarg(INTEGER_TEST,"substring",caddr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    arg3 = caddr(arglist);
+    memset(str1,0,SYMSIZE);
+    memset(str2,0,SYMSIZE);
+    strcpy(str1,GET_NAME(arg1));
+    start = GET_INT(arg2);
+    end = GET_INT(arg3);
+    j = 0;
+    for(i=start;i<=end;i++){
+        str2[j] = str1[i];
+        j++;
+    }
+    return(makestr(str2));
 }
 
 int f_string_copy(int arglist)
