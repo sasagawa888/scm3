@@ -2378,7 +2378,7 @@ void initsubr(void)
     defsubr("atom?", f_atomp);
     defsubr("gbc", f_gbc);
     defsubr("read", f_read);
-    defsubr("readc", f_readc);
+    defsubr("read-char", f_read_char);
     defsubr("eval", f_eval);
     defsubr("eval-cps", f_eval_cps);
     defsubr("apply", f_apply);
@@ -3569,14 +3569,27 @@ int f_read(int arglist)
     return(TRUE);
 }
 
-int f_readc(int arglist)
-{
+int f_read_char(int arglist)
+{   
+    int save;
     char c, str[5];
-    checkarg(LEN0_TEST, "readc", arglist);
     memset(str, 0, 5);
+    if(length(arglist) == 0){
     c = fgetc(GET_STM(input_stream));
     str[0] = c;
     return (makesym(str));
+    } else if(length(arglist) == 1){
+        save = input_stream;
+        input_stream = car(arglist);
+        c = fgetc(GET_STM(input_stream));
+        str[0] = c;
+        res = makesym(str);
+        input_stream = save;
+        return(res);
+    } else 
+        error(ILLEGAL_OBJ_ERR,"read-char",arglist);
+    //dummy
+    return(TRUE);
 }
 
 int f_display(int arglist)

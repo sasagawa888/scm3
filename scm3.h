@@ -356,7 +356,7 @@ int f_gbc(int addr);
 int f_eval(int addr);
 int f_apply(int addr);
 int f_read(int addr);
-int f_readc(int addr);
+int f_read_char(int addr);
 int f_display(int addr);
 int f_write(int addr);
 int f_newline(int addr);
