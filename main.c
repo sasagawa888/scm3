@@ -3593,16 +3593,32 @@ int f_display(int arglist)
 
 int f_write(int arglist)
 {
-    checkarg(LEN1_TEST, "write", arglist);
-    print(car(arglist));
+    int arg1,arg2,save;
+    if(length(arglist) == 1){
+    arg1 = car(arglist);
+    display_flag = 1;
+    print(arg1);
+    display_flag = 0;
+    } else if(length(arglist) == 2){
+        arg1 = car(arglist);
+        arg2 = cadr(arglist);
+        save = output_stream;
+        output_stream = arg2;
+        print(arg1);
+        output_stream = save;
+    } else 
+        error(ILLEGAL_OBJ_ERR,"write",arglist);
     return (TRUE);
 }
 
 
 int f_newline(int arglist)
-{
-    checkarg(LEN0_TEST, "newline", arglist);
+{   
+    if(length(arglist) == 0){
     printf("\n");
+    } else if(length(arglist) == 1){
+       fprintf(GET_STM(car(arglist)),"\n"); 
+    }
     return (TRUE);
 }
 
