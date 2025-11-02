@@ -20,7 +20,7 @@ written by kenichi sasagawa 2025/10~
 
 #define DEBUG longjmp(buf, 2);
 
-typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC,PROM} tag;
+typedef enum tag {EMP,NUM,FLTN,STR,SYM,LIS,SUBR,FSUBR,EXPR,CONT,BOOL,CHAR,VEC,PROM,STM} tag;
 typedef enum flag {FRE,USE} flag;
 
 
@@ -33,6 +33,7 @@ typedef struct cell {
 		int ( *subr) ();
 		double fltnum;
 		int *vector;
+		FILE *stream;
     } val;
     int car;
     int cdr;
@@ -72,6 +73,7 @@ typedef struct token {
 #define SET_TR(addr,x)		heap[addr].trace = x
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
+#define SET_STM(addr,x)		heap[addr].val.stream = x
 #define SET_NAME(addr,x)	heap[addr].name = malloc(SYMSIZE); strcpy(heap[addr].name,x);
 #define SET_NAME_ELT(addr,i,x)  heap[addr].name[i] = x
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x

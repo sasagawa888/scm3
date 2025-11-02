@@ -251,6 +251,9 @@ void cellprint(int addr)
     case PROM:
 	printf("PROMISE");
 	break;
+    case STM:
+	printf("STREAM ");
+	break;
     }
     printf("%07d ", GET_CAR(addr));
     printf("%07d ", GET_CDR(addr));
@@ -1054,6 +1057,16 @@ int makepromise(int addr)
     return (val);
 }
 
+int makestm(FILE *stream)
+{
+    int val;
+
+    val = freshcell();
+    SET_TAG(val, STM);
+    SET_STM(val, stream);
+    return (val);
+}
+
 
 int ci_str(int addr)
 {
@@ -1550,6 +1563,9 @@ void print(int addr)
 	break;
     case PROM:
 	printf("<promise>");
+	break;
+    case STM:
+	printf("<stream>");
 	break;
     case LIS:{
 	    printf("(");
