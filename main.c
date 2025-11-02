@@ -2369,6 +2369,10 @@ void initsubr(void)
     defsubr("atan", f_atan);
     defsubr("gcd", f_gcd);
     defsubr("lcm", f_lcm);
+    defsubr("floor", f_floor);
+    defsubr("ceiling", f_ceiling);
+    defsubr("truncate", f_truncate);
+    defsubr("round", f_round);
     defsubr("exit", f_exit);
     defsubr("hdmp", f_heapdump);
     defsubr("car", f_car);
@@ -2984,6 +2988,64 @@ int f_lcm(int arglist)
 
 }
 
+int f_floor(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(NUMBER_TEST,"floor",car(arglist));
+    arg1 = car(arglist);
+    if(integerp(arg1))
+    return(arg1);
+    
+    res = floor(GET_FLT(arg1));
+    return(makeflt(res));
+    
+}
+
+
+int f_ceiling(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(NUMBER_TEST,"ceiling",car(arglist));
+    arg1 = car(arglist);
+    if(integerp(arg1))
+    return(arg1);
+    
+    res = ceil(GET_FLT(arg1));
+    return(makeflt(res));
+    
+}
+
+
+int f_truncate(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(NUMBER_TEST,"truncate",car(arglist));
+    arg1 = car(arglist);
+    if(integerp(arg1))
+    return(arg1);
+    
+    res = trunc(GET_FLT(arg1));
+    return(makeflt(res));
+    
+}
+
+
+int f_round(int arglist)
+{
+    int arg1;
+    double res;
+    checkarg(NUMBER_TEST,"round",car(arglist));
+    arg1 = car(arglist);
+    if(integerp(arg1))
+    return(arg1);
+    
+    res = round(GET_FLT(arg1));
+    return(makeflt(res));
+    
+}
 
 
 int f_exit(int arglist)
