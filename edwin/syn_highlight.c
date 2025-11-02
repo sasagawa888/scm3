@@ -45,7 +45,6 @@ static const char *builtin[] = {
     "cons",
     "delay",
     "display",
-    "do",
     "eq?",
     "eqv?",
     "equal?",
@@ -99,6 +98,14 @@ static const char *builtin[] = {
     "vector-length",
     "vector-ref",
     "write",
+    "input-port?",
+    "output-port?",
+    "current-input-port",
+    "current-output-port",
+    "open-input-file",
+    "open-output-file",
+    "close-input-port",
+    "close-output-port",
 };
 
 // extended function
