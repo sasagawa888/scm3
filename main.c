@@ -2505,6 +2505,8 @@ void initsubr(void)
     defsubr("open-output-file", f_open_output_file);
     defsubr("close-input-port", f_close_input_port);
     defsubr("close-output-port", f_close_output_port);
+    defsubr("call-with-input-file", f_call_with_input_file);
+    defsubr("call-with-output-file", f_call_with_output_file);
     defsubr("exact->inexact", f_exact_to_inexact);
     defsubr("inexact->exact", f_inexact_to_exact);
     defsubr("number->string", f_number_to_string);
@@ -4342,6 +4344,33 @@ int f_current_output_port(int arglist)
     return(output_stream);
 }
 
+int f_call_with_input_file(int arglist)
+{
+    int arg1,arg2,save,res;
+    checkarg(STRING_TEST,"call-with-input-file", car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    save = input_stream;
+    input_stream = makestm(fopen(GET_NAME(arg1), "r"),INPUT,GET_NAME(arg1));
+    res = eval_cps(arg2);
+    fclose(GET_STM(input_stream));
+    input_stream = save;
+    return(res);
+}
+
+int f_call_with_output_file(int arglist)
+{
+    int arg1,arg2,save,res;
+    checkarg(STRING_TEST,"call-with-ouput-file",car(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    save = output_stream;
+    output_stream = makestm(fopen(GET_NAME(arg1), "w"),OUTPUT,GET_NAME(arg1));
+    res = eval_cps(arg2);
+    fclose(GET_STM(output_stream));
+    output_stream = save;
+    return(res);
+}
 
 int f_load(int arglist)
 {
