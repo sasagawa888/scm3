@@ -1561,7 +1561,7 @@ void print(int addr)
     case FLTN:
 	fprintf(GET_STM(output_stream),"%g", GET_FLT(addr));
 	if (GET_FLT(addr) - (int) GET_FLT(addr) == 0.0)
-	    printf(".0");
+	    fprintf(GET_STM(output_stream),".0");
 	break;
     case STR:
 	if (display_flag) {
@@ -2499,6 +2499,8 @@ void initsubr(void)
     defsubr("close-output-port", f_close_output_port);
     defsubr("exact->inexact", f_exact_to_inexact);
     defsubr("inexact->exact", f_inexact_to_exact);
+    defsubr("number->string", f_number_to_string);
+    defsubr("string->number", f_string_to_number);
 
 
     deffsubr("quote", f_quote);
@@ -4979,4 +4981,35 @@ int f_inexact_to_exact(int arglist)
 {
     checkarg(NUMBER_TEST,"inexact->exact",car(arglist));
     return(inexact_to_exact(car(arglist)));
+}
+
+int f_number_to_string(int arglist)
+{
+    int arg1;
+    char str[SYMSIZE];
+    checkarg(NUMBER_TEST,"number->string",car(arglist));
+    arg1 = car(arglist);
+    memset(str,0,SYMSIZE);
+    if(integerp(arg1))
+    sprintf(str,"%d",GET_INT(arg1));
+    else if(floatp(arg1));
+    sprintf(str,"%g", GET_FLT(arg1));
+    
+    return(makestr(str));
+}
+
+
+int f_string_to_number(int arglist)
+{
+    int arg1;
+    char str[SYMSIZE];
+    checkarg(STRING_TEST,"string->number",car(arglist));
+    arg1 = car(arglist);
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(arg1));
+    if(inttoken(str))
+    return(makeint(atoi(str)));
+    else if(flttoken(str));
+    return(makeflt(atof(str)));
+    
 }
