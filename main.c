@@ -410,7 +410,7 @@ void clrcell(int addr)
     SET_CAR(addr, 0);
     SET_CDR(addr, 0);
     SET_BIND(addr, 0);
-    SET_TR(addr, 0);
+    SET_REC(addr,0);
 }
 
 // If the number of free cells falls below a certain threshold, trigger GBC.
@@ -1987,33 +1987,7 @@ int eval(int addr)
 	else if (symbolp(car(addr)) && IS_EXPR((lam = findsym(car(addr)))))
 	    return (apply(lam, evlis(cdr(addr))));
 	else if (functionp(car(addr))) {
-	    int sym, i, n, res;
-	    sym = car(addr);
-	    if (GET_TR(sym) >= 1) {
-		SET_TR(sym, GET_TR(sym) + 1);
-		n = GET_TR(sym);
-		for (i = 2; i < n; i++) {
-		    printf(" ");
-		}
-		printf("ENTER ");
-		print(sym);
-		print(evlis(cdr(addr)));
-		printf("\n");
-	    }
-	    res = apply(GET_BIND(car(addr)), evlis(cdr(addr)));
-	    if (GET_TR(sym) > 1) {
-		n = GET_TR(sym);
-		for (i = 2; i < n; i++) {
-		    printf(" ");
-		}
-		printf("RETURN ");
-		print(sym);
-		printf(" ");
-		print(res);
-		printf("\n");
-		SET_TR(sym, GET_TR(sym) - 1);
-	    }
-	    return (res);
+	return (apply(GET_BIND(car(addr)), evlis(cdr(addr))));
 	}
     }
     error(CANT_FIND_ERR, "eval", addr);
@@ -2423,8 +2397,6 @@ void initsubr(void)
     defsubr("display", f_display);
     defsubr("write", f_write);
     defsubr("newline", f_newline);
-    deffsubr("trace", f_trace);
-    deffsubr("untrace", f_untrace);
     defsubr("gensym", f_gensym);
     defsubr("step", f_step);
     defsubr("putprop", f_putprop);
@@ -3686,23 +3658,6 @@ int f_newline(int arglist)
     return (TRUE);
 }
 
-int f_trace(int arglist)
-{
-    int arg1;
-    checkarg(SYMBOL_TEST, "trace", car(arglist));
-    arg1 = car(arglist);
-    SET_TR(arg1, 1);
-    return (T);
-}
-
-int f_untrace(int arglist)
-{
-    int arg1;
-    checkarg(SYMBOL_TEST, "untrace", car(arglist));
-    arg1 = car(arglist);
-    SET_TR(arg1, 0);
-    return (T);
-}
 
 int f_gensym(int arglist)
 {
