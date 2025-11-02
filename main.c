@@ -3553,9 +3553,20 @@ int f_gbc(int arglist)
 }
 
 int f_read(int arglist)
-{
-    checkarg(LEN0_TEST, "read", arglist);
+{   
+    int save,res;
+    if(length(arglist) == 0){
     return (read());
+    } else if(length(arglist) == 1){
+        save = input_stream;
+        input_stream = car(arglist);
+        res = read();
+        input_stream = save;
+        return(res);
+    } else 
+        error(ILLEGAL_OBJ_ERR,"read",arglist);
+    //dummy
+    return(TRUE);
 }
 
 int f_readc(int arglist)
