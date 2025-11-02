@@ -40,6 +40,8 @@ bind
 caar
 cadr
 call-with-current-continuation
+call-with-input-file
+call-with-output-file
 call/cc
 car
 case
@@ -47,6 +49,7 @@ cadddr
 caddr
 cdar
 cdr
+ceiling
 cond
 cons
 delay
@@ -60,6 +63,7 @@ eval
 eval-cps
 even?
 exp
+floor
 force
 for-each
 gbc
@@ -78,6 +82,7 @@ list-ref
 list-tail
 load
 lcm
+make-sting
 map
 memq
 member
@@ -99,6 +104,7 @@ quote
 rational?
 remainder
 reverse
+round
 set
 set-car!
 set-cdr!
@@ -109,7 +115,11 @@ sqrt
 step
 symbol?
 symbol->string
+string-copy
+string-fill!
+substring
 tan
+truncate
 unbind
 vector
 vector-length
