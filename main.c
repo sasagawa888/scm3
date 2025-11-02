@@ -2490,6 +2490,7 @@ void initsubr(void)
     defsubr("string->list", f_string_to_list);
     defsubr("list->string", f_list_to_string);
     defsubr("string-copy", f_string_copy);
+    defsubr("string-fill!", f_string_fill);
     defsubr("substring", f_substring);
     defsubr("input-port?", f_input_port_p);
     defsubr("output-port?", f_output_port_p);
@@ -4999,6 +5000,25 @@ int f_string_copy(int arglist)
 {
     checkarg(STRING_TEST,"string-copy",car(arglist));
     return(makestr(GET_NAME(car(arglist))));
+}
+
+int f_string_fill(int arglist)
+{
+    int arg1,arg2,i,c;
+    char str[SYMSIZE];
+    checkarg(STRING_TEST,"string-fill!",car(arglist));
+    checkarg(CHAR_TEST,"string-fill!",cadr(arglist));
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    memset(str,0,SYMSIZE);
+    strcpy(str,GET_NAME(arg1));
+    c = GET_NAME(arg2)[3];
+    i = 0;
+    while(str[i] != 0){
+        str[i] = c;
+        i++;
+    }
+    return(makestr(str));
 }
 
 int f_exact_to_inexact(int arglist)

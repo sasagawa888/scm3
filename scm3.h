@@ -415,6 +415,7 @@ int f_string_to_list(int addr);
 int f_list_to_string(int addr);
 int f_string_copy(int addr);
 int f_substring(int addr);
+int f_string_fill(int addr);
 int f_input_port_p(int addr);
 int f_output_port_p(int addr);
 int f_current_input_port(int addr);
