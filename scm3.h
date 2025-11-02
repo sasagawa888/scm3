@@ -11,6 +11,8 @@ written by kenichi sasagawa 2025/10~
 #define T 8
 #define TRUE 2
 #define FAIL 3
+#define STDIN 4
+#define STDOUT 5
 #define HASHTBSIZE 107
 #define NO HEAPSIZE+1
 #define UNDEF HEAPSIZE+2
@@ -207,6 +209,7 @@ int makenum(int num);
 int makesym(char *name);
 int makebool(char *name);
 int makefunc(int addr);
+int makestm(FILE *stm, int prop, char* name);
 void gettoken(void);
 int booltoken(char buf[]);
 int chartoken(char buf[]);

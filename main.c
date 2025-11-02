@@ -93,6 +93,8 @@ void initcell(void)
     makesym("nil");
     makebool("#t");
     makebool("#f");
+    makestm(stdin,INPUT,"stdin");
+    makestm(stdout,OUTPUT,"stdout");
 
     sp = 0;
     ap = 0;
@@ -318,10 +320,11 @@ void markcell(int addr)
 	return;
 
     MARK_CELL(addr);
-    if (addr == T)
+    if (addr == T || addr == NIL || addr == TRUE || addr == FAIL)
 	return;
-    if (addr == NIL)
-	return;
+    if (addr == STDIN || addr == STDOUT)
+    return;
+
 
     if (listp(addr)) {
 	markcell(car(addr));
@@ -353,6 +356,10 @@ void gbcmark(void)
 {
     int addr, i;
 
+    markcell(TRUE);
+    markcell(FAIL);
+    markcell(STDIN);
+    markcell(STDOUT);
     markcell(cp);		// continuation
     markcell(cp1);
     markcell(sp_cps);		//cps stack 
