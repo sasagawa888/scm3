@@ -92,8 +92,6 @@ static const char *builtin[] = {
     "symbol?",
     "symbol->string",
     "tan",
-    "trace",
-    "untrace",
     "vector",
     "vector-length",
     "vector-ref",

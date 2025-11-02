@@ -110,8 +110,6 @@ step
 symbol?
 symbol->string
 tan
-trace
-untrace
 unbind
 vector
 vector-length
