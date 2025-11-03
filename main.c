@@ -2737,6 +2737,7 @@ int f_division(int arglist)
     if (length(arglist) == 2){
     arg1 = car(arglist);
     arg2 = cadr(arglist);
+    checkarg(DIVZERO_TEST,"/",arg2);
     return (quotient(arg1, arg2));
     } else if(length(arglist) == 1){
     arg1 = makeint(1);
@@ -2745,6 +2746,7 @@ int f_division(int arglist)
     } else if (length(arglist) > 2){
     arg1 = car(arglist);
     arg2 = f_times(cdr(arglist));
+    checkarg(DIVZERO_TEST,"/",arg2);
     return (quotient(arg1, arg2));     
     }
     // dummy
