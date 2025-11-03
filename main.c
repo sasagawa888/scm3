@@ -5167,12 +5167,14 @@ int f_number_to_string(int arglist)
     checkarg(NUMBER_TEST,"number->string",car(arglist));
     arg1 = car(arglist);
     memset(str,0,SYMSIZE);
-    if(integerp(arg1))
+    if(integerp(arg1)){
     sprintf(str,"%d",GET_INT(arg1));
-    else if(floatp(arg1));
-    sprintf(str,"%g", GET_FLT(arg1));
-    
     return(makestr(str));
+    }else if(floatp(arg1));{
+    sprintf(str,"%g", GET_FLT(arg1));
+    return(makestr(str));
+    }
+    return(FAIL);
 }
 
 
@@ -5184,9 +5186,12 @@ int f_string_to_number(int arglist)
     arg1 = car(arglist);
     memset(str,0,SYMSIZE);
     strcpy(str,GET_NAME(arg1));
-    if(inttoken(str))
-    return(makeint(atoi(str)));
-    else if(flttoken(str));
-    return(makeflt(atof(str)));
+    if(str[0] == 0)
+        return(FAIL);
+    else if(inttoken(str))
+        return(makeint(atoi(str)));
+    else if(flttoken(str))
+        return(makeflt(atof(str)));
+    else return(FAIL);
     
 }

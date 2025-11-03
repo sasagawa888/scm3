@@ -64,3 +64,25 @@
 (test (quotient -8 3) -2)
 (test (quotient 8 -3) -2)
 (test (quotient -8 -3) 2)
+
+(test (number->string 42)    "42")
+(test (number->string -42)   "-42")
+(test (number->string 0)     "0")
+(test (number->string 2.5)   "2.5")
+(test (number->string -0.001) "-0.001")
+(test (number->string 0.0)   "0.0")  ;depend implementation
+
+(test (string->number "42")    42)
+(test (string->number "-42")   -42)
+(test (string->number "+42")   42)
+(test (string->number "003")   3)     
+(test (string->number "2.5")   2.5)
+(test (string->number "-0.001") -0.001)
+(test (string->number "1e3")   1000)  
+(test (string->number "1e-2")  0.01)
+
+(test (string->number "abc")   #f)
+(test (string->number "")      #f)
+
+ ;(test (string->number " 42") 42) ;depend implementation
+ ;(test (string->number "42 ") 42) ;depend implementation
