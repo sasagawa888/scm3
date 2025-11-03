@@ -74,7 +74,7 @@ typedef struct token {
 #define SET_FLT(addr,x)		heap[addr].val.fltnum = x
 #define	SET_BIND(addr,x)	heap[addr].val.bind = x
 #define SET_STM(addr,x)		heap[addr].val.stream = x
-#define SET_NAME(addr,x)	heap[addr].name = malloc(SYMSIZE); strcpy(heap[addr].name,x);
+#define SET_NAME(addr,x)	heap[addr].name = malloc(strlen(x)+1); strcpy(heap[addr].name,x);
 #define SET_NAME_ELT(addr,i,x)  heap[addr].name[i] = x
 #define SET_SUBR(addr,x)	heap[addr].val.subr = x
 #define SET_VEC(addr,x)		heap[addr].val.vector = x;
@@ -95,7 +95,6 @@ typedef struct token {
 #define IS_PROM(addr) 		heap[addr].tag == PROM
 #define IS_STM(addr)		heap[addr].tag == STM
 #define IS_EMPTY(addr)		heap[addr].tag	== EMP
-#define HAS_NAME(addr,x)	strcmp(heap[addr].name,x) == 0
 #define SAME_NAME(addr1,addr2) strcmp(heap[addr1].name, heap[addr2].name) == 0
 #define EQUAL_STR(x,y)		strcmp(x,y) == 0
 #define MARK_CELL(addr)		heap[addr].flag = USE
