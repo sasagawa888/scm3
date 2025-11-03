@@ -2115,6 +2115,12 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+     case ARITY_ERR:{
+	    printf("%s arity mismatch ", fun);
+	    print(arg);
+	    break;
+	}
+
     case ARG_SYM_ERR:{
 	    printf("%s require symbol but got ", fun);
 	    print(arg);
@@ -2971,7 +2977,7 @@ int f_atan(int arglist)
 	arg2 = exact_to_inexact(cadr(arglist));
 	res = atan2(GET_FLT(arg1), GET_FLT(arg2));
     } else {
-	error(ILLEGAL_OBJ_ERR, "atan", arglist);
+	error(ARITY_ERR, "atan", arglist);
     }
     return (makeflt(res));
 }
@@ -3687,7 +3693,7 @@ int f_read(int arglist)
         input_stream = save;
         return(res);
     } else 
-        error(ILLEGAL_OBJ_ERR,"read",arglist);
+        error(ARITY_ERR,"read",arglist);
     //dummy
     return(TRUE);
 }
@@ -3713,7 +3719,7 @@ int f_read_char(int arglist)
         input_stream = save;
         return(res);
     } else 
-        error(ILLEGAL_OBJ_ERR,"read-char",arglist);
+        error(ARITY_ERR,"read-char",arglist);
     //dummy
     return(TRUE);
 }
@@ -3736,7 +3742,7 @@ int f_display(int arglist)
         display_flag = 0;
         output_stream = save;
     } else 
-        error(ILLEGAL_OBJ_ERR,"display",arglist);
+        error(ARITY_ERR,"display",arglist);
     return (TRUE);
 }
 
@@ -3757,7 +3763,7 @@ int f_write(int arglist)
         print(arg1);
         output_stream = save;
     } else 
-        error(ILLEGAL_OBJ_ERR,"write",arglist);
+        error(ARITY_ERR,"write",arglist);
     return (TRUE);
 }
 
@@ -4042,7 +4048,7 @@ int f_if(int arglist)
 	else
 	    return (UNDEF);
     }
-    error(ILLEGAL_OBJ_ERR, "if", arglist);
+    error(ARITY_ERR, "if", arglist);
     return (FAIL);
 }
 
@@ -4871,7 +4877,7 @@ int f_make_string(int arglist)
     for(i=0;i<n;i++)
     str[i] = c;
     } else 
-        error(ILLEGAL_OBJ_ERR,"make-string",arglist);
+        error(ARITY_ERR,"make-string",arglist);
     
     return(makestr(str));
 }
