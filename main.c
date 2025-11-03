@@ -4834,7 +4834,7 @@ int f_make_string(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     n = GET_INT(arg1);
-    c = GET_NAME(arg2)[3];
+    c = GET_NAME(arg2)[2];
     for(i=0;i<n;i++)
     str[i] = c;
     } else 
@@ -5104,7 +5104,7 @@ int f_substring(int arglist)
     start = GET_INT(arg2);
     end = GET_INT(arg3);
     j = 0;
-    for(i=start;i<=end;i++){
+    for(i=start;i<end;i++){
         str2[j] = str1[i];
         j++;
     }
