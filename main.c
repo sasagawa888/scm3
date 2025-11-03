@@ -3439,8 +3439,12 @@ int f_rplacd(int arglist)
 
 int f_symbolp(int arglist)
 {
+    int arg1;
     checkarg(LEN1_TEST, "symbol?", arglist);
-    if (symbolp(car(arglist)))
+    arg1 = car(arglist);
+    if(nullp(arg1))
+    return (FAIL);
+    else if (symbolp(car(arglist)))
 	return (TRUE);
     else
 	return (FAIL);
@@ -4860,7 +4864,10 @@ int f_char_lower_case_p(int arglist)
 int f_stringp(int arglist)
 {
     checkarg(LEN1_TEST, "string?", arglist);
-    return (stringp(car(arglist)));
+    if(stringp(car(arglist)))
+    return(TRUE);
+    else 
+    return(FAIL);
 }
 
 int f_make_string(int arglist)
