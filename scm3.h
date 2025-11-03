@@ -260,6 +260,7 @@ int issymlis(int arg);
 int f_plus(int addr);
 int f_difference(int addr);
 int	f_times(int addr);
+int f_division(int addr);
 int f_quotient(int addr);
 int f_max(int addr);
 int f_min(int addr);

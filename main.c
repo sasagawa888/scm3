@@ -2351,7 +2351,8 @@ void initsubr(void)
     defsubr("+", f_plus);
     defsubr("-", f_difference);
     defsubr("*", f_times);
-    defsubr("/", f_quotient);
+    defsubr("/", f_division);
+    defsubr("quotient", f_quotient);
     defsubr("max", f_max);
     defsubr("min", f_min);
     defsubr("abs", f_abs);
@@ -2706,11 +2707,12 @@ int f_times(int arglist)
     return (res);
 }
 
-int f_quotient(int arglist)
+
+int f_division(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(NUMLIST_TEST, "quotient", arglist);
+    checkarg(NUMLIST_TEST, "/", arglist);
     if (length(arglist) == 2){
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -2726,6 +2728,15 @@ int f_quotient(int arglist)
     }
     // dummy
     return(TRUE);
+}
+
+int f_quotient(int arglist)
+{
+    int arg1,arg2;
+    checkarg(INTLIST_TEST,"quotient",arglist);
+    arg1 = car(arglist);
+    arg2 = cadr(arglist);
+    return(makeint(GET_INT(arg1) / GET_INT(arg2)));
 }
 
 
