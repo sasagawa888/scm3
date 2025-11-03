@@ -47,3 +47,20 @@
 (test (round -3.5) -4) ; even direct
 (test (round 0.0) 0)
 (test (round 5.0) 5)
+
+
+(test (quotient 7 2) 3)
+(test (quotient 10 5) 2)
+(test (quotient 0 5) 0)
+(test (quotient 5 1) 5)
+(test (quotient 5 5) 1)
+(test (quotient -7 2) -3)
+(test (quotient 7 -2) -3)
+(test (quotient -7 -2) 3)
+(test (quotient -10 5) -2)
+(test (quotient 10 -5) -2)
+(test (quotient -10 -5) 2)
+(test (quotient 8 3) 2)
+(test (quotient -8 3) -2)
+(test (quotient 8 -3) -2)
+(test (quotient -8 -3) 2)

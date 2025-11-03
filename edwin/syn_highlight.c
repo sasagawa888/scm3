@@ -85,6 +85,7 @@ static const char *builtin[] = {
     "positive?",
     "procedure?",
     "quote",
+    "quotient",
     "rational?",
     "remainder",
     "reverse",

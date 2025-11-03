@@ -101,6 +101,7 @@ procedure?
 push
 putprop
 quote
+quotient
 rational?
 remainder
 reverse
