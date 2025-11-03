@@ -93,7 +93,7 @@
 (test '(symbol? "foo") #f)
 (test '(symbol? 123) #f)
 (test '(symbol? #t) #f)
-(test '(symbol? '()) #f)  ;; 空リストはシンボルではない
+(test '(symbol? '()) #f)  
 
 (test '(number? 123) #t)
 (test '(number? -12.3) #t)
