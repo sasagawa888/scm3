@@ -3235,7 +3235,7 @@ int f_eq(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "eq", arglist);
+    checkarg(LEN2_TEST, "eq?", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (eqp(arg1, arg2))
@@ -3249,7 +3249,7 @@ int f_eqv(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "eqv", arglist);
+    checkarg(LEN2_TEST, "eqv?", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (eqvp(arg1, arg2))
@@ -3263,7 +3263,7 @@ int f_equal(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "equal", arglist);
+    checkarg(LEN2_TEST, "equal?", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     if (equalp(arg1, arg2))
@@ -3276,7 +3276,7 @@ int f_nullp(int arglist)
 {
     int arg;
 
-    checkarg(LEN1_TEST, "null", arglist);
+    checkarg(LEN1_TEST, "null?", arglist);
     arg = car(arglist);
     if (nullp(arg))
 	return (TRUE);
