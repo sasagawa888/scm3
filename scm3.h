@@ -124,24 +124,25 @@ int pp;  //protect pointer
 #define NUL		'\0'
 
 //-------error code---
-#define CANT_FIND_ERR	1
-#define ARG_SYM_ERR		2
-#define ARG_INT_ERR		12
-#define ARG_STR_ERR     13
-#define ARG_NUM_ERR		3
-#define ARG_LIS_ERR		4
-#define ARG_BOOL_ERR    15
-#define ARG_VEC_ERR		16
-#define ARG_PROM_ERR	17
-#define ARG_CHAR_ERR	18
-#define ARG_LEN0_ERR	5
-#define ARG_LEN1_ERR	6
-#define ARG_LEN2_ERR	7
-#define ARG_LEN3_ERR	8
-#define MALFORM_ERR		9
-#define CANT_READ_ERR	10
-#define CANT_OPEN_ERR   14
-#define ILLEGAL_OBJ_ERR 11
+#define ARG_SYM_ERR		1
+#define ARG_INT_ERR		2
+#define ARG_STR_ERR     3
+#define ARG_NUM_ERR		4
+#define ARG_LIS_ERR		5
+#define ARG_BOOL_ERR    6
+#define ARG_VEC_ERR		7
+#define ARG_PROM_ERR	8
+#define ARG_CHAR_ERR	9
+#define ARG_LEN0_ERR	10
+#define ARG_LEN1_ERR	11
+#define ARG_LEN2_ERR	12
+#define ARG_LEN3_ERR	13
+#define MALFORM_ERR		14
+#define CANT_FIND_ERR	15
+#define CANT_READ_ERR	16
+#define CANT_OPEN_ERR   17
+#define ILLEGAL_OBJ_ERR 18
+#define DIV_ZERO_ERR	19
 
 //-------arg check code--
 #define INTLIST_TEST    0
@@ -164,6 +165,7 @@ int pp;  //protect pointer
 #define VECTOR_TEST		17
 #define PROMISE_TEST	18
 #define CHAR_TEST		19
+#define DIVZERO_TEST	20
 
 //----------------------------
 #define INPUT	1

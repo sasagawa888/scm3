@@ -460,6 +460,16 @@ int floatp(int addr)
 	return (0);
 }
 
+int zerop(int addr)
+{
+    if (integerp(addr) && GET_INT(addr) == 0)
+	return (1);
+    else if (floatp(addr) && fabs(GET_FLT(addr)) < DBL_MIN)
+	return (1);
+    else 
+    return(0);
+}
+
 int stringp(int addr)
 {
     if (addr >= HEAPSIZE || addr < 0)
@@ -2099,6 +2109,12 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+    case DIV_ZERO_ERR:{
+	    printf("%s division by zero ", fun);
+	    print(arg);
+	    break;
+	}
+
     case ARG_SYM_ERR:{
 	    printf("%s require symbol but got ", fun);
 	    print(arg);
@@ -2273,6 +2289,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ILLEGAL_OBJ_ERR, fun, arg);
+    case DIVZERO_TEST:
+	if (!zerop(arg))
+	    return;
+	else
+	    error(DIV_ZERO_ERR, fun, arg);
 
     }
 }
@@ -2734,6 +2755,7 @@ int f_quotient(int arglist)
 {
     int arg1,arg2;
     checkarg(INTLIST_TEST,"quotient",arglist);
+    checkarg(DIVZERO_TEST,"quotient",cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return(makeint(GET_INT(arg1) / GET_INT(arg2)));
@@ -3479,9 +3501,7 @@ int f_zerop(int arglist)
     checkarg(NUMLIST_TEST, "zerop", arglist);
     arg1 = car(arglist);
 
-    if (integerp(arg1) && GET_INT(arg1) == 0)
-	return (TRUE);
-    else if (floatp(arg1) && fabs(GET_FLT(arg1)) < DBL_MIN)
+    if (zerop(arg1))
 	return (TRUE);
     else
 	return (FAIL);
