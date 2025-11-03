@@ -2126,8 +2126,14 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
-     case ARITY_ERR:{
+    case ARITY_ERR:{
 	    printf("%s arity mismatch ", fun);
+	    print(arg);
+	    break;
+	}
+
+    case WRONG_ARG_ERR:{
+	    printf("%s wrong argument ", fun);
 	    print(arg);
 	    break;
 	}
@@ -4897,6 +4903,8 @@ int f_make_string(int arglist)
     if(length(arglist) == 1){
     arg1 = car(arglist);
     n = GET_INT(arg1);
+    if(n < 0)
+        error(WRONG_ARG_ERR,"make-string",arg1);
     for(i=0;i<n;i++)
         str[i] = ' ';
     } else if(length(arglist) == 2){
@@ -4904,6 +4912,8 @@ int f_make_string(int arglist)
     arg2 = cadr(arglist);
     n = GET_INT(arg1);
     c = GET_NAME(arg2)[2];
+    if(n < 0)
+        error(WRONG_ARG_ERR,"make-string",arg1);
     for(i=0;i<n;i++)
     str[i] = c;
     } else 

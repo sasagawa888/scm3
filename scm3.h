@@ -143,6 +143,7 @@ int pp;  //protect pointer
 #define ILLEGAL_OBJ_ERR 18
 #define DIV_ZERO_ERR	19
 #define ARITY_ERR		20
+#define WRONG_ARG_ERR	21
 
 //-------arg check code--
 #define INTLIST_TEST    0
