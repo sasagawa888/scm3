@@ -88,7 +88,6 @@
  ;(test (string->number "42 ") 42) ;depend implementation
 
 
-;; symbol? のテスト
 (test '(symbol? 'a) #t)
 (test '(symbol? 'foo) #t)
 (test '(symbol? "foo") #f)
@@ -96,14 +95,12 @@
 (test '(symbol? #t) #f)
 (test '(symbol? '()) #f)  ;; 空リストはシンボルではない
 
-;; number? のテスト
 (test '(number? 123) #t)
 (test '(number? -12.3) #t)
 (test '(number? +0) #t)
 (test '(number? 'a) #f)
 (test '(number? "123") #f)
 
-;; string? のテスト
 (test '(string? "abc") #t)
 (test '(string? "") #t)
 (test '(string? 'abc) #f)
