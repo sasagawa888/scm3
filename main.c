@@ -2616,11 +2616,11 @@ int times(int x, int y)
 }
 
 
-int quotient(int x, int y)
+int division(int x, int y)
 {
     if (integerp(x)) {
 	if (integerp(y))
-	    return (makeint(GET_INT(x) / GET_INT(y)));
+	    return (makeflt((double)GET_INT(x) / (double)GET_INT(y)));
 	if (floatp(y))
 	    return (makeflt((double) GET_INT(x) / GET_FLT(y)));
     } else if (floatp(x)) {
@@ -2744,16 +2744,16 @@ int f_division(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     checkarg(DIVZERO_TEST,"/",arg2);
-    return (quotient(arg1, arg2));
+    return (division(arg1, arg2));
     } else if(length(arglist) == 1){
     arg1 = makeint(1);
     arg2 = car(arglist);
-    return (quotient(arg1, arg2));    
+    return (division(arg1, arg2));    
     } else if (length(arglist) > 2){
     arg1 = car(arglist);
     arg2 = f_times(cdr(arglist));
     checkarg(DIVZERO_TEST,"/",arg2);
-    return (quotient(arg1, arg2));     
+    return (division(arg1, arg2));     
     }
     // dummy
     return(TRUE);
