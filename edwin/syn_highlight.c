@@ -34,6 +34,7 @@ static const char *builtin[] = {
     "asin",
     "assoc",
     "atan",
+    "atom?",
     "caar",
     "cadr",
     "call-with-current-continuation",

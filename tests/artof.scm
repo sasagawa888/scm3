@@ -5,6 +5,12 @@
             1
             (* n (fact (- n 1))))))
 
+(define leftmost
+    (lambda (l)
+        (if (atom? l)
+            l
+            (leftmost (car l)))))
+
 (define rightmost 
     (lambda (l)
         (if (null? (cdr l))
