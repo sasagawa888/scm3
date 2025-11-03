@@ -3407,8 +3407,8 @@ int f_append(int arglist)
 
 int f_nconc(int arglist)
 {
-    checkarg(LEN2_TEST, "nconc", arglist);
-    checkarg(LIST_TEST, "nconc", car(arglist));
+    checkarg(LEN2_TEST, "append!", arglist);
+    checkarg(LIST_TEST, "append!", car(arglist));
     return (nconc(car(arglist), cadr(arglist)));
 }
 
@@ -3416,8 +3416,8 @@ int f_rplaca(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "rplaca", arglist);
-    checkarg(LIST_TEST, "rplaca", car(arglist));
+    checkarg(LEN2_TEST, "set-car!", arglist);
+    checkarg(LIST_TEST, "set-car!", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     SET_CAR(arg1, arg2);
@@ -3428,8 +3428,8 @@ int f_rplacd(int arglist)
 {
     int arg1, arg2;
 
-    checkarg(LEN2_TEST, "rplacd", arglist);
-    checkarg(LIST_TEST, "rplacd", car(arglist));
+    checkarg(LEN2_TEST, "set-cdr!", arglist);
+    checkarg(LIST_TEST, "set-cdr!", car(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     SET_CDR(arg1, arg2);
