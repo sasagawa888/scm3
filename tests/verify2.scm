@@ -125,41 +125,55 @@
 (test '(null? '(1 2 3)) #f)
 (test '(null? 0) #f)
 
-;; gcd 基本
 (test '(= (gcd 6 9) 3) #t)
 (test '(= (gcd 48 18) 6) #t)
-(test '(= (gcd 13 17) 1) #t)    ; 共に素
-(test '(= (gcd 8 12 20) 4) #t)  ; 複数引数
+(test '(= (gcd 13 17) 1) #t)   
+(test '(= (gcd 8 12 20) 4) #t)  
 (test '(= (gcd 100 10 5) 5) #t)
-
-;; gcd と 0 / 負数
 (test '(= (gcd 0 0) 0) #t)
 (test '(= (gcd 0 5) 5) #t)
-(test '(= (gcd 0 -5) 5) #t)    ; 絶対値で返る
+(test '(= (gcd 0 -5) 5) #t)    
 (test '(= (gcd -6 9) 3) #t)
 (test '(= (gcd -6 -9) 3) #t)
-
-;; gcd 単一引数
 (test '(= (gcd 7) 7) #t)
 (test '(= (gcd -7) -7) #t)
-
 
 (test '(= (lcm 6 8) 24) #t)
 (test '(= (lcm 4 6 8) 24) #t) 
 (test '(= (lcm 3 5) 15) #t)
 (test '(= (lcm 13 17) 221) #t)
-
 (test '(= (lcm 0 5) 0) #t)   
 (test '(= (lcm 0 0) 0) #t)
 (test '(= (lcm -3 5) 15) #t)
 (test '(= (lcm -3 -5) 15) #t)
-
 (test '(= (lcm 7) 7) #t)
 (test '(= (lcm -7) -7) #t)
 
 (test '(= (* (gcd 6 8) (lcm 6 8)) (abs (* 6 8))) #t)
 (test '(= (* (gcd -9 12) (lcm -9 12)) (abs (* -9 12))) #t)
 (test '(= (* (gcd 21 6 14) (lcm 21 6 14)) (abs (* 21 (lcm 6 14)))) #f)
-
 (test '(= (gcd 123456 789012) 12) #t)   ; 123456 = 12 * 10288, 789012 = 12 * 65751
 ;(test '(= (lcm 123456 789012) (/ (* 123456 789012) (gcd 123456 789012))) #t)
+
+(test '(= (exp 0) 1.0) #t)
+(test '(= (exp 1) 2.718281828459045) #t)
+(test '(= (exp -1) 0.36787944117144233) #t)
+(test '(= (exp 2) 7.38905609893065) #t)
+
+(test '(= (log 1) 0.0) #t)
+(test '(= (log 2.718281828459045) 1.0) #t)
+(test '(= (log 10) 2.302585092994046) #t)
+
+(test '(= (sqrt 0) 0.0) #t)
+(test '(= (sqrt 1) 1.0) #t)
+(test '(= (sqrt 4) 2.0) #t)
+(test '(= (sqrt 2) 1.4142135623730951) #t)
+
+(test '(= (exp (log 2)) 2.0) #t)
+(test '(= (log (exp 3)) 3.0) #t)
+
+(test '(= (* (sqrt 2) (sqrt 2)) 2) #t)
+(test '(= (* (sqrt 3) (sqrt 3)) 3.0) #t)
+
+(test '(= (exp (log 10)) 10) #t)
+(test '(= (* (sqrt 5) (sqrt 5)) 5) #t)
