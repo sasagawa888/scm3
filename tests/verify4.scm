@@ -31,3 +31,6 @@
 ;; undefined
 (test '(catch-error '(foobar 1 2)) 18)
 (test '(catch-error '(undefined-func 5)) 18)
+
+;; wrong argument
+(test '(catch-error '(make-string -1)) 21)
