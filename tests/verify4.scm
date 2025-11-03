@@ -22,7 +22,7 @@
 (test '(catch-error '(modulo 1 0)) 19)
 (test '(catch-error '(remainder 1 0)) 19)
 
-;; type error
+;; type error not number
 (test '(catch-error '(+ 1 'a)) 4)
 (test '(catch-error '(- 'a 2)) 4)
 (test '(catch-error '(* 1 'b)) 4)
