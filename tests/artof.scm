@@ -1,14 +1,21 @@
+(define add1
+    (lambda (n)
+       (+ n 1)))
+
+(define sub1
+    (lambda (n)
+        (- n 1)))
 
 (define harmonic-sum
     (lambda (n)
         (cond ((zero? n) 0)
-              (else (+ (/ 1 n) (harmonic-sum (- n 1)))))))
+              (else (+ (/ 1 n) (harmonic-sum (sub1 n)))))))
 
 (define fact
     (lambda (n)
         (if (zero? n)
             1
-            (* n (fact (- n 1))))))
+            (* n (fact (sub1 n))))))
 
 (define leftmost
     (lambda (l)

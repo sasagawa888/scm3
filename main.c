@@ -3005,7 +3005,9 @@ int f_gcd(int arglist)
 {
 
     checkarg(INTLIST_TEST, "gcd", arglist);
-    if (nullp(cdr(arglist)))
+    if(nullp(arglist))
+    return(makeint(0));
+    else if (nullp(cdr(arglist)))
 	return (car(arglist));
     else {
 	int a, b, x;
@@ -3020,7 +3022,9 @@ int f_gcd(int arglist)
 int f_lcm(int arglist)
 {
     checkarg(INTLIST_TEST, "lcm", arglist);
-    if (nullp(cdr(arglist)))
+    if(nullp(arglist))
+    return(makeint(1));
+    else if (nullp(cdr(arglist)))
 	return (car(arglist));
     else {
 	int a, b, x;
