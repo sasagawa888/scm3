@@ -86,3 +86,44 @@
 
  ;(test (string->number " 42") 42) ;depend implementation
  ;(test (string->number "42 ") 42) ;depend implementation
+
+
+;; symbol? のテスト
+(test '(symbol? 'a) #t)
+(test '(symbol? 'foo) #t)
+(test '(symbol? "foo") #f)
+(test '(symbol? 123) #f)
+(test '(symbol? #t) #f)
+(test '(symbol? '()) #f)  ;; 空リストはシンボルではない
+
+;; number? のテスト
+(test '(number? 123) #t)
+(test '(number? -12.3) #t)
+(test '(number? +0) #t)
+(test '(number? 'a) #f)
+(test '(number? "123") #f)
+
+;; string? のテスト
+(test '(string? "abc") #t)
+(test '(string? "") #t)
+(test '(string? 'abc) #f)
+(test '(string? 123) #f)
+
+(test '(boolean? #t) #t)
+(test '(boolean? #f) #t)
+(test '(boolean? 0) #f)
+(test '(boolean? '()) #f)
+
+(test '(pair? '(1 . 2)) #t)
+(test '(pair? '(1 2 3)) #t)
+(test '(pair? '()) #f)
+(test '(pair? 123) #f)
+
+(test '(list? '()) #t)
+(test '(list? '(1 2 3)) #t)
+(test '(list? '(1 . 2)) #f)
+(test '(list? 123) #f)
+
+(test '(null? '()) #t)
+(test '(null? '(1 2 3)) #f)
+(test '(null? 0) #f)

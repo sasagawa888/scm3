@@ -3466,8 +3466,12 @@ int f_rationalp(int arglist)
 
 int f_listp(int arglist)
 {
-    if (listp(car(arglist)))
+    int arg1;
+    arg1 = car(arglist);
+    if (listp(arg1) && !atomp(cdr(arg1)))
 	return (TRUE);
+    else if(nullp(arg1))
+    return(TRUE);
     else
 	return (FAIL);
 }
