@@ -7,7 +7,7 @@
 // special form token. use in Edlis indentation
 static const char *special[] = {
     "define", "let", "let*", "letrec", "case",
-    "do", "begin",
+    "do", "begin", "lambda",
 };
 
 // syntax token
@@ -106,6 +106,7 @@ static const char *builtin[] = {
     "vector-length",
     "vector-ref",
     "write",
+    "zero?",
     "input-port?",
     "output-port?",
     "current-input-port",
