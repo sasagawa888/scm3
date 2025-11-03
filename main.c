@@ -21,6 +21,7 @@ int protect[STACKSIZE];
 token stok = { GO, OTHER };
 
 jmp_buf buf;
+jmp_buf err;
 int cell_hash_table[HASHTBSIZE];
 
 int input_stream;
@@ -34,6 +35,8 @@ int letrec_flag = 0;
 int display_flag = 0;
 int continuation_variable;
 int continutation_entity;
+int error_handling = 0;
+int error_number;
 
 void signal_handler_c(int signo)
 {
@@ -2084,6 +2087,14 @@ int evlis(int addr)
 //-------error------
 void error(int errnum, char *fun, int arg)
 {
+    // when called from error function
+    // jump to error function with errnum
+    if(error_handling){
+        error_number = errnum;
+        error_handling = 0;
+        longjmp(err, 1);
+    }
+
     switch (errnum) {
     case CANT_FIND_ERR:{
 	    printf("%s can't find difinition of ", fun);
@@ -2205,6 +2216,7 @@ void error(int errnum, char *fun, int arg)
     input_stream = STDIN;
     output_stream = STDOUT;
     longjmp(buf, 1);
+
 }
 
 void checkarg(int test, char *fun, int arg)
@@ -2539,6 +2551,7 @@ void initsubr(void)
     defsubr("inexact->exact", f_inexact_to_exact);
     defsubr("number->string", f_number_to_string);
     defsubr("string->number", f_string_to_number);
+    defsubr("catch-error", f_catch_error);
 
 
     deffsubr("quote", f_quote);
@@ -2821,6 +2834,7 @@ int f_remainder(int arglist)
 
     checkarg(LEN2_TEST, "remainder", arglist);
     checkarg(INTLIST_TEST, "remainder", arglist);
+    checkarg(DIVZERO_TEST,"remainder", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (makeint(GET_INT(arg1) % GET_INT(arg2)));
@@ -2840,6 +2854,7 @@ int f_modulo(int arglist)
     int arg1, arg2;
     checkarg(LEN2_TEST, "modulo", arglist);
     checkarg(INTLIST_TEST, "modulo", arglist);
+    checkarg(DIVZERO_TEST,"module", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     return (makeint(modulo(GET_INT(arg1), GET_INT(arg2))));
@@ -5237,4 +5252,21 @@ int f_string_to_number(int arglist)
         return(makeflt(atof(str)));
     else return(FAIL);
     
+}
+
+int f_catch_error(int arglist)
+{
+    int arg1;
+    arg1 = car(arglist);
+    error_handling = 1;
+    int ret = setjmp(err);
+    if(ret == 0){
+    return(eval_cps(arg1));
+    }
+    else if(ret == 1){
+    return(makeint(error_number));
+    } 
+
+    //dummy
+    return(FAIL);
 }

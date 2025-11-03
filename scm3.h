@@ -438,7 +438,7 @@ int f_exact_to_inexact(int addr);
 int f_inexact_to_exact(int addr);
 int f_number_to_string(int addr);
 int f_string_to_number(int addr);
-
+int f_catch_error(int addr);
 
 int list1(int x);
 int list2(int x, int y);
