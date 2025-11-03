@@ -261,3 +261,16 @@ This is expanded until it reaches primitives. When all these computations are fi
 (2 (push) 3 (push) (apply-cps / (pop 2)))
 > 
 ```
+- syntax
+```
+(transfer '(if a b c))
+((quote a) (push) (quote b) (push) (quote c) (push) (apply-cps if (pop 3)))
+> 
+```
+
+- call/cc
+```
+transfer '(call/cc (lambda (c) (c 0))))
+((quote (c)) (push) (quote (c 0)) (push) (apply-cps lambda (pop 2)) (push) (apply-cps call/cc (pop 1)))
+> 
+```
