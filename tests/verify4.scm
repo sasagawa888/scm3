@@ -267,3 +267,32 @@
 (test '(catch-error '(vector-ref #(1 2 3) 2)) 3)
 (test '(catch-error '(if #t 1 2)) 1)
 
+
+;; ネスト構文の誤り
+(test '(catch-error '(begin (if 1 2 3 . 4))) 22)      ; ifのドット誤用
+(test '(catch-error '(lambda (x . y z) x)) 5)        ; lambda引数リスト不正
+(test '(catch-error '(let ((x . (1 2))) x)) 22)      ; let束縛の構文誤り
+(test '(catch-error '(cond ((> 3 2) 1) ((< 3 2) 2) . 3)) 22)
+(test '(catch-error '(and 1 . (2 3))) 22)            ; andでのドット構文
+(test '(catch-error '(or . (1 2 3))) 22)
+(test '(catch-error '(begin (define x 1) (define))) 22)
+(test '(catch-error '(case 1 ((1 2)) (else 1 2 3 . 4))) 22)
+(test '(catch-error '(let ((x 1) (y)) (+ x y))) 22)   ; 束縛の右辺欠落
+(test '(catch-error '(define (f . (x y)) (+ x y))) 22)
+
+;; ランタイムエラー（実行時の型・手続き呼び出し誤り）
+(test '(catch-error '((lambda (x) (car x)) 123)) 3)       ; carに数値
+(test '(catch-error '((lambda (x) (cdr x)) "abc")) 3)     ; cdrに文字列
+(test '(catch-error '((lambda (x) (x 1)) 2)) 4)           ; 手続きでないものの呼び出し
+(test '(catch-error '((lambda (x) (+ x #f)) 1)) 4)        ; +に不正型
+(test '(catch-error '((lambda (f) (f 1)) "abc")) 4)       ; 文字列呼び出し
+(test '(catch-error '(apply 1 '(1 2 3))) 4)               ; apply第1引数が手続きでない
+(test '(catch-error '(apply + 1)) 4)                      ; apply第2引数がリストでない
+(test '(catch-error '((lambda (x) (vector-ref x 10)) '#(1 2))) 7)
+(test '(catch-error '((lambda (x) (string-ref x 10)) "abc")) 3)
+(test '(catch-error '((lambda (x) (x)) #t)) 4)             ; 真偽値を関数として呼び出し
+
+(test '(catch-error '((lambda (x) (set! y (+ x 1)))) 5) 22) ; 未定義変数へのset!
+(test '(catch-error '(letrec ((x (x))) x)) 4)              ; 再帰定義で未束縛呼び出し
+(test '(catch-error '(define (f x) (f))) 22)               ; 引数なし再帰呼び出し
+(test '(catch-error '(let ((x (lambda (y) (y)))) (x 1))) 4) ; 手続き呼び出し誤り
