@@ -5182,6 +5182,14 @@ int f_substring(int arglist)
     strcpy(str1,GET_NAME(arg1));
     start = GET_INT(arg2);
     end = GET_INT(arg3);
+    if(start < 0)
+        error(WRONG_ARG_ERR,"substring",arg2);
+    if(end < 0)
+        error(WRONG_ARG_ERR,"substring",arg3);
+    if(start > end)
+        error(WRONG_ARG_ERR,"substring",arglist);
+    if(end > strlen(str1))
+        error(WRONG_ARG_ERR,"substring",arg3);
     j = 0;
     for(i=start;i<end;i++){
         str2[j] = str1[i];
