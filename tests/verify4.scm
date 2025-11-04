@@ -41,7 +41,9 @@
 (test '(catch-error '(vector-ref "abc" 1)) 7)
 (test '(catch-error '(vector-ref #(a b c) -1)) 21)
 (test '(catch-error '(vector-ref #(a b c) 3)) 21)
-
+(test '(catch-error '(string-ref #(a b c) 3)) 3)
+(test '(catch-error '(string-ref "asdf" -1)) 21)
+(test '(catch-error '(string-ref "asdf" 4)) 21)
 
 ;; arity mismatch
 (test '(catch-error '(if 1 2 3 4)) 20)
@@ -58,6 +60,7 @@
 ;; --- type mismatch ---
 (test '(catch-error '(+ "abc" 1)) 4)
 (test '(catch-error '(string-length 42)) 3)
+(test '(catch-error '(string-ref 42 1)) 3)
 (test '(catch-error '(vector-ref 123 0)) 7)
 (test '(catch-error '(eq? "a" 1)) #f)
 

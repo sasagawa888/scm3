@@ -5097,12 +5097,18 @@ int f_string_length(int arglist)
 
 int f_string_ref(int arglist)
 {
-    int arg1, arg2;
+    int arg1, arg2,n ,len;
     char str[10];
     checkarg(STRING_TEST, "string-ref", car(arglist));
     checkarg(INTEGER_TEST, "string-ref", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
+    len = GET_CDR(arg1);
+    n = GET_INT(arg2);
+    if(n < 0)
+    error(WRONG_ARG_ERR,"string-ref",arg2);
+    if(n >= len)
+    error(WRONG_ARG_ERR,"string-ref",arg2);
     str[0] = '#';
     str[1] = '\\';
     str[2] = GET_NAME_ELT(arg1, GET_INT(arg2));
