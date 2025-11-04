@@ -4194,7 +4194,7 @@ int f_or(int arglist)
 
 int f_let(int arglist)
 {
-    int arg1, arg2, arg3, vars, args, var, val, res, save, save1;
+    int arg1, arg2, arg3, vars, args, var, val, res, save;
     if (!symbolp(car(arglist))) {
 	//normal let syntax
 	checkarg(LIST_TEST, "let", car(arglist));
@@ -4203,7 +4203,6 @@ int f_let(int arglist)
 	vars = NIL;
 
 	save = ep;
-	save1 = pp;
 	while (!nullp(arg1)) {
 	    var = caar(arg1);
 	    val = eval_cps(cadar(arg1));
@@ -4220,7 +4219,6 @@ int f_let(int arglist)
 	}
 	res = f_begin(arg2);
 	ep = save;
-	pp = save1;
 	return (res);
     } else {
 	// case of let named letlsyntax
@@ -4231,7 +4229,6 @@ int f_let(int arglist)
     vars = NIL;
     args = NIL;
     save = ep;
-	save1 = pp;
 	while (!nullp(arg2)) {
 	    var = caar(arg2);
 	    val = eval_cps(cadar(arg2));
@@ -4241,6 +4238,7 @@ int f_let(int arglist)
         args = cons(var,args);
 	}
     SET_CAR(arg1,cons(args,arg3)); // save body to name symbol
+    push_protect(GET_CDR(arg1));   //protect body from GC
 	ep = save;
 	while (!nullp(vars)) {
 	    var = caar(vars);
@@ -4250,7 +4248,7 @@ int f_let(int arglist)
 	}
     res = f_begin(arg3);
 	ep = save;
-	pp = save1;
+    pop_protect();
 	return (res);
     }
     //dummy
