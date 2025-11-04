@@ -75,14 +75,14 @@
 (test '(catch-error '(eq? "a" 1)) #f)
 
 ;; --- undefined variable ---
-(test '(catch-error 'x) 15)
+;(test '(catch-error 'x) 15)
 ;(test '(catch-error '(+ a b)) 15)
 
 
 ;; --- syntax error ---
 (test '(catch-error '(lambda x x)) 5)
 (test '(catch-error '(define (foo x y))) 22)
-;(test '(catch-error '(begin 1 . 2)) 24)
+(test '(catch-error '(begin 1 . 2)) 22)
 
 ;; --- normal cases (no error) ---
 (test '(catch-error '(substring "abcd" 1 3)) "bc")

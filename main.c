@@ -604,7 +604,15 @@ int nullp(int addr)
 	return (0);
 }
 
-
+int improper_list_p(int addr)
+{
+    if(nullp(addr))
+        return(0);
+    else if(atomp(addr))
+        return(1);
+    else 
+        return(improper_list_p(cdr(addr)));
+}
 
 int numeqp(int addr1, int addr2)
 {
@@ -1735,6 +1743,9 @@ int transfer(int addr)
 	|| vectorp(addr))
 	return (list1(addr));
     else if (listp(addr)) {
+    if(improper_list_p(addr)){
+        error(SYNTAX_ERR,"transfer",addr);
+    }
 	if (numberp(car(addr)))
 	    error(ILLEGAL_OBJ_ERR, "transfer", addr);
 	else if (subrp(car(addr))) {
@@ -5115,7 +5126,7 @@ int f_string_ref(int arglist)
     checkarg(INTEGER_TEST, "string-ref", cadr(arglist));
     arg1 = car(arglist);
     arg2 = cadr(arglist);
-    len = GET_CDR(arg1);
+    len = strlen(GET_NAME(arg1));
     n = GET_INT(arg2);
     if(n < 0)
     error(WRONG_ARG_ERR,"string-ref",arg2);
