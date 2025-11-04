@@ -34,3 +34,8 @@
 
 ;; wrong argument
 (test '(catch-error '(make-string -1)) 21)
+(test '(catch-error '(substring "asdf" -1 2)) 21)
+(test '(catch-error '(substring "asdf" 1 -2)) 21)
+(test '(catch-error '(substring "asdf" 1 5)) 21)
+(test '(catch-error '(substring "asdf" 1 4)) "sdf")
+
