@@ -65,7 +65,7 @@ The key bindings are a hybrid of Emacs and nano.
 
 
 # Tmux
-Using tmux is very convenient. Pressing CTRL+B followed by % will split the screen into two panes. You can start Edlis on the left side and Easy-ISLisp on the right side. When you want to finish, detach by pressing CTRL+B followed by D in the terminal. To reattach, use tmux attach. The previous state will be restored.
+Using tmux is very convenient. Pressing CTRL+B followed by % will split the screen into two panes. You can start Edwin on the left side and scm3 on the right side. When you want to finish, detach by pressing CTRL+B followed by D in the terminal. To reattach, use tmux attach. The previous state will be restored.
 
 
 To easily move between the two split screens, add the following setting to the ~/.tmux.conf file:
