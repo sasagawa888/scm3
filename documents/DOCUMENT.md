@@ -280,3 +280,6 @@ transfer '(call/cc (lambda (c) (c 0))))
 This function is a custom-defined utility designed to verify whether errors are triggered according to the specification.
 If an error occurs, it returns the corresponding error code.
 If no error occurs, it returns the evaluated value.
+
+- (atom? x)
+To enjoy The Little Schemer, the atom? procedure is necessary. I have included it.
