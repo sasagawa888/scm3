@@ -6,7 +6,7 @@
         (begin
           (display "OK: ") (display result) (newline))
         (begin
-          (display expr)
+          (write expr)
           (display "ERROR: expected ") (display expected)
           (display ", but got ") (display result) (newline)))))
 
@@ -158,6 +158,68 @@
 (test '(catch-error '(string-ref 42 1)) 3)
 (test '(catch-error '(vector-ref 123 0)) 7)
 (test '(catch-error '(eq? "a" 1)) #f)
+
+(test '(catch-error '(+ "abc" 1)) 4)
+(test '(catch-error '(- #t 3)) 4)
+(test '(catch-error '(* 'a 2)) 4)
+(test '(catch-error '(/ 10 "5")) 4)
+(test '(catch-error '(remainder 10 "5")) 4)
+(test '(catch-error '(max 1 "a" 3)) 4)
+(test '(catch-error '(min #f 2)) 4)
+(test '(catch-error '(abs "x")) 4)
+(test '(catch-error '(sqrt "x")) 4)
+(test '(catch-error '(exp "x")) 4)
+(test '(catch-error '(log #f)) 4)
+
+(test '(catch-error '(sin "a")) 4)
+(test '(catch-error '(cos "b")) 4)
+(test '(catch-error '(tan 'x)) 4)
+(test '(catch-error '(asin #t)) 4)
+(test '(catch-error '(acos "a")) 4)
+(test '(catch-error '(atan "1")) 4)
+
+(test '(catch-error '(= 1 "1")) 4)
+(test '(catch-error '(< "a" 2)) 4)
+(test '(catch-error '(> 3 "b")) 4)
+(test '(catch-error '(<= "a" "b")) 4)
+(test '(catch-error '(>= "a" 1)) 4)
+
+(test '(catch-error '(car 1)) 5)
+(test '(catch-error '(cdr "abc")) 5)
+(test '(catch-error '(cons 1 2.5)) '(1 . 2.5)) 
+(test '(catch-error '(list-ref 42 1)) 5)
+(test '(catch-error '(list-ref '(a b c) "x")) 2)
+(test '(catch-error '(list-tail 42 0)) 5)
+(test '(catch-error '(list-tail '(a b) "x")) 2)
+
+(test '(catch-error '(string-length 42)) 3)
+(test '(catch-error '(string-ref 42 1)) 3)
+(test '(catch-error '(string-ref "abc" "x")) 2)
+(test '(catch-error '(string-append 123 "x")) 3)
+(test '(catch-error '(substring 42 0 1)) 3)
+(test '(catch-error '(substring "abc" "a" 2)) 2)
+(test '(catch-error '(string->number 123)) 3)
+(test '(catch-error '(number->string "abc")) 4)
+(test '(catch-error '(string->symbol 123)) 3)
+(test '(catch-error '(symbol->string "abc")) 1)
+
+(test '(catch-error '(vector-ref 123 0)) 7)
+(test '(catch-error '(vector-ref '#(a b c) "a")) 2)
+(test '(catch-error '(vector-set! 42 0 'x)) 18)
+(test '(catch-error '(vector-set! '#(a b) "x" 'y)) 18)
+
+(test '(catch-error '(boolean? "a")) #f)
+(test '(catch-error '(pair? 123)) #f)
+(test '(catch-error '(symbol? "abc")) #f)
+(test '(catch-error '(null? 1)) #f)
+(test '(catch-error '(number? "a")) #f)
+(test '(catch-error '(string? 42)) #f)
+(test '(catch-error '(vector? "x")) #f)
+(test '(catch-error '(procedure? 10)) #f)
+
+(test '(catch-error '(eq? "a" 1)) #f)
+(test '(catch-error '(eqv? 1 "1")) #f)
+(test '(catch-error '(equal? "a" 1)) #f)
 
 ;; --- undefined variable ---
 ;(test '(catch-error 'x) 15)
