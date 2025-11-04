@@ -98,7 +98,7 @@ static const char *builtin[] = {
     "sqrt",
     "step",
     "string-copy",
-    "string-fill",
+    "string-fill!",
     "substring",
     "symbol?",
     "symbol->string",
