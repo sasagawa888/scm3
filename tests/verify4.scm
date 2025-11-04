@@ -12,6 +12,8 @@
 
 (test '(+) 0)
 (test '(*) 1)
+(test '(gcd) 0)
+(test '(lcm) 1)
 (test '(catch-error '(-)) 20)
 (test '(catch-error '(/)) 20)
 
@@ -52,6 +54,10 @@
 ;; arity mismatch
 (test '(catch-error '(if 1 2 3 4)) 20)
 (test '(catch-error '(if 1)) 20)
+(test '(catch-error '(modulo 1)) 12)
+(test '(catch-error '(modulo 2 3 4)) 12)
+(test '(catch-error '(remainder 1)) 12)
+(test '(catch-error '(remainder 2 3 4)) 12)
 
 
 ;; --- arity mismatch ---
