@@ -4634,12 +4634,19 @@ int f_vector_length(int arglist)
 
 int f_vector_ref(int arglist)
 {
-    int arg1, arg2;
+    int arg1, arg2,n,len;
     checkarg(VECTOR_TEST, "vector-ref", car(arglist));
     checkarg(INTEGER_TEST, "vector-ref", cadr(arglist));
     arg1 = car(arglist);
-    arg2 = cadr(arglist);
-    return (GET_VEC_ELT(arg1, GET_INT(arg2)));
+    arg2 = cadr(arglist);   
+    n = GET_INT(arg2);
+    len = GET_CDR(arg1);
+    if (n < 0)
+        error(WRONG_ARG_ERR,"vector-ref",arg2);
+    if (n >= len)
+        error(WRONG_ARG_ERR,"vector-ref",arg1);
+    
+    return (GET_VEC_ELT(arg1, n));
 }
 
 int f_string_to_symbol(int arglist)

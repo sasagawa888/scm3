@@ -38,4 +38,12 @@
 (test '(catch-error '(substring "asdf" 1 -2)) 21)
 (test '(catch-error '(substring "asdf" 1 5)) 21)
 (test '(catch-error '(substring "asdf" 1 4)) "sdf")
+(test '(catch-error '(vector-ref "abc" 1)) 7)
+(test '(catch-error '(vector-ref #(a b c) -1)) 21)
+(test '(catch-error '(vector-ref #(a b c) 3)) 21)
+
+
+;; arity mismatch
+(test '(catch-error '(if 1 2 3 4)) 20)
+(test '(catch-error '(if 1)) 20)
 
