@@ -230,6 +230,37 @@
 (test '(catch-error '(lambda x x)) 5)
 (test '(catch-error '(define (foo x y))) 22)
 (test '(catch-error '(begin 1 . 2)) 22)
+(test '(catch-error '(if 1)) 22)               ; ifの引数不足
+(test '(catch-error '(set!)) 22)               ; set!に引数がない
+(test '(catch-error '(quote a b)) 22)          ; quoteに引数が多い
+(test '(catch-error '(cond (else 1) (else 2))) 22) ; elseが複数
+(test '(catch-error '(let ((x 1 2)) x)) 22)    ; let束縛の構文誤り
+(test '(catch-error '(let* (((x 1))) x)) 22)   ; let*の構文誤り
+(test '(catch-error '(case 1 ((1 2)))) 22)     ; case節構文誤り
+
+;; 手続き呼び出し・引数関連のエラー
+(test '(catch-error '(car 123)) 3)
+(test '(catch-error '(cdr "abc")) 3)
+(test '(catch-error '(cons 1)) 4)
+(test '(catch-error '(+ "a" 1)) 4)
+(test '(catch-error '(* 1 "b")) 4)
+(test '(catch-error '(= 1 "a")) 4)
+(test '(catch-error '(string-length 42)) 3)
+(test '(catch-error '(string-ref 42 1)) 3)
+(test '(catch-error '(vector-ref 123 0)) 7)
+(test '(catch-error '(eq? "a" 1)) #f)
+
+;; defineの使用ミスなど
+(test '(catch-error '(define)) 22)
+(test '(catch-error '(define foo)) 22)
+(test '(catch-error '(define ())) 22)
+
+;; 不正な式全般
+;(test '(catch-error '(1 . 2 . 3)) 22)
+(test '(catch-error '(#(1 2) . 3)) 22)
+(test '(catch-error '((1 2))) 4)       ; 手続きでないものの呼び出し
+(test '(catch-error '(#t 1)) 4)
+(test '(catch-error '(123 456)) 4)
 
 ;; --- normal cases (no error) ---
 (test '(catch-error '(substring "abcd" 1 3)) "bc")
