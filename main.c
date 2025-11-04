@@ -2138,6 +2138,13 @@ void error(int errnum, char *fun, int arg)
 	    break;
 	}
 
+    case SYNTAX_ERR:{
+	    printf("%s syntax error ", fun);
+	    print(arg);
+	    break;
+	}
+
+
     case ARG_SYM_ERR:{
 	    printf("%s require symbol but got ", fun);
 	    print(arg);
@@ -4028,6 +4035,9 @@ int f_define(int arglist)
 
     arg1 = NIL;
     if (listp(car(arglist))) {
+    if(nullp(cdr(arglist))){
+        error(SYNTAX_ERR,"define",arglist);
+    }
 	arg1 = caar(arglist);	// function name
 	arg2 = cons(cdar(arglist), cdr(arglist));	// argument + body
 	bindfunc1(arg1, EXPR, arg2);

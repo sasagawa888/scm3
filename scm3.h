@@ -144,6 +144,7 @@ int pp;  //protect pointer
 #define DIV_ZERO_ERR	19
 #define ARITY_ERR		20
 #define WRONG_ARG_ERR	21
+#define SYNTAX_ERR		22
 
 //-------arg check code--
 #define INTLIST_TEST    0

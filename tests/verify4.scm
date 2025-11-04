@@ -81,7 +81,7 @@
 
 ;; --- syntax error ---
 (test '(catch-error '(lambda x x)) 5)
-;(test '(catch-error '(define (foo x y))) 24)
+(test '(catch-error '(define (foo x y))) 22)
 ;(test '(catch-error '(begin 1 . 2)) 24)
 
 ;; --- normal cases (no error) ---
