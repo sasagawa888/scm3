@@ -2735,7 +2735,8 @@ int f_difference(int arglist)
     arg2 = f_plus(cdr(arglist));
     return (difference(arg1, arg2));
     }
-    //dummy
+    
+    error(ARITY_ERR,"-",arglist);
     return (TRUE);
 }
 
@@ -2774,7 +2775,8 @@ int f_division(int arglist)
     checkarg(DIVZERO_TEST,"/",arg2);
     return (division(arg1, arg2));     
     }
-    // dummy
+    
+    error(ARITY_ERR,"/",arglist);
     return(TRUE);
 }
 

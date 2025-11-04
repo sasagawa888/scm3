@@ -10,6 +10,10 @@
           (display "ERROR: expected ") (display expected)
           (display ", but got ") (display result) (newline)))))
 
+(test '(+) 0)
+(test '(*) 1)
+(test '(catch-error '(-)) 20)
+(test '(catch-error '(/)) 20)
 
 ;; normal
 (test '(catch-error '(+ 1 2)) 3)
