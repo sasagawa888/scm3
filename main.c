@@ -2321,6 +2321,11 @@ void checkarg(int test, char *fun, int arg)
 	    return;
 	else
 	    error(ARG_LEN3_ERR, fun, arg);
+    case LENS1_TEST:
+    if(length(arg) >= 1)
+        return;
+    else 
+        error(ARITY_ERR,fun,arg);
     case DEFLIST_TEST:
 	if (isdeflis(arg))
 	    return;
@@ -2813,6 +2818,7 @@ int f_max(int arglist)
 {
     int res;
 
+    checkarg(LENS1_TEST,"max",arglist);
     checkarg(NUMLIST_TEST, "max", arglist);
     res = car(arglist);
     arglist = cdr(arglist);
@@ -2828,6 +2834,7 @@ int f_min(int arglist)
 {
     int res;
 
+    checkarg(LENS1_TEST,"min",arglist);
     checkarg(NUMLIST_TEST, "min", arglist);
     res = car(arglist);
     arglist = cdr(arglist);
@@ -2842,6 +2849,7 @@ int f_min(int arglist)
 int f_abs(int arglist)
 {
     int arg1, res;
+    checkarg(LEN1_TEST,"abs",arglist);
     checkarg(NUMBER_TEST, "abs", car(arglist));
     arg1 = car(arglist);
     res = NIL;
@@ -3263,6 +3271,7 @@ int f_numeqp(int arglist)
 {
     int arg1, arg2;
 
+    checkarg(LENS1_TEST,"=",arglist);
     checkarg(NUMLIST_TEST, "=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -3528,6 +3537,7 @@ int f_listp(int arglist)
 
 int f_vectorp(int arglist)
 {
+    checkarg(LEN1_TEST,"vector?",arglist);
     if (vectorp(car(arglist)))
 	return (TRUE);
     else
@@ -3538,6 +3548,7 @@ int f_vectorp(int arglist)
 
 int f_pairp(int arglist)
 {
+    checkarg(LEN1_TEST,"pair?",arglist);
     if (pairp(car(arglist)))
 	return (TRUE);
     else
@@ -3655,6 +3666,7 @@ int f_lessp(int arglist)
 {
     int arg1, arg2;
 
+    checkarg(LENS1_TEST,"<",arglist);
     checkarg(NUMLIST_TEST, "<", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -3672,6 +3684,7 @@ int f_eqlessp(int arglist)
 {
     int arg1, arg2;
 
+    checkarg(LENS1_TEST,"<=",arglist);
     checkarg(NUMLIST_TEST, "<=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -3689,6 +3702,7 @@ int f_greaterp(int arglist)
 {
     int arg1, arg2;
 
+    checkarg(LENS1_TEST,">",arglist);
     checkarg(NUMLIST_TEST, ">", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -3706,6 +3720,7 @@ int f_eqgreaterp(int arglist)
 {
     int arg1, arg2;
 
+    checkarg(LENS1_TEST,">=",arglist);
     checkarg(NUMLIST_TEST, ">=", arglist);
     arg1 = car(arglist);
     arg2 = cadr(arglist);
@@ -4648,6 +4663,7 @@ int f_vector(int arglist)
 int f_vector_length(int arglist)
 {
     int arg1;
+    checkarg(LEN1_TEST,"vector-length",arglist);
     checkarg(VECTOR_TEST, "vector-length", car(arglist));
     arg1 = car(arglist);
     return (makeint(GET_CDR(arg1)));
@@ -4656,6 +4672,7 @@ int f_vector_length(int arglist)
 int f_vector_ref(int arglist)
 {
     int arg1, arg2,n,len;
+    checkarg(LEN2_TEST,"vector-ref",arglist);
     checkarg(VECTOR_TEST, "vector-ref", car(arglist));
     checkarg(INTEGER_TEST, "vector-ref", cadr(arglist));
     arg1 = car(arglist);
@@ -4673,6 +4690,7 @@ int f_vector_ref(int arglist)
 int f_string_to_symbol(int arglist)
 {
     int arg1;
+    checkarg(LEN1_TEST,"string->symbol",arglist);
     checkarg(STRING_TEST, "string->symbol", car(arglist));
 
     arg1 = car(arglist);
@@ -4683,6 +4701,7 @@ int f_string_to_symbol(int arglist)
 int f_symbol_to_string(int arglist)
 {
     int arg1;
+    checkarg(LEN1_TEST,"symbol->string",arglist);
     checkarg(SYMBOL_TEST, "symbol->string", car(arglist));
 
     arg1 = car(arglist);
@@ -5110,6 +5129,7 @@ int f_str_ci_eqgreaterp(int arglist)
 int f_string_length(int arglist)
 {
     int arg1, len;
+    checkarg(LEN1_TEST,"string-length",arglist);
     checkarg(STRING_TEST, "string-length", car(arglist));
     arg1 = car(arglist);
     len = strlen(GET_NAME(arg1));
@@ -5120,6 +5140,7 @@ int f_string_ref(int arglist)
 {
     int arg1, arg2,n ,len;
     char str[10];
+    checkarg(LEN2_TEST,"string-ref",arglist);
     checkarg(STRING_TEST, "string-ref", car(arglist));
     checkarg(INTEGER_TEST, "string-ref", cadr(arglist));
     arg1 = car(arglist);
@@ -5274,6 +5295,7 @@ int f_number_to_string(int arglist)
 {
     int arg1;
     char str[SYMSIZE];
+    checkarg(LEN1_TEST,"number->string",arglist);
     checkarg(NUMBER_TEST,"number->string",car(arglist));
     arg1 = car(arglist);
     memset(str,0,SYMSIZE);
@@ -5292,6 +5314,7 @@ int f_string_to_number(int arglist)
 {
     int arg1;
     char str[SYMSIZE];
+    checkarg(LEN1_TEST,"string->number",arglist);
     checkarg(STRING_TEST,"string->number",car(arglist));
     arg1 = car(arglist);
     memset(str,0,SYMSIZE);
