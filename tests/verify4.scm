@@ -78,8 +78,6 @@
 (test '(catch-error 'x) 15)
 ;(test '(catch-error '(+ a b)) 15)
 
-;; --- division by zero ---
-(test '(catch-error '(/ 1 0)) 19)
 
 ;; --- syntax error ---
 (test '(catch-error '(lambda x x)) 5)

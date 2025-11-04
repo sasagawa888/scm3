@@ -274,3 +274,9 @@ transfer '(call/cc (lambda (c) (c 0))))
 ((quote (c)) (push) (quote (c 0)) (push) (apply-cps lambda (pop 2)) (push) (apply-cps call/cc (pop 1)))
 > 
 ```
+
+# Extention
+- (catch-error expr)
+This function is a custom-defined utility designed to verify whether errors are triggered according to the specification.
+If an error occurs, it returns the corresponding error code.
+If no error occurs, it returns the evaluated value.
