@@ -168,6 +168,7 @@ int pp;  //protect pointer
 #define PROMISE_TEST	18
 #define CHAR_TEST		19
 #define DIVZERO_TEST	20
+#define PROPERLIST_TEST	21
 
 //----------------------------
 #define INPUT	1

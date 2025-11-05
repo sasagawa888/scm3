@@ -4086,6 +4086,8 @@ int f_lambda(int arglist)
 
     checkarg(LIST_TEST, "lambda", car(arglist));
     checkarg(LIST_TEST, "lambda", cdr(arglist));
+    if(improper_list_p(car(arglist)))
+    error(SYNTAX_ERR,"lambda",arglist);
     return (makefunc(arglist));
 }
 
@@ -4119,7 +4121,7 @@ int f_if(int arglist)
 	else
 	    return (UNDEF);
     }
-    error(ARITY_ERR, "if", arglist);
+    error(SYNTAX_ERR, "if", arglist);
     return (FAIL);
 }
 
