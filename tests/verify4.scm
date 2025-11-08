@@ -249,7 +249,7 @@
 (test '(catch-error '(vector-ref 123 0)) 7)
 (test '(catch-error '(eq? "a" 1)) #f)
 
-;; defineの使用ミスなど
+
 ;(test '(catch-error '(define)) 22)
 ;(test '(catch-error '(define foo)) 22)
 ;(test '(catch-error '(define ())) 22)

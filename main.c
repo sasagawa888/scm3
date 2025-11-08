@@ -4059,6 +4059,8 @@ int f_define(int arglist)
 {
     int arg1, arg2;
 
+    if(nullp(arglist))
+    error(SYNTAX_ERR,"define",arglist);
     arg1 = NIL;
     if (listp(car(arglist))) {
     if(nullp(cdr(arglist))){
