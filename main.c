@@ -1547,6 +1547,8 @@ int read(void)
     default:
 	break;
     }
+    char c;
+    while ((c = getchar()) != '\n' && c != EOF)
     error(CANT_READ_ERR, "read", NIL);
     return (0);
 }
@@ -1892,6 +1894,9 @@ int execute(int addr)
 	else
 	    error(CANT_FIND_ERR, "execute", addr);
     } else if (listp(addr)) {
+    if(improper_list_p(addr)){
+        error(SYNTAX_ERR,"execute",addr);
+    }
 	if (eqp(car(addr), makesym("quote")))
 	    return (cadr(addr));
 	else if (subrp(car(addr)) || fsubrp(car(addr))) {
@@ -4060,7 +4065,7 @@ int f_define(int arglist)
     int arg1, arg2;
 
     if(nullp(arglist))
-    error(SYNTAX_ERR,"define",arglist);
+    error(SYNTAX_ERR,"define",arglist);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     arg1 = NIL;
     if (listp(car(arglist))) {
     if(nullp(cdr(arglist))){
