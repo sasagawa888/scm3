@@ -7,7 +7,6 @@
 #include <locale.h>
 #include <stdbool.h>
 #include <string.h>
-#include "compat/cdefs.h"
 #include "edlis.h"
 
 
@@ -1739,7 +1738,7 @@ char *getname()
 	    cancel_flag = true;
 	    return (buf);
 	default:
-	    if (pos > SHORT_STR_MAX)
+	    if (pos >= SHORT_STR_MAX)
 		break;
 	    else if (c < 20)
 		break;
@@ -1794,7 +1793,7 @@ char *getword1()
 	    cancel_flag = true;
 	    return (buf);
 	default:
-	    if (pos > SHORT_STR_MAX)
+	    if (pos >= SHORT_STR_MAX)
 		break;
 	    else if (c < 20)
 		break;
@@ -1848,7 +1847,7 @@ char *getword2()
 	    cancel_flag = true;
 	    return (buf);
 	default:
-	    if (pos > SHORT_STR_MAX)
+	    if (pos >= SHORT_STR_MAX)
 		break;
 	    else if (c < 20)
 		break;
@@ -2593,6 +2592,7 @@ int find_eol(int row)
 {
     int i;
 
+	if(row < 0) return(-1);
     for (i = 0; i < COL_SIZE; i++) {
 	if (ed_data[row][i] == EOL || ed_data[row][i] == 0)
 	    return (i);

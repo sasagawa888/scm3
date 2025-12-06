@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
 	while (1) {
 	    printf("> ");
 	    fflush(stdout);
-	    fflush(stdin);
 	    cp = NIL;
 	    cp1 = NIL;
 	    sp = 0;
@@ -1241,8 +1240,7 @@ void pop_protect(void)
 
 void gettoken(void)
 {
-    char c, c1;
-    int pos;
+    int c,c1,pos;
 
     if (stok.flag == BACK) {
 	stok.flag = GO;
@@ -1292,7 +1290,7 @@ void gettoken(void)
 	break;
     case '"':
 	pos = 0;
-	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
+	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE-1) &&
 	       (c != '"'))
 	    stok.buf[pos++] = c;
 
@@ -1312,7 +1310,7 @@ void gettoken(void)
     case '|':
 	pos = 0;
 	stok.buf[pos++] = c;
-	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
+	while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE-2) &&
 	       (c != '|'))
 	    stok.buf[pos++] = c;
 
@@ -1336,7 +1334,7 @@ void gettoken(void)
 	  etc:
 	    pos = 0;
 	    stok.buf[pos++] = c;
-	    while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE) &&
+	    while (((c = fgetc(GET_STM(input_stream))) != EOL) && (pos < BUFSIZE-2) &&
 		   (c != SPACE) && (c != '(') && (c != ')') &&
 		   (c != '`') && (c != ',') && (c != '@'))
 		stok.buf[pos++] = c;
@@ -1547,7 +1545,7 @@ int read(void)
     default:
 	break;
     }
-    char c;
+    int c;
     while ((c = getchar()) != '\n' && c != EOF)
     error(CANT_READ_ERR, "read", NIL);
     return (0);
