@@ -122,7 +122,7 @@ int getch1(void)
     return (c);
 }
 
-__dead void errw(const char *msg)
+void errw(const char *msg)
 {
     endwin();
     fprintf(stderr, "%s\n", msg);
@@ -183,12 +183,12 @@ void init_ncurses()
     }
 }
 
-void signal_handler_c(int signo __unused)
+void signal_handler_c(int signo)
 {
     ctrl_c = 1;
 }
 
-void signal_handler_z(int signo __unused)
+void signal_handler_z(int signo)
 {
     ctrl_z = 1;
 }
@@ -3030,7 +3030,7 @@ int findnext(int row, int col)
 }
 
 
-void remove_headspace(int row __unused)
+void remove_headspace(int row)
 {
     int col, i, j, k;
 

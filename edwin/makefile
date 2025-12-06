@@ -3,7 +3,7 @@
 
 CC := gcc
 LIBS := -lm -ldl -lpthread -lncurses
-INCS := -Icii/include
+INCS := 
 CURSES_CFLAGS := $(shell ncursesw6-config --cflags)
 CURSES_LIBS := $(shell ncursesw6-config --libs)
 
@@ -15,7 +15,6 @@ SRC_CII := cii/src/except.c \
            cii/src/text.c \
            cii/src/mem.c
 
-OBJ_CII := $(SRC_CII:.c=.o)
 
 # ====== target ======
 
@@ -23,7 +22,7 @@ TARGET := edwin
 
 all: $(TARGET)
 
-$(TARGET): edlis.o syn_highlight.o $(OBJ_CII)
+$(TARGET): edlis.o syn_highlight.o 
 	$(CC) $(CFLAGS) $^ -o $@ $(CURSES_LIBS)
 
 edlis.o: edlis.c edlis.h term.h

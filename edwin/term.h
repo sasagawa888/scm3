@@ -53,7 +53,7 @@ extern char ed_key_up;
  * Edlis uses the higher-level curses interface 
  */
 
-__dead void errw(const char *msg);
+void errw(const char *msg);
 #define CHECK(fn, ...) { \
         if ((fn)(__VA_ARGS__) == ERR) { \
                 errw(#fn); \
@@ -87,7 +87,7 @@ static inline void ESCCLSL(void)
 
 static inline void ESCMVLEFT(int x)
 {
-    int dummy __unused;
+    int dummy;
     int cur_y;
 
     getyx(stdscr, cur_y, dummy);
