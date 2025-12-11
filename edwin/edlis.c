@@ -2224,6 +2224,7 @@ void help(void)
     CHECK(refresh);
     CHECK(getch);
     display_screen();
+	display_header();
     restore_cursol();
 }
 
