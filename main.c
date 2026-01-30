@@ -3976,7 +3976,7 @@ int f_for_each(int arglist)
     arg1 = car(arglist);
     arg2 = cadr(arglist);
     for_each(arg2, arg1);
-    return(arg2);
+    return(UNDEF);
 }
 
 
