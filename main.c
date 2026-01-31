@@ -4077,6 +4077,10 @@ int f_define(int arglist)
 	arg1 = car(arglist);	// function name
 	arg2 = cadr(arglist);	//lambda exp
 	SET_BIND(arg1, eval(arg2));
+    } else if (symbolp(car(arglist)) && listp(cadr(arglist))) {
+	arg1 = car(arglist);	// function name
+	arg2 = cadr(arglist);	// exp
+	bindsym(arg1, eval_cps(arg2));
     } else if (symbolp(car(arglist))) {
 	arg1 = car(arglist);	//variable name
 	arg2 = eval(cadr(arglist));	//value
