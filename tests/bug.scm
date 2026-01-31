@@ -1,5 +1,5 @@
 
-(define escape-test
+(define foo
   (call/cc
     (lambda (ex)
       (for-each
