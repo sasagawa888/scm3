@@ -54,3 +54,5 @@ This system is intentionally kept small. It is not meant for practical use; rath
 Because the implementation is deliberately minimal, it is easy to understand as a whole. Once you have grasped its structure, you can move on to a more practical system—or simply appreciate this little interpreter for what it is.
 
 It will probably never serve in a real application, but if browsing through its compact codebase brings you a moment of comfort or relaxation, the author could ask for nothing more.
+
+call/cc: supported for early-exit patterns (escape from iteration). Other advanced continuation idioms are out of scope.
