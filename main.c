@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
 	    cp1 = NIL;
 	    sp = 0;
 	    sp_cps = NIL;
+        cont_flag = 0;
 	    print(eval_cps(read()));
 	    printf("\n");
 	    fflush(stdout);
@@ -4080,7 +4081,11 @@ int f_define(int arglist)
     } else if (symbolp(car(arglist)) && listp(cadr(arglist))) {
 	arg1 = car(arglist);	// function name
 	arg2 = cadr(arglist);	// exp
-	bindsym(arg1, eval_cps(arg2));
+    int res = eval_cps(arg2);
+    if(!cont_flag)
+	bindsym(arg1, res);
+    else
+    bindsym(arg1, acc1);
     } else if (symbolp(car(arglist))) {
 	arg1 = car(arglist);	//variable name
 	arg2 = eval(cadr(arglist));	//value
@@ -4656,6 +4661,8 @@ int f_exec_cont(int arglist)
     sp_cps = GET_CAR(arg1);	//restore stack
     ep = GET_CDR(arg1);		//restore environment
     acc = arg2;
+    acc1 = acc;
+    cont_flag = 1;
     return (eval_cps(NIL));	//execute CPS
 }
 

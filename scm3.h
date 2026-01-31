@@ -112,8 +112,12 @@ int ap; //arglist pointer
 int cp; //continuation pointer
 int cp1; //cp save;
 int acc; //register 
+int acc1;
 int sp_cps; //stack pointer for CPS
 int pp;  //protect pointer 
+
+//--------flag-------
+int cont_flag;
 
 //-------read--------
 #define EOL		'\n'
