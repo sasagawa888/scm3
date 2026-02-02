@@ -55,4 +55,24 @@ Because the implementation is deliberately minimal, it is easy to understand as 
 
 It will probably never serve in a real application, but if browsing through its compact codebase brings you a moment of comfort or relaxation, the author could ask for nothing more.
 
-call/cc: supported for early-exit patterns (escape from iteration). Other advanced continuation idioms are out of scope.
+call/cc: The `call/cc` implementation in scm3 is incomplete.
+
+As shown below, it works in typical top-level use cases.
+Scheme R3RS ver 1.70
+> (define f #f)
+f
+> (+ 1 2 (call/cc (lambda (c) (set! f c) 0)))
+3
+> f
+<cont>
+> (f 10)
+13
+> 
+
+
+However, it does not behave correctly in situations involving the built-in
+`for-each` procedure and similar higher-order control constructs.
+
+scm3 is intended as an educational interpreter.
+Please treat this project as a hint or starting point for developing your own
+fully compliant implementation.
